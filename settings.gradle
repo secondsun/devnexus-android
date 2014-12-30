@@ -1,0 +1,1 @@
+include ':devnexusclientlibrary',':app', ':devnexusclientsdktest'
