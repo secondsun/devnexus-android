@@ -15,10 +15,12 @@ public class ScheduleItemContract {
     public static final Uri URI = Uri.parse("content://org.devnexus.sync/ScheduleItem");
     public static final String _ID = "id";
     public static final String DATA = "DATA";
+
     public static String NOTIFY = "NOTIFY";
-    public static String TITLE = "presentation.title";
-    public static String SPEAKER_FNAME = "presentation.speaker.firstName";
-    public static String SPEAKER_NAME = "presentation.speaker.lastName";
+    public static final String ID = "scheduleItemList.scheduleItems.presentation.id";
+    public static String TITLE = "scheduleItemList.scheduleItems.presentation.title";
+    public static String SPEAKER_FNAME = "scheduleItemList.scheduleItems.presentation.speaker.firstName";
+    public static String SPEAKER_NAME = "scheduleItemList.scheduleItems.presentation.speaker.lastName";
 
     public static final String[] COLUMNS = {DATA, NOTIFY};
 

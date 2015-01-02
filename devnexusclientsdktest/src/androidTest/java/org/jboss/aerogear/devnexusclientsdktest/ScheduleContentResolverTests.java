@@ -14,6 +14,7 @@ import org.apache.commons.io.IOUtils;
 
 import org.devnexus.util.GsonUtils;
 import org.devnexus.vo.Schedule;
+import org.devnexus.vo.ScheduleItem;
 import org.devnexus.vo.contract.ScheduleContract;
 import org.devnexus.vo.contract.ScheduleItemContract;
 import org.jboss.aerogear.devnexusclientsdktest.R;
@@ -53,12 +54,21 @@ public class ScheduleContentResolverTests extends InstrumentationTestCase{
         cursor.close();
     }
 
-    public void testScheduleItemQuery() {
+    public void testScheduleItemEmptyQuery() {
         Cursor cursor = contentResolver.query(ScheduleItemContract.URI, null, null, null, null);
         Assert.assertEquals(127, cursor.getCount());
         cursor.close();
     }
 
+    public void testScheduleItemQueryId() {
+        Cursor cursor = contentResolver.query(ScheduleItemContract.URI, null, ScheduleItemContract.toQuery(ScheduleItemContract.ID),new String[] { "3994" }, null);
+        Assert.assertEquals(1, cursor.getCount());
+        cursor.moveToNext();
+        String scheduleItemRawJson = cursor.getString(0);
+        ScheduleItem scheduleItem = gson.fromJson(scheduleItemRawJson, ScheduleItem.class);
+        assertEquals("Down and Dirty with Java EE 7", scheduleItem.presentation.title);
+        cursor.close();
+    }
 
 
 }

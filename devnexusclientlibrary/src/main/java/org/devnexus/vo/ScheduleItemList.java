@@ -17,7 +17,7 @@ public class ScheduleItemList implements Serializable {
     public int numberOfBreaks = 0;
     public int numberOfTracks = 0;
     public List<Date> days = new ArrayList<Date>();
-    public List<ScheduleItem> scheduleItems = new ArrayList<ScheduleItem>();
+    public transient List<ScheduleItem> scheduleItems = new ArrayList<ScheduleItem>();
 
     public ScheduleItemList() {
         days.add(new Date());
