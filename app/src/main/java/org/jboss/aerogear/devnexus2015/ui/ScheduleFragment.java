@@ -2,7 +2,6 @@ package org.jboss.aerogear.devnexus2015.ui;
 
 import android.app.Fragment;
 import android.app.LoaderManager;
-import android.content.AsyncTaskLoader;
 import android.content.ContentResolver;
 import android.content.CursorLoader;
 import android.content.Loader;
@@ -15,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Spinner;
 
 import org.devnexus.util.GsonUtils;
 import org.devnexus.vo.Schedule;
@@ -25,6 +25,7 @@ import org.jboss.aerogear.devnexus2015.R;
 import org.jboss.aerogear.devnexus2015.ui.adapter.ScheduleItemViewAdapter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -49,7 +50,13 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
         resolver = getActivity().getContentResolver();
         recycler.setAdapter(new ScheduleItemViewAdapter(new ArrayList<ScheduleItem>(1)));
 
+        Spinner spinner = (Spinner) toolbar.findViewById(R.id.spinner_nav);
+        loadSpinnerNav(spinner);
         return view;
+    }
+
+    private void loadSpinnerNav(Spinner spinner) {
+        spinner.setAdapter(new SessionSpinnerAdaper());
     }
 
     @Override
@@ -73,6 +80,7 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
         while (data.moveToNext()) {
             Schedule schedule = GsonUtils.GSON.fromJson(data.getString(0), Schedule.class);
             scheduleItems.addAll(schedule.scheduleItemList.scheduleItems);
+            Collections.sort(scheduleItems);
         }
         
         refreshData(scheduleItems);

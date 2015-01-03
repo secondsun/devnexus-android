@@ -18,18 +18,22 @@
     <color name="dn_gray">#455159</color>
     <color name="dn_light_gray">#617784</color>
     <color name="dn_white">#ffffff</color>
-    <color name="track_1">#630d1a</color>
-    <color name="track_102">#44b75c</color>
-    <color name="track_2">#fd8c2a</color>
-    <color name="track_3">#7bb7cd</color>
-    <color name="track_4">#dbaa2e</color>
-    <color name="track_5">#297ca5</color>
-    <color name="track_6">#d14928</color>
-    <color name="track_7">#455159</color>
-    <color name="track_8">#A2285E</color>
-    <color name="track_9">#FF5D40</color>
-    <color name="track_10">#6A237E</color>
-    <color name="track_11">#617784</color>
+
     <color name="black_overlay">#66000000</color>
+
+    <color name="HTML5">#3a7dda</color>
+    <color name="Web">#512698</color>
+    <color name="JavaScript">#5a8e22</color>
+    <color name="Workshop">#6c6f70</color>
+    <color name="Agile">#6dc6e7</color>
+    <color name="JVM_Languages_Debugging">#8b2346</color>
+    <color name="Cloud_DevOps">#8d6cd1</color>
+    <color name="Mobile">#8dc740</color>
+    <color name="Data_Integration_IoT">#a2c6f8</color>
+    <color name="Microservices_Security">#e87ea6</color>
+    <color name="Keynotes">#edcd1c</color>
+    <color name="Java">#ffa200</color>
+    <color name="Functional_Programming">#ffa200</color>
+    <color name="User_Experience_Tools">#ffa200</color>
 
 </resources>

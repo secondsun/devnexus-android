@@ -5,5 +5,24 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="loading_text">Please wait while we download DevNexus data.</string>
+    <string name="all_events">All Events</string>
+    <string name="event_type">Event Types</string>
+    <string name="workshops">Workshops</string>
+    <string name="breakouts">Breakouts</string>
+    <string name="breaks_and_social">Breaks and Social</string>
+    <string name="topics">Topics</string>
+    <string name="topic_html5">HTML 5</string>
+    <string name="topic_javascript">JavaScript</string>
+    <string name="topic_web">Web</string>
+    <string name="topic_agile">Agile</string>
+    <string name="topic_jvm_languages">JVM Languages + Debugging</string>
+    <string name="topic_cloud_and_devopts">Cloud + DevOps</string>
+    <string name="topic_mobile">Mobile</string>
+    <string name="topic_data_integration_iot"><![CDATA[Data, Integration & IoT]]></string>
+    <string name="topic_microservices_and_security">Microservices + Security</string>
+    <string name="keynote">Keynote</string>
+    <string name="topic_java">Java</string>
+    <string name="topic_functional_programming">Functional Programming</string>
+    <string name="topic_user_experience_plus_tools">User Experience + Tools</string>
 
 </resources>
