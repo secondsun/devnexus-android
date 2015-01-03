@@ -43,7 +43,8 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = contentView = inflater.inflate(R.layout.schedule_layout, null);
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.my_awesome_toolbar);
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        toolbar.setTitle("");
         ((MainActivity)getActivity()).attachToolbar(toolbar);
         recycler = (RecyclerView) view.findViewById(R.id.my_recycler_view);
         recycler.setLayoutManager(new GridLayoutManager(getActivity(), 2));
@@ -56,7 +57,7 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     private void loadSpinnerNav(Spinner spinner) {
-        spinner.setAdapter(new SessionSpinnerAdaper());
+        spinner.setAdapter(new SessionSpinnerAdaper(getActivity()));
     }
 
     @Override
