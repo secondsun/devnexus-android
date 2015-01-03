@@ -17,7 +17,7 @@ import org.devnexus.vo.Schedule;
 import org.devnexus.vo.ScheduleItem;
 import org.devnexus.vo.contract.ScheduleContract;
 import org.devnexus.vo.contract.ScheduleItemContract;
-import org.jboss.aerogear.devnexusclientsdktest.R;
+
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -61,7 +61,7 @@ public class ScheduleContentResolverTests extends InstrumentationTestCase{
     }
 
     public void testScheduleItemQueryId() {
-        Cursor cursor = contentResolver.query(ScheduleItemContract.URI, null, ScheduleItemContract.toQuery(ScheduleItemContract.ID),new String[] { "3994" }, null);
+        Cursor cursor = contentResolver.query(ScheduleItemContract.URI, null, ScheduleItemContract.toQuery(ScheduleItemContract.PRESENTATION_ID),new String[] { "3994" }, null);
         Assert.assertEquals(1, cursor.getCount());
         cursor.moveToNext();
         String scheduleItemRawJson = cursor.getString(0);

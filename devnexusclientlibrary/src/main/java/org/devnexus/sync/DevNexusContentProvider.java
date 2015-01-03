@@ -18,18 +18,13 @@ import org.devnexus.vo.contract.ScheduleContract;
 import org.devnexus.vo.contract.ScheduleItemContract;
 import org.devnexus.vo.contract.SingleColumnJsonArrayList;
 import org.devnexus.vo.contract.UserCalendarContract;
+import org.jboss.aerogear.android.impl.datamanager.DefaultIdGenerator;
+import org.jboss.aerogear.android.impl.datamanager.SQLStore;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
-
-import org.jboss.aerogear.android.ReadFilter;
-import org.jboss.aerogear.android.impl.datamanager.DefaultIdGenerator;
-import org.jboss.aerogear.android.impl.datamanager.SQLStore;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 
 /**
@@ -288,26 +283,45 @@ public class DevNexusContentProvider extends ContentProvider {
 
         @Override
         public SingleColumnJsonArrayList exec(Gson gson, SQLStore scheduleStore, Uri uri, ContentValues[] values, String selection, String[] selectionArgs) {
+
+            if (DevNexusContentProvider.schedule == null) {
+                DevNexusContentProvider.schedule = new ArrayList<Schedule>(scheduleStore.readAll());
+            }
+
             if (selection == null || selection.isEmpty()) {
-                if (DevNexusContentProvider.schedule == null) {
-                    DevNexusContentProvider.schedule = new ArrayList<Schedule>(scheduleStore.readAll());
-                }
                 return new SingleColumnJsonArrayList(new ArrayList<ScheduleItem>(DevNexusContentProvider.schedule.get(0).scheduleItemList.scheduleItems));
             } else {
-                ReadFilter filter = new ReadFilter();
-                JSONObject where = new JSONObject();
+
+                ArrayList<ScheduleItem> items = new ArrayList<>(schedule.get(0).scheduleItemList.scheduleItems);
+                ArrayList<ScheduleItem> filteredItems = new ArrayList<>(items.size());//max number
 
                 String[] selections = selection.split(" && ");
-                for (int i = 0; i < selections.length; i++) {
-                    try {
-                        where.put(selections[i], selectionArgs[i]);
-                    } catch (JSONException e) {
-                        Log.e(TAG, e.getMessage(), e);
-                        throw new RuntimeException(e);
+
+                for (int i = 0; i <selections.length; i++) {
+                    for (ScheduleItem item :items) {
+                        String value = selectionArgs[i];
+                        switch (selections[i])  {
+                            case ScheduleItemContract.PRESENTATION_ID:
+                                if ((item.presentation == null) || !Integer.toString(item.presentation.id).equals(value)) {
+                                    filteredItems.add(item);
+                                }
+                                break;
+                            case ScheduleItemContract.SPEAKER_FNAME:
+
+                                break;
+                            case ScheduleItemContract.SPEAKER_NAME:
+                                break;
+                            case ScheduleItemContract.TITLE:
+                                break;
+                            default:
+                                break;
+                        }
+
                     }
+
                 }
-                filter.setWhere(where);
-                return new SingleColumnJsonArrayList(new ArrayList(scheduleStore.readWithFilter(filter)));
+                items.removeAll(filteredItems);
+                return new SingleColumnJsonArrayList(items);
             }
         }
     }
