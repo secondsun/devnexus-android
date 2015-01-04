@@ -143,7 +143,7 @@ public class DevNexusContentProvider extends ContentProvider {
             op = new CalendarDelete();
         } else if (uri.equals(ScheduleContract.URI)) {
             op = new ScheduleDelete();
-        } else if (uri.equals(PresentationContract.URI)) {
+        } else if (uri.equals(PresentationContract.URI) ||uri.equals(PresentationContract.URI_NOTIFY)) {
             op = new PresentationDelete();
         } else
             throw new IllegalArgumentException(String.format("%s not supported", uri.toString()));
@@ -204,7 +204,7 @@ public class DevNexusContentProvider extends ContentProvider {
             tempStore = calendarSQLStore;
         } else if (uri.equals(ScheduleContract.URI) || uri.equals(ScheduleItemContract.URI) ) {
             tempStore = scheduleSQLStore;
-        } else if (uri.equals(PresentationContract.URI) ) {
+        } else if (uri.equals(PresentationContract.URI) || uri.equals(PresentationContract.URI_NOTIFY)  ) {
             tempStore = presentationSQLStore;
         } else {
             throw new IllegalArgumentException(String.format("%s not supported", uri.toString()));
@@ -494,7 +494,11 @@ public class DevNexusContentProvider extends ContentProvider {
                 presentationStore.remove(id);
             }
             DevNexusContentProvider.presentations = null;
-            resolver.notifyChange(PresentationContract.URI, null, false);
+
+            if (uri.equals(PresentationContract.URI_NOTIFY)) {
+                resolver.notifyChange(PresentationContract.URI, null, false);
+            }
+
             return 1;
         }
     }

@@ -8,7 +8,7 @@ import java.util.Date;
 /**
  * Created by summers on 1/4/15.
  */
-public class Track implements Serializable {
+public class Track implements Serializable, Comparable<Track> {
     @RecordId
     public int id;
     public Date createdDate;
@@ -60,4 +60,9 @@ public class Track implements Serializable {
         result = 31 * result + (description != null ? description.hashCode() : 0);
         return result;
     }
+
+    public int compareTo(Track track) {
+        return trackOrder - track.trackOrder;
+    }
+
 }

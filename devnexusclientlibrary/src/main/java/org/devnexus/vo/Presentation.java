@@ -5,8 +5,11 @@ import org.jboss.aerogear.android.RecordId;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Presentation implements Serializable {
+public class Presentation implements Serializable, Comparable<Presentation> {
 
+    private static final String KEYNOTE = "Keynote";
+    private static final String BREAKOUT = "Breakout";
+    private static final String WORKSHOP = "Workshop";
     @RecordId
     public int id;
     public Date createdDate;
@@ -66,6 +69,31 @@ public class Presentation implements Serializable {
         result = 31 * result + (skillLevel != null ? skillLevel.hashCode() : 0);
         result = 31 * result + (track != null ? track.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public int compareTo(Presentation o) {
+        if (presentationType == KEYNOTE && o.presentationType == BREAKOUT) {
+            return 1;
+        } else if (presentationType == BREAKOUT && o.presentationType == KEYNOTE) {
+            return -1;
+        }
+        if (track == null) {
+            if (o.track != null) {
+                return -1;
+            } else {
+
+            }
+        } else if ((o.track == null)) {
+            return 1;
+        } else {
+            if (o.track.compareTo(track) == 0) {
+                return title.compareTo(o.title);
+            } else {
+                return track.compareTo(track);
+            }
+        }
+        return 0;
     }
 
     public int getId() {

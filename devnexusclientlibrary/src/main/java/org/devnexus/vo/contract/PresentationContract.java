@@ -16,6 +16,7 @@ import java.util.List;
  */
 public class PresentationContract {
     public static final Uri URI = Uri.parse("content://org.devnexus.sync/Presentation");
+    public static final Uri URI_NOTIFY = Uri.parse("content://org.devnexus.sync/Presentation#notify");
     public static final String _ID = "id";
     public static final String DATA = "DATA";
     public static String NOTIFY = "NOTIFY";

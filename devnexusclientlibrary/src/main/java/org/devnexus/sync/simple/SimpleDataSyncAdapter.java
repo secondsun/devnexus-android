@@ -10,10 +10,10 @@ import android.content.SyncResult;
 import android.os.Bundle;
 import android.util.Log;
 
-import org.devnexus.util.CountDownCallback;
 import org.devnexus.util.GsonUtils;
+import org.devnexus.vo.PresentationResponse;
 import org.devnexus.vo.Schedule;
-import org.devnexus.vo.ScheduleItem;
+import org.devnexus.vo.contract.PresentationContract;
 import org.devnexus.vo.contract.ScheduleContract;
 import org.jboss.aerogear.android.Callback;
 import org.jboss.aerogear.android.impl.pipeline.GsonResponseParser;
@@ -23,7 +23,6 @@ import org.jboss.aerogear.android.pipeline.PipeManager;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
@@ -34,6 +33,7 @@ public class SimpleDataSyncAdapter  extends AbstractThreadedSyncAdapter {
 
 
     private static final Pipe<Schedule> SCHEDULE_PIPE;
+    private static final Pipe<PresentationResponse> PRESENTATION_PIPE;
 
     static {
         try {
@@ -41,6 +41,10 @@ public class SimpleDataSyncAdapter  extends AbstractThreadedSyncAdapter {
                 .withUrl(new URL("http://devnexus.com/s/schedule.json"))
                 .responseParser(new GsonResponseParser(GsonUtils.GSON))
                 .forClass(Schedule.class);
+            PRESENTATION_PIPE =PipeManager.config("presentation", RestfulPipeConfiguration.class)
+                    .withUrl(new URL("http://devnexus.com/s/presentations.json"))
+                    .responseParser(new GsonResponseParser(GsonUtils.GSON))
+                    .forClass(PresentationResponse.class);
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
@@ -74,7 +78,7 @@ public class SimpleDataSyncAdapter  extends AbstractThreadedSyncAdapter {
 
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
-        final CountDownLatch syncFinished = new CountDownLatch(1);
+        final CountDownLatch syncFinished = new CountDownLatch(2);
 
         SCHEDULE_PIPE.read(new Callback<List<Schedule>>() {
             @Override
@@ -83,6 +87,24 @@ public class SimpleDataSyncAdapter  extends AbstractThreadedSyncAdapter {
                 ContentValues scheduleValues = ScheduleContract.valueize(schedules.get(0));
                 scheduleValues.put(ScheduleContract.NOTIFY, true);
                 mContentResolver.insert(ScheduleContract.URI, scheduleValues);
+                Log.d("DevNexus", "Schedules Saved");
+                syncFinished.countDown();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Log.e("DevNexus", e.getMessage(), e);
+                syncFinished.countDown();
+            }
+        });
+
+        PRESENTATION_PIPE.read(new Callback<List<PresentationResponse>>() {
+            @Override
+            public void onSuccess(List<PresentationResponse> presentationResponses) {
+                mContentResolver.delete(PresentationContract.URI, "", null);
+                ContentValues[] scheduleValues = PresentationContract.valueize(presentationResponses.get(0).presentationList.presentation);
+
+                mContentResolver.bulkInsert(PresentationContract.URI, scheduleValues);
                 Log.d("DevNexus", "Schedules Saved");
                 syncFinished.countDown();
             }
