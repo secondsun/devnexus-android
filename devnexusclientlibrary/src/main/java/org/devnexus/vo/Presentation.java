@@ -1,9 +1,13 @@
 package org.devnexus.vo;
 
+import org.jboss.aerogear.android.RecordId;
+
 import java.io.Serializable;
 import java.util.Date;
 
 public class Presentation implements Serializable {
+
+    @RecordId
     public int id;
     public Date createdDate;
     public Date updatedDate;
@@ -15,11 +19,12 @@ public class Presentation implements Serializable {
     public String title;
     public String presentationType;
     public String skillLevel;
+    public Track track;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Presentation)) return false;
 
         Presentation that = (Presentation) o;
 
@@ -39,6 +44,7 @@ public class Presentation implements Serializable {
             return false;
         if (speaker != null ? !speaker.equals(that.speaker) : that.speaker != null) return false;
         if (title != null ? !title.equals(that.title) : that.title != null) return false;
+        if (track != null ? !track.equals(that.track) : that.track != null) return false;
         if (updatedDate != null ? !updatedDate.equals(that.updatedDate) : that.updatedDate != null)
             return false;
 
@@ -58,6 +64,15 @@ public class Presentation implements Serializable {
         result = 31 * result + (title != null ? title.hashCode() : 0);
         result = 31 * result + (presentationType != null ? presentationType.hashCode() : 0);
         result = 31 * result + (skillLevel != null ? skillLevel.hashCode() : 0);
+        result = 31 * result + (track != null ? track.hashCode() : 0);
         return result;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

@@ -11,15 +11,20 @@ import com.google.gson.Gson;
 
 import org.devnexus.util.CountDownCallback;
 import org.devnexus.util.GsonUtils;
+import org.devnexus.vo.Presentation;
 import org.devnexus.vo.Schedule;
 import org.devnexus.vo.ScheduleItem;
 import org.devnexus.vo.UserCalendar;
+import org.devnexus.vo.contract.PresentationContract;
 import org.devnexus.vo.contract.ScheduleContract;
 import org.devnexus.vo.contract.ScheduleItemContract;
 import org.devnexus.vo.contract.SingleColumnJsonArrayList;
 import org.devnexus.vo.contract.UserCalendarContract;
+import org.jboss.aerogear.android.ReadFilter;
 import org.jboss.aerogear.android.impl.datamanager.DefaultIdGenerator;
 import org.jboss.aerogear.android.impl.datamanager.SQLStore;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
@@ -37,9 +42,11 @@ public class DevNexusContentProvider extends ContentProvider {
     private static final Gson GSON = GsonUtils.GSON;
 
     private static ContentResolver resolver;
+    private static ArrayList<Presentation> presentations;
     private SQLStore<UserCalendar> calendarSQLStore;
     private SQLStore<Schedule> scheduleSQLStore;
-    private final CountDownLatch createdLatch = new CountDownLatch(2);
+    private SQLStore<Presentation> presentationSQLStore;
+    private final CountDownLatch createdLatch = new CountDownLatch(3);
 
     private static ArrayList<Schedule> schedule = null;
 
@@ -52,6 +59,9 @@ public class DevNexusContentProvider extends ContentProvider {
         calendarSQLStore.open(new CountDownCallback<SQLStore<UserCalendar>>(createdLatch));
         scheduleSQLStore = new SQLStore<Schedule>(Schedule.class, getContext(), GsonUtils.builder(), new DefaultIdGenerator());
         scheduleSQLStore.open(new CountDownCallback<SQLStore<Schedule>>(createdLatch));
+        presentationSQLStore = new SQLStore<Presentation>(Presentation.class, getContext(), GsonUtils.builder(), new DefaultIdGenerator());
+        presentationSQLStore.open(new CountDownCallback<SQLStore<Presentation>>(createdLatch));
+
 
         return true;
     }
@@ -64,6 +74,8 @@ public class DevNexusContentProvider extends ContentProvider {
             return execute(uri, null, null, null, new ScheduleQuery());
         } else if (uri.equals(ScheduleItemContract.URI)) {
             return execute(uri, null, selection, selectionArgs, new ScheduleItemQuery());
+        } else if (uri.equals(PresentationContract.URI)) {
+            return execute(uri, null, selection, selectionArgs, new PresentationQuery());
         } else
             throw new IllegalArgumentException(String.format("%s not supported", uri.toString()));
     }
@@ -76,6 +88,8 @@ public class DevNexusContentProvider extends ContentProvider {
             return uri.toString();
         } else if (uri.equals(ScheduleItemContract.URI)) {
             return uri.toString();
+        } else if (uri.equals(PresentationContract.URI)) {
+            return uri.toString();
         } else
             throw new IllegalArgumentException(String.format("%s not supported", uri.toString()));
     }
@@ -86,6 +100,8 @@ public class DevNexusContentProvider extends ContentProvider {
             return execute(uri, new ContentValues[]{values}, null, null, new CalendarInsert());
         } else if (uri.equals(ScheduleContract.URI)) {
             return execute(uri, new ContentValues[]{values}, null, null, new ScheduleInsert());
+        } else if (uri.equals(PresentationContract.URI)) {
+            return execute(uri, new ContentValues[]{values}, null, null, new PresentationInsert());
         } else
             throw new IllegalArgumentException(String.format("%s not supported", uri.toString()));
     }
@@ -106,6 +122,13 @@ public class DevNexusContentProvider extends ContentProvider {
             } else {
                 return res;
             }
+        } else if (uri.equals(PresentationContract.URI)) {
+            Integer res = execute(uri, values, "", null, new PresentationBulkInsert());
+            if (res == null) {
+                return 0;
+            } else {
+                return res;
+            }
         } else
             throw new IllegalArgumentException(String.format("%s not supported", uri.toString()));
 
@@ -120,6 +143,8 @@ public class DevNexusContentProvider extends ContentProvider {
             op = new CalendarDelete();
         } else if (uri.equals(ScheduleContract.URI)) {
             op = new ScheduleDelete();
+        } else if (uri.equals(PresentationContract.URI)) {
+            op = new PresentationDelete();
         } else
             throw new IllegalArgumentException(String.format("%s not supported", uri.toString()));
 
@@ -179,6 +204,8 @@ public class DevNexusContentProvider extends ContentProvider {
             tempStore = calendarSQLStore;
         } else if (uri.equals(ScheduleContract.URI) || uri.equals(ScheduleItemContract.URI) ) {
             tempStore = scheduleSQLStore;
+        } else if (uri.equals(PresentationContract.URI) ) {
+            tempStore = presentationSQLStore;
         } else {
             throw new IllegalArgumentException(String.format("%s not supported", uri.toString()));
         }
@@ -348,20 +375,6 @@ public class DevNexusContentProvider extends ContentProvider {
         }
     }
 
-    private static class ScheduleInsert implements Operation<Uri> {
-
-        @Override
-        public Uri exec(Gson gson, SQLStore scheduleStore, Uri uri, ContentValues[] values, String selection, String[] selectionArgs) {
-            Schedule calendar = gson.fromJson(values[0].getAsString(ScheduleContract.DATA), Schedule.class);
-            scheduleStore.save(calendar);
-            DevNexusContentProvider.schedule = null;
-            if (values[0].getAsBoolean(ScheduleContract.NOTIFY) != null && values[0].getAsBoolean(ScheduleContract.NOTIFY)) {
-                resolver.notifyChange(ScheduleContract.URI, null, false);
-            }
-            return ScheduleContract.URI;
-        }
-    }
-
     private static class ScheduleBulkInsert implements Operation<Integer> {
 
         @Override
@@ -390,6 +403,98 @@ public class DevNexusContentProvider extends ContentProvider {
             }
             DevNexusContentProvider.schedule = null;
             resolver.notifyChange(ScheduleContract.URI, null, false);
+            return 1;
+        }
+    }
+
+    public static class ScheduleInsert implements Operation<Uri> {
+
+        @Override
+        public Uri exec(Gson gson, SQLStore scheduleStore, Uri uri, ContentValues[] values, String selection, String[] selectionArgs) {
+            Schedule calendar = gson.fromJson(values[0].getAsString(ScheduleContract.DATA), Schedule.class);
+            scheduleStore.save(calendar);
+            schedule = null;
+            if (values[0].getAsBoolean(ScheduleContract.NOTIFY) != null && values[0].getAsBoolean(ScheduleContract.NOTIFY)) {
+                resolver.notifyChange(ScheduleContract.URI, null, false);
+            }
+            return ScheduleContract.URI;
+        }
+    }
+
+
+    public static class PresentationInsert implements Operation<Uri> {
+
+        @Override
+        public Uri exec(Gson gson, SQLStore presentationStore, Uri uri, ContentValues[] values, String selection, String[] selectionArgs) {
+            Presentation presentation = gson.fromJson(values[0].getAsString(PresentationContract.DATA), Presentation.class);
+            presentationStore.save(presentation);
+            schedule = null;
+            if (values[0].getAsBoolean(PresentationContract.NOTIFY) != null && values[0].getAsBoolean(PresentationContract.NOTIFY)) {
+                resolver.notifyChange(PresentationContract.URI, null, false);
+            }
+            return PresentationContract.URI;
+        }
+    }
+
+    private static class PresentationBulkInsert implements Operation<Integer> {
+
+        @Override
+        public Integer exec(Gson gson, SQLStore presentationStore, Uri uri, ContentValues[] values, String selection, String[] selectionArgs) {
+            for (ContentValues value : values) {
+                Presentation presentation = gson.fromJson(value.getAsString(PresentationContract.DATA), Presentation.class);
+                presentationStore.save(presentation);
+            }
+            DevNexusContentProvider.schedule = null;
+            resolver.notifyChange(PresentationContract.URI, null, false);
+            return values.length;
+        }
+    }
+
+
+    private static class PresentationQuery implements Operation<Cursor> {
+
+        @Override
+        public SingleColumnJsonArrayList exec(Gson gson, SQLStore presentationStore, Uri uri, ContentValues[] values, String selection, String[] selectionArgs) {
+            if (DevNexusContentProvider.presentations == null) {
+                DevNexusContentProvider.presentations = new ArrayList<Presentation>(presentationStore.readAll());
+            }
+
+            if (selection == null ||selection.isEmpty()) {
+                return new SingleColumnJsonArrayList(new ArrayList<Presentation>(DevNexusContentProvider.presentations));
+            } else {
+                String[] queries = selection.split(" && ");
+                JSONObject where = new JSONObject();
+                for (int i = 0; i <queries.length; i++) {
+                    try {
+                        where.put(queries[i], selectionArgs[i]);
+                    } catch (JSONException e) {
+                        Log.e(TAG, e.getMessage(), e);
+                    }
+                }
+
+                ReadFilter filter = new ReadFilter();
+
+                filter.setWhere(where);
+
+                return new SingleColumnJsonArrayList(new ArrayList<Presentation>(presentationStore.readWithFilter(filter)));
+            }
+        }
+    }
+
+
+    private static class PresentationDelete implements Operation<Integer> {
+
+        @Override
+        public Integer exec(Gson gson, SQLStore presentationStore, Uri uri, ContentValues[] values, String selection, String[] selectionArgs) {
+
+            if (selectionArgs == null || selectionArgs[0] == null) {
+                presentationStore.reset();
+            } else {
+                Long id = Long.getLong(selectionArgs[0]);
+                presentationStore.remove(id);
+            }
+            DevNexusContentProvider.presentations = null;
+            resolver.notifyChange(PresentationContract.URI, null, false);
             return 1;
         }
     }
