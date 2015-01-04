@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Spinner;
 
 import org.devnexus.util.GsonUtils;
@@ -24,10 +25,13 @@ import org.jboss.aerogear.devnexus2015.MainActivity;
 import org.jboss.aerogear.devnexus2015.R;
 import org.jboss.aerogear.devnexus2015.ui.adapter.PresentationViewAdapter;
 import org.jboss.aerogear.devnexus2015.ui.adapter.ScheduleItemViewAdapter;
+import org.jboss.aerogear.devnexus2015.ui.adapter.SessionSpinnerAdaper;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static org.devnexus.vo.contract.PresentationContract.toQuery;
 
 /**
  * Created by summers on 12/28/14.
@@ -38,15 +42,16 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
     private RecyclerView recycler;
     private View contentView;
     private ContentResolver resolver;
+    private Toolbar toolbar;
 
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = contentView = inflater.inflate(R.layout.schedule_layout, null);
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         toolbar.setTitle("");
-        ((MainActivity)getActivity()).attachToolbar(toolbar);
+        ((MainActivity) getActivity()).attachToolbar(toolbar);
         recycler = (RecyclerView) view.findViewById(R.id.my_recycler_view);
         recycler.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         resolver = getActivity().getContentResolver();
@@ -57,8 +62,52 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
         return view;
     }
 
-    private void loadSpinnerNav(Spinner spinner) {
+    private void loadSpinnerNav(final Spinner spinner) {
         spinner.setAdapter(new SessionSpinnerAdaper(getActivity()));
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                SessionSpinnerAdaper.ITEMS item = (SessionSpinnerAdaper.ITEMS) spinner.getAdapter().getItem(position);
+                Bundle args = new Bundle();
+                toolbar.setBackgroundColor(getResources().getColor(item.getRightDrawable()));
+                switch (item) {
+
+                    case ALL_EVENTS:
+                        getLoaderManager().restartLoader(SCHEDULE_LOADER, Bundle.EMPTY, ScheduleFragment.this);
+                        break;
+                    case WORKSHOP:
+                        getLoaderManager().restartLoader(SCHEDULE_LOADER, Bundle.EMPTY, ScheduleFragment.this);
+                        break;
+                    case BREAKOUTS:
+                        getLoaderManager().restartLoader(SCHEDULE_LOADER, Bundle.EMPTY, ScheduleFragment.this);
+                        break;
+                    case BREAKS_AND_SOCIAL:
+                        getLoaderManager().restartLoader(SCHEDULE_LOADER, Bundle.EMPTY, ScheduleFragment.this);
+                        break;
+                    case AGILE:
+                    case CLOUD_DEVOPTS:
+                    case DATA_INTEGRATION_IOT:
+                    case FUNCTIONAL_PROGRAMMING:
+                    case HTML_5:
+                    case JAVA:
+                    case JAVASCRIPT:
+                    case JVM_LANGUAGES:
+                    case KEYNOTES:
+                    case MICROSERVICES_SECURITY:
+                    case MOBILE:
+                    case USER_EXPERIENCE_AND_TOOLS:
+                    case WEB:
+                        args.putString(PresentationContract.TRACK, getResources().getString(item.getTitleStringResource()));
+                        getLoaderManager().restartLoader(SCHEDULE_LOADER, args, ScheduleFragment.this);
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     @Override
@@ -73,19 +122,28 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(), PresentationContract.URI, new String[]{}, null, null, null);
+        if (args.isEmpty())
+            return new CursorLoader(getActivity(), PresentationContract.URI, new String[]{}, null, null, null);
+        else {
+            String[] queryKeys = args.keySet().toArray(new String[]{});
+            String[] queryValues = new String[queryKeys.length];
+            for (int i = 0; i <queryKeys.length; i++) {
+                queryValues[i] = args.getString(queryKeys[i]);
+            }
+            return new CursorLoader(getActivity(), PresentationContract.URI, new String[]{}, toQuery(queryKeys), queryValues, null);
+        }
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        List<Presentation> presentations  = new ArrayList<>(data.getCount());
+        List<Presentation> presentations = new ArrayList<>(data.getCount());
         while (data.moveToNext()) {
             Presentation presentation = GsonUtils.GSON.fromJson(data.getString(0), Presentation.class);
             presentations.add(presentation);
         }
         Collections.sort(presentations);
         refreshData(presentations);
-        
+
     }
 
     private void refreshData(List<Presentation> presentationList) {

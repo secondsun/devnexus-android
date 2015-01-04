@@ -1,10 +1,11 @@
-package org.jboss.aerogear.devnexus2015.ui;
+package org.jboss.aerogear.devnexus2015.ui.adapter;
 
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
@@ -13,7 +14,7 @@ import org.jboss.aerogear.devnexus2015.R;
 /**
  * Created by summers on 1/3/15.
  */
-public class SessionSpinnerAdaper implements SpinnerAdapter {
+public class SessionSpinnerAdaper extends BaseAdapter implements SpinnerAdapter {
 
     private static final int TOPIC_VIEW = 0x100;
     private static final int HEADER_VIEW = 0x200;
@@ -26,7 +27,42 @@ public class SessionSpinnerAdaper implements SpinnerAdapter {
 
     @Override
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
-        return getView(position, convertView, parent);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        ITEMS item = (ITEMS) getItem(position);
+        if (convertView == null) {
+            convertView = inflater.inflate(R.layout.schedule_spinner_topic_layout_item, null);
+        }
+        switch (getActualItemViewType(position)) {
+            case SPACER_VIEW:
+                convertView.findViewById(R.id.header_label).setVisibility(View.INVISIBLE);
+                convertView.findViewById(R.id.label).setVisibility(View.GONE);
+                convertView.findViewById(R.id.color).setVisibility(View.GONE);
+                convertView.findViewById(R.id.spacer).setVisibility(View.VISIBLE);
+                return convertView;
+
+            case TOPIC_VIEW:
+                convertView.findViewById(R.id.header_label).setVisibility(View.INVISIBLE);
+                convertView.findViewById(R.id.label).setVisibility(View.VISIBLE);
+                convertView.findViewById(R.id.color).setVisibility(View.VISIBLE);
+                convertView.findViewById(R.id.spacer).setVisibility(View.GONE);
+                ((TextView) convertView.findViewById(R.id.label)).setTextColor(context.getResources().getColor(R.color.dn_blue));
+                ((TextView) convertView.findViewById(R.id.label)).setText(context.getText(item.getTitleStringResource()));
+                convertView.findViewById(R.id.color).setBackgroundResource(item.getRightDrawable());
+                return convertView;
+
+            case HEADER_VIEW:
+
+                convertView.findViewById(R.id.header_label).setVisibility(View.VISIBLE);
+                convertView.findViewById(R.id.label).setVisibility(View.INVISIBLE);
+                convertView.findViewById(R.id.color).setVisibility(View.GONE);
+                convertView.findViewById(R.id.spacer).setVisibility(View.GONE);
+                convertView.findViewById(R.id.color).setBackgroundResource(item.getRightDrawable());
+                ((TextView) convertView.findViewById(R.id.header_label)).setTextColor(context.getResources().getColor(R.color.dn_light_gray));
+                ((TextView) convertView.findViewById(R.id.header_label)).setText(context.getText(item.getTitleStringResource()));
+                return convertView;
+            default:
+                throw new IllegalStateException("Illegal view type");
+        }
     }
 
     @Override
@@ -37,6 +73,16 @@ public class SessionSpinnerAdaper implements SpinnerAdapter {
     @Override
     public void unregisterDataSetObserver(DataSetObserver observer) {
         //do nothing
+    }
+
+    @Override
+    public boolean areAllItemsEnabled() {
+        return false;
+    }
+
+    @Override
+    public boolean isEnabled(int position) {
+        return ((ITEMS)getItem(position)).isClickable();
     }
 
     @Override
@@ -67,34 +113,18 @@ public class SessionSpinnerAdaper implements SpinnerAdapter {
             convertView = inflater.inflate(R.layout.schedule_spinner_topic_layout, null);
         }
         switch (getActualItemViewType(position)) {
-            case SPACER_VIEW:
-
-                convertView.findViewById(R.id.label).setVisibility(View.GONE);
-                convertView.findViewById(R.id.color).setVisibility(View.GONE);
-                convertView.findViewById(R.id.spacer).setVisibility(View.VISIBLE);
-                return convertView;
-
             case TOPIC_VIEW:
+                convertView.findViewById(R.id.header_label).setVisibility(View.INVISIBLE);
                 convertView.findViewById(R.id.label).setVisibility(View.VISIBLE);
                 convertView.findViewById(R.id.color).setVisibility(View.VISIBLE);
                 convertView.findViewById(R.id.spacer).setVisibility(View.GONE);
                 ((TextView) convertView.findViewById(R.id.label)).setTextColor(context.getResources().getColor(R.color.dn_blue));
                 ((TextView) convertView.findViewById(R.id.label)).setText(context.getText(item.getTitleStringResource()));
                 convertView.findViewById(R.id.color).setBackgroundResource(item.getRightDrawable());
-
                 return convertView;
 
-            case HEADER_VIEW:
-
-                convertView.findViewById(R.id.label).setVisibility(View.VISIBLE);
-                convertView.findViewById(R.id.color).setVisibility(View.VISIBLE);
-                convertView.findViewById(R.id.spacer).setVisibility(View.GONE);
-                convertView.findViewById(R.id.color).setBackgroundResource(item.getRightDrawable());
-                ((TextView) convertView.findViewById(R.id.label)).setTextColor(context.getResources().getColor(R.color.dn_light_gray));
-                ((TextView) convertView.findViewById(R.id.label)).setText(context.getText(item.getTitleStringResource()));
-                return convertView;
             default:
-                throw new IllegalStateException("Illegal view type");
+                return convertView;
         }
     }
 
@@ -130,8 +160,9 @@ public class SessionSpinnerAdaper implements SpinnerAdapter {
         ALL_EVENTS(R.string.all_events, true, false, false, R.color.dn_white),
         SPACER_0(0, false, false, true, R.color.dn_white),
         EVENT_TYPES(R.string.event_type, false, true, false, R.color.dn_white),
-        WORKSHOPS(R.string.workshops, true, false, false, R.color.dn_white),
+        WORKSHOP(R.string.workshops, true, false, false, R.color.dn_white),
         BREAKOUTS(R.string.breakouts, true, false, false, R.color.dn_white),
+        KEYNOTES(R.string.keynote, true, false, false, R.color.dn_white),
         BREAKS_AND_SOCIAL(R.string.breaks_and_social, true, false, false, R.color.dn_white),
         SPACER_1(0, false, false, true, R.color.dn_white),
         SESSION_TOPIC(R.string.topics, false, true, false, R.color.dn_white),
@@ -143,12 +174,10 @@ public class SessionSpinnerAdaper implements SpinnerAdapter {
         JAVA(R.string.topic_java, true, false, false, R.color.Java),
         JAVASCRIPT(R.string.topic_javascript, true, false, false, R.color.JavaScript),
         JVM_LANGUAGES(R.string.topic_jvm_languages, true, false, false, R.color.JVM_Languages_Debugging),
-        KEYNOTES(R.string.keynote, true, false, false, R.color.Keynotes),
         MICROSERVICES_SECURITY(R.string.topic_microservices_and_security, true, false, false, R.color.Microservices_Security),
         MOBILE(R.string.topic_mobile, true, false, false, R.color.Mobile),
         USER_EXPERIENCE_AND_TOOLS(R.string.topic_user_experience_plus_tools, true, false, false, R.color.User_Experience_Tools),
-        WEB(R.string.topic_web, true, false, false, R.color.Web),
-        WORKSHOP(R.string.workshops, true, false, false, R.color.Workshop),;
+        WEB(R.string.topic_web, true, false, false, R.color.Web);
 
         private final int titleStringResource;
         private final boolean isClickable;
