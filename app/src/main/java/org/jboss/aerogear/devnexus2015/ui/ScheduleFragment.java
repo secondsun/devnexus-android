@@ -17,11 +17,12 @@ import android.view.ViewGroup;
 import android.widget.Spinner;
 
 import org.devnexus.util.GsonUtils;
-import org.devnexus.vo.Schedule;
+import org.devnexus.vo.Presentation;
 import org.devnexus.vo.ScheduleItem;
-import org.devnexus.vo.contract.ScheduleContract;
+import org.devnexus.vo.contract.PresentationContract;
 import org.jboss.aerogear.devnexus2015.MainActivity;
 import org.jboss.aerogear.devnexus2015.R;
+import org.jboss.aerogear.devnexus2015.ui.adapter.PresentationViewAdapter;
 import org.jboss.aerogear.devnexus2015.ui.adapter.ScheduleItemViewAdapter;
 
 import java.util.ArrayList;
@@ -72,28 +73,27 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(), ScheduleContract.URI, new String[]{}, null, null, null);
+        return new CursorLoader(getActivity(), PresentationContract.URI, new String[]{}, null, null, null);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        List<ScheduleItem> scheduleItems  = new ArrayList<>(data.getCount());
+        List<Presentation> presentations  = new ArrayList<>(data.getCount());
         while (data.moveToNext()) {
-            Schedule schedule = GsonUtils.GSON.fromJson(data.getString(0), Schedule.class);
-            scheduleItems.addAll(schedule.scheduleItemList.scheduleItems);
-            Collections.sort(scheduleItems);
+            Presentation presentation = GsonUtils.GSON.fromJson(data.getString(0), Presentation.class);
+            presentations.add(presentation);
         }
-        
-        refreshData(scheduleItems);
+        Collections.sort(presentations);
+        refreshData(presentations);
         
     }
 
-    private void refreshData(List<ScheduleItem> scheduleItems) {
-        recycler.setAdapter(new ScheduleItemViewAdapter(scheduleItems));
+    private void refreshData(List<Presentation> presentationList) {
+        recycler.setAdapter(new PresentationViewAdapter(presentationList));
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        recycler.setAdapter(new ScheduleItemViewAdapter(new ArrayList<ScheduleItem>(1)));
+        recycler.setAdapter(new PresentationViewAdapter(new ArrayList<Presentation>(1)));
     }
 }
