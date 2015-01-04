@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@color/dn_white"
+    android:layout_height="42dp"
+    android:padding="4dp"
+    >
+
+    <TextView
+        android:id="@+id/label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/color"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:drawablePadding="8dp"
+        android:layout_centerVertical="true"
+        android:gravity="center_vertical|start"
+        android:fontFamily="sans-serif-medium"
+        android:textSize="16sp"
+
+        android:text="@string/topic_mobile"
+        android:textColor="@color/dn_black" />
+
+    <org.jboss.aerogear.devnexus2015.ui.view.SquareImageView
+        android:id="@+id/color"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_alignParentRight="true"
+        android:adjustViewBounds="true"
+        android:background="@color/Mobile"
+        android:scaleType="centerInside" />
+
+    <View
+        android:id="@+id/spacer"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/dn_blue"
+        android:visibility="gone" />
+
+</RelativeLayout>
