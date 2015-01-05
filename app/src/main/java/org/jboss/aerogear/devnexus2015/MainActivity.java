@@ -13,11 +13,12 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import org.devnexus.sync.simple.SimpleDataAuthenticator;
 import org.devnexus.vo.contract.PresentationContract;
-import org.jboss.aerogear.devnexus2015.ui.ScheduleFragment;
-import org.jboss.aerogear.devnexus2015.ui.SetupFragment;
+import org.jboss.aerogear.devnexus2015.ui.fragment.ScheduleFragment;
+import org.jboss.aerogear.devnexus2015.ui.fragment.SetupFragment;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -34,11 +35,7 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onChange(boolean selfChange) {
                 super.onChange(selfChange);
-
-                Fragment schedule = ScheduleFragment.newInstance();
-                FragmentTransaction tx = getFragmentManager().beginTransaction();
-                tx.replace(R.id.display_fragment, schedule);
-                tx.commit();
+                switchFragment(ScheduleFragment.newInstance(), true, "SessionListFragment");
             }
         };
 
@@ -58,10 +55,12 @@ public class MainActivity extends ActionBarActivity {
     protected void onStart() {
         super.onStart();
         getContentResolver().registerContentObserver(PresentationContract.URI, false, presentationObersever);
-        Fragment loading = SetupFragment.newInstance();
-        FragmentTransaction tx = getFragmentManager().beginTransaction();
-        tx.add(R.id.display_fragment, loading);
-        tx.commit();
+        if (((LinearLayout)findViewById(R.id.display_fragment)).getChildCount() == 0) {
+            Fragment loading = SetupFragment.newInstance();
+            FragmentTransaction tx = getFragmentManager().beginTransaction();
+            tx.add(R.id.display_fragment, loading);
+            tx.commit();
+        }
 
     }
 
@@ -104,4 +103,22 @@ public class MainActivity extends ActionBarActivity {
         });
     }
 
+    public void switchFragment(Fragment fragment, boolean addToBackStack, String tag) {
+        FragmentTransaction tx = getFragmentManager().beginTransaction();
+
+        tx.replace(R.id.display_fragment, fragment, tag);
+        if (addToBackStack) {
+            tx.addToBackStack(tag);
+        }
+        tx.commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
+    }
 }

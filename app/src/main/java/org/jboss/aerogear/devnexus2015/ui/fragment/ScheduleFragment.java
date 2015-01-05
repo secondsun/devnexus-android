@@ -1,4 +1,4 @@
-package org.jboss.aerogear.devnexus2015.ui;
+package org.jboss.aerogear.devnexus2015.ui.fragment;
 
 import android.app.Fragment;
 import android.app.LoaderManager;
@@ -36,7 +36,7 @@ import static org.devnexus.vo.contract.PresentationContract.toQuery;
 /**
  * Created by summers on 12/28/14.
  */
-public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,PresentationViewAdapter.SessionClickListener {
 
     private static final int SCHEDULE_LOADER = 0x0100;
     private RecyclerView recycler;
@@ -147,11 +147,18 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     private void refreshData(List<Presentation> presentationList) {
-        recycler.setAdapter(new PresentationViewAdapter(presentationList));
+        recycler.setAdapter(new PresentationViewAdapter(presentationList, getActivity(), this));
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        recycler.setAdapter(new PresentationViewAdapter(new ArrayList<Presentation>(1)));
+        recycler.setAdapter(new PresentationViewAdapter(new ArrayList<Presentation>(1), getActivity(), this));
+    }
+
+    @Override
+    public void loadSession(Presentation presentation) {
+        Fragment sessionDetailFragment = SessionDetailFragment.newInstance(presentation.title, presentation.id);
+
+        ((MainActivity)getActivity()).switchFragment(sessionDetailFragment, true, "SessionDetailFragment");
     }
 }

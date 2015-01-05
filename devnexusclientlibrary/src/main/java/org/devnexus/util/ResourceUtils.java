@@ -36,7 +36,7 @@ public class ResourceUtils {
     }
 
     public static int roomCSSToColor(String roomName) {
-        return trackCSSToColor(RoomName.room(roomName).trackName);
+        return trackCSSToColor(TrackRoomUtil.room(roomName).trackName);
     }
 
 }

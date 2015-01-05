@@ -3,7 +3,9 @@ package org.devnexus.vo;
 import org.jboss.aerogear.android.RecordId;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Presentation implements Serializable, Comparable<Presentation> {
 
@@ -18,7 +20,7 @@ public class Presentation implements Serializable, Comparable<Presentation> {
     public String audioLink;
     public String description;
     public String presentationLink;
-    public Speaker speaker;
+    public List<Speaker> speakers = new ArrayList<Speaker>(0);
     public String title;
     public String presentationType;
     public String skillLevel;
@@ -45,7 +47,8 @@ public class Presentation implements Serializable, Comparable<Presentation> {
             return false;
         if (skillLevel != null ? !skillLevel.equals(that.skillLevel) : that.skillLevel != null)
             return false;
-        if (speaker != null ? !speaker.equals(that.speaker) : that.speaker != null) return false;
+        if (speakers != null ? !speakers.equals(that.speakers) : that.speakers != null)
+            return false;
         if (title != null ? !title.equals(that.title) : that.title != null) return false;
         if (track != null ? !track.equals(that.track) : that.track != null) return false;
         if (updatedDate != null ? !updatedDate.equals(that.updatedDate) : that.updatedDate != null)
@@ -63,7 +66,7 @@ public class Presentation implements Serializable, Comparable<Presentation> {
         result = 31 * result + (audioLink != null ? audioLink.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (presentationLink != null ? presentationLink.hashCode() : 0);
-        result = 31 * result + (speaker != null ? speaker.hashCode() : 0);
+        result = 31 * result + (speakers != null ? speakers.hashCode() : 0);
         result = 31 * result + (title != null ? title.hashCode() : 0);
         result = 31 * result + (presentationType != null ? presentationType.hashCode() : 0);
         result = 31 * result + (skillLevel != null ? skillLevel.hashCode() : 0);

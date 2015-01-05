@@ -59,6 +59,12 @@ public class PresentationContentResolverTests  extends InstrumentationTestCase {
         assertEquals(8, result.getCount());
     }
 
+    public void testQueryPresentationById() {
+        Cursor result = contentResolver.query(PresentationContract.URI, null,PresentationContract.toQuery(PresentationContract.PRESENTATION_ID), new String[]{"3994"} ,null);
+        assertEquals(1, result.getCount());
+    }
+
+
     public void testPresentationDoesNotSignalDelete() throws InterruptedException {
 
         final AtomicBoolean called = new AtomicBoolean(false);

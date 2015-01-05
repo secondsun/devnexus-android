@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.devnexus.vo.Schedule;
 import org.devnexus.vo.ScheduleItem;
 import org.jboss.aerogear.devnexus2015.R;
 

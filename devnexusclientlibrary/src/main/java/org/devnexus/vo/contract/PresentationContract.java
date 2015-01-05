@@ -21,8 +21,8 @@ public class PresentationContract {
     public static final String DATA = "DATA";
     public static String NOTIFY = "NOTIFY";
 
-    public static final String PRESENTATION_ID = "presentation.id";
-    public static final String TITLE = "presentation.title";
+    public static final String PRESENTATION_ID = "id";
+    public static final String TITLE = "title";
     public static final String SPEAKER_FNAME = "presentation.speaker.firstName";
     public static final String SPEAKER_NAME = "presentation.speaker.lastName";
     public static final String TRACK = "track.name";

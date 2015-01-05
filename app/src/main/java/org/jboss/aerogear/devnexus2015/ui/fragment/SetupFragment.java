@@ -1,6 +1,5 @@
-package org.jboss.aerogear.devnexus2015.ui;
+package org.jboss.aerogear.devnexus2015.ui.fragment;
 
-import android.accounts.Account;
 import android.app.Fragment;
 import android.content.ContentResolver;
 import android.os.Bundle;
@@ -10,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.devnexus.sync.simple.SimpleDataAuthenticator;
-import org.devnexus.util.AccountUtil;
 import org.jboss.aerogear.devnexus2015.R;
 
 /**

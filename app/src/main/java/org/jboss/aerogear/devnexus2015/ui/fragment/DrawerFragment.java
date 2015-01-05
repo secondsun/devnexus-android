@@ -1,4 +1,4 @@
-package org.jboss.aerogear.devnexus2015.ui;
+package org.jboss.aerogear.devnexus2015.ui.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
