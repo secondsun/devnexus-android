@@ -5,7 +5,9 @@ import org.jboss.aerogear.android.RecordId;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Presentation implements Serializable, Comparable<Presentation> {
 
@@ -21,6 +23,7 @@ public class Presentation implements Serializable, Comparable<Presentation> {
     public String description;
     public String presentationLink;
     public List<Speaker> speakers = new ArrayList<Speaker>(0);
+    public Set<PresentationTag> presentationTags = new HashSet<>(0);
     public String title;
     public String presentationType;
     public String skillLevel;

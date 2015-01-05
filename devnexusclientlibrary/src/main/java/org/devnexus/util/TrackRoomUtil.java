@@ -47,12 +47,12 @@ public enum TrackRoomUtil {
 
     public static int forTrack(String trackName) {
         for (TrackRoomUtil room : TrackRoomUtil.values()) {
-            if (room.trackName.equals(trackName)) {
+            if (room.trackName.toLowerCase().equals(trackName.toLowerCase())) {
                 return room.trackColor;
             }
         }
 
-        return R.color.dn_white;
+        return R.color.dn_default;
     }
 
 

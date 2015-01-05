@@ -35,5 +35,6 @@
     <color name="Java">#ffa200</color>
     <color name="Functional_Programming">#ffa200</color>
     <color name="User_Experience_Tools">#ffa200</color>
+    <color name="dn_default" >#0E27eB</color>
 
 </resources>

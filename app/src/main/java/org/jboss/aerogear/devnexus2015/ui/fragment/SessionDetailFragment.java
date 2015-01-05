@@ -28,6 +28,8 @@ import org.devnexus.vo.Speaker;
 import org.devnexus.vo.contract.PresentationContract;
 import org.jboss.aerogear.devnexus2015.MainActivity;
 import org.jboss.aerogear.devnexus2015.R;
+import org.jboss.aerogear.devnexus2015.ui.adapter.TagAdapter;
+import org.jboss.aerogear.devnexus2015.ui.view.HorizontalListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,11 +46,16 @@ public class SessionDetailFragment extends Fragment implements LoaderManager.Loa
     private RecyclerView speakersView;
     private ContentResolver resolver;
     private TextView description;
+    private TextView skill;
+    private TextView track;
+    private TextView slot;
+    private HorizontalListView tags;
+    private View view;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.session_detail_layout, null);
+        view = inflater.inflate(R.layout.session_detail_layout, null);
 
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         toolbar.setTitle(getArguments().getString(TOOLBAR_TITLE));
@@ -58,6 +65,11 @@ public class SessionDetailFragment extends Fragment implements LoaderManager.Loa
         resolver = getActivity().getContentResolver();
         speakersView.setAdapter(new SpeakerSessionAdapter(new ArrayList<Speaker>(1), getActivity()));
         description = (TextView) view.findViewById(R.id.description);
+        track = (TextView) view.findViewById(R.id.track);
+        skill = (TextView) view.findViewById(R.id.skill_level);
+        slot = (TextView) view.findViewById(R.id.slot);
+        tags = (HorizontalListView) view.findViewById(R.id.tags);
+
         Spinner spinner = (Spinner) toolbar.findViewById(R.id.spinner_nav);
         getLoaderManager().initLoader(DETAIL_LOADER, getArguments(), this);
         return view;
@@ -80,10 +92,33 @@ public class SessionDetailFragment extends Fragment implements LoaderManager.Loa
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         data.moveToFirst();
-        Presentation presentation = GsonUtils.GSON.fromJson(data.getString(0), Presentation.class);
+        final Presentation presentation = GsonUtils.GSON.fromJson(data.getString(0), Presentation.class);
 
         description.setText(presentation.description);
-        toolbar.setBackgroundColor(getResources().getColor(TrackRoomUtil.forTrack(presentation.track.name)));
+        int color = getResources().getColor(TrackRoomUtil.forTrack(presentation.track.name));
+        toolbar.setBackgroundColor(color);
+        skill.setText(presentation.skillLevel);
+        track.setText(presentation.track.name);
+        //todo slot
+        if (presentation.presentationTags.size()>0) {
+            view.findViewById(R.id.tags_label).setVisibility(View.VISIBLE);
+            tags.setVisibility(View.VISIBLE);
+            tags.setAdapter(new TagAdapter(presentation, getActivity()));
+        } else {
+            view.findViewById(R.id.tags_label).setVisibility(View.INVISIBLE);
+            tags.setVisibility(View.INVISIBLE);
+        }
+
+        TextView speakersLabel = ((TextView) view.findViewById(R.id.speakersLabel));
+        speakersLabel.setTextColor(color);
+        switch (presentation.speakers.size()) {
+            case 1:
+                speakersLabel.setText("Speaker");
+                break;
+            default:
+                speakersLabel.setText("Speakers");
+                break;
+        }
         speakersView.setAdapter(new SpeakerSessionAdapter(presentation.speakers, loader.getContext()));
 
         data.close();
@@ -118,6 +153,7 @@ public class SessionDetailFragment extends Fragment implements LoaderManager.Loa
             Speaker speaker = getItem(position);
             Picasso.with(mContext).load("http://devnexus.com/s/speakers/"+speaker.id+".jpg").placeholder(R.drawable.speaker).fit().centerCrop().into((holder).photo);
             holder.bio.setText(speaker.bio);
+
         }
 
         private Speaker getItem(int position) {

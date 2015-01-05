@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="wrap_content"
+    android:background="@drawable/blue_border"
+    android:paddingRight="4dp"
+    android:paddingLeft="1dp"
+    android:paddingTop="1dp"
+    android:paddingBottom="1dp"
+
+    android:layout_margin="12dp"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/color"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:background="@color/dn_orange_red"/>
+
+    <TextView
+        android:id="@+id/tag_name"
+        android:padding="4dp"
+        android:background="@color/dn_white"
+        android:text="Java ee 7"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp" />
+
+</LinearLayout>
