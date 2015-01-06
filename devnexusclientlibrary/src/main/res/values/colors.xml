@@ -21,6 +21,19 @@
 
     <color name="black_overlay">#66000000</color>
 
+    <color name="track_1">#630d1a</color>
+    <color name="track_102">#44b75c</color>
+    <color name="track_2">#fd8c2a</color>
+    <color name="track_3">#7bb7cd</color>
+    <color name="track_4">#dbaa2e</color>
+    <color name="track_5">#297ca5</color>
+    <color name="track_6">#d14928</color>
+    <color name="track_7">#455159</color>
+    <color name="track_8">#A2285E</color>
+    <color name="track_9">#FF5D40</color>
+    <color name="track_10">#6A237E</color>
+    <color name="track_11">#617784</color>
+
     <color name="HTML5">#3a7dda</color>
     <color name="Web">#512698</color>
     <color name="JavaScript">#5a8e22</color>

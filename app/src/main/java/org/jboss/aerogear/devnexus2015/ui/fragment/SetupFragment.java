@@ -37,7 +37,7 @@ public class SetupFragment extends Fragment {
             public void onChange(boolean selfChange) {
                 super.onChange(selfChange);
                 if (getActivity() != null) {
-                    ((MainActivity) getActivity()).switchFragment(ScheduleFragment.newInstance(), true, "SessionListFragment");
+                    ((MainActivity) getActivity()).switchFragment(PresentationExplorerFragment.newInstance(), MainActivity.BackStackOperation.ADD, "SessionListFragment");
                 }
             }
         };

@@ -36,7 +36,7 @@ import static org.devnexus.vo.contract.PresentationContract.toQuery;
 /**
  * Created by summers on 12/28/14.
  */
-public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,PresentationViewAdapter.SessionClickListener {
+public class PresentationExplorerFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,PresentationViewAdapter.SessionClickListener {
 
     private static final int SCHEDULE_LOADER = 0x0100;
     private RecyclerView recycler;
@@ -73,16 +73,16 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
                 switch (item) {
 
                     case ALL_EVENTS:
-                        getLoaderManager().restartLoader(SCHEDULE_LOADER, Bundle.EMPTY, ScheduleFragment.this);
+                        getLoaderManager().restartLoader(SCHEDULE_LOADER, Bundle.EMPTY, PresentationExplorerFragment.this);
                         break;
                     case WORKSHOP:
-                        getLoaderManager().restartLoader(SCHEDULE_LOADER, Bundle.EMPTY, ScheduleFragment.this);
+                        getLoaderManager().restartLoader(SCHEDULE_LOADER, Bundle.EMPTY, PresentationExplorerFragment.this);
                         break;
                     case BREAKOUTS:
-                        getLoaderManager().restartLoader(SCHEDULE_LOADER, Bundle.EMPTY, ScheduleFragment.this);
+                        getLoaderManager().restartLoader(SCHEDULE_LOADER, Bundle.EMPTY, PresentationExplorerFragment.this);
                         break;
                     case BREAKS_AND_SOCIAL:
-                        getLoaderManager().restartLoader(SCHEDULE_LOADER, Bundle.EMPTY, ScheduleFragment.this);
+                        getLoaderManager().restartLoader(SCHEDULE_LOADER, Bundle.EMPTY, PresentationExplorerFragment.this);
                         break;
                     case AGILE:
                     case CLOUD_DEVOPTS:
@@ -98,7 +98,7 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
                     case USER_EXPERIENCE_AND_TOOLS:
                     case WEB:
                         args.putString(PresentationContract.TRACK, getResources().getString(item.getTitleStringResource()));
-                        getLoaderManager().restartLoader(SCHEDULE_LOADER, args, ScheduleFragment.this);
+                        getLoaderManager().restartLoader(SCHEDULE_LOADER, args, PresentationExplorerFragment.this);
                         break;
                 }
             }
@@ -117,7 +117,7 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     public static Fragment newInstance() {
-        return new ScheduleFragment();
+        return new PresentationExplorerFragment();
     }
 
     @Override
@@ -159,6 +159,6 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
     public void loadSession(Presentation presentation) {
         Fragment sessionDetailFragment = SessionDetailFragment.newInstance(presentation.title, presentation.id);
 
-        ((MainActivity)getActivity()).switchFragment(sessionDetailFragment, true, "SessionDetailFragment");
+        ((MainActivity)getActivity()).switchFragment(sessionDetailFragment, MainActivity.BackStackOperation.ADD, "SessionDetailFragment");
     }
 }

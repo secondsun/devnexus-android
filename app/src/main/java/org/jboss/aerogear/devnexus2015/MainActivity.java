@@ -3,9 +3,7 @@ package org.jboss.aerogear.devnexus2015;
 import android.accounts.AccountManager;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.database.ContentObserver;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,13 +14,13 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import org.devnexus.sync.simple.SimpleDataAuthenticator;
-import org.devnexus.vo.contract.PresentationContract;
-import org.jboss.aerogear.devnexus2015.ui.fragment.ScheduleFragment;
 import org.jboss.aerogear.devnexus2015.ui.fragment.SetupFragment;
 
 
 public class MainActivity extends ActionBarActivity {
 
+
+    public enum BackStackOperation {NONE, ADD, RESET};
 
     private DrawerLayout drawerLayout;
 
@@ -95,12 +93,23 @@ public class MainActivity extends ActionBarActivity {
         });
     }
 
-    public void switchFragment(Fragment fragment, boolean addToBackStack, String tag) {
+    public void switchFragment(Fragment fragment, BackStackOperation operation, String tag) {
         FragmentTransaction tx = getFragmentManager().beginTransaction();
 
         tx.replace(R.id.display_fragment, fragment, tag);
-        if (addToBackStack) {
-            tx.addToBackStack(tag);
+
+        switch (operation) {
+
+            case NONE:
+                break;
+            case ADD:
+                tx.addToBackStack(tag);
+                break;
+            case RESET:
+                while(getFragmentManager().getBackStackEntryCount() > 0) {
+                    getFragmentManager().popBackStack();
+                }
+                break;
         }
         tx.commit();
     }
