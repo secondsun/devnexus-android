@@ -24,20 +24,13 @@ import org.jboss.aerogear.devnexus2015.ui.fragment.SetupFragment;
 public class MainActivity extends ActionBarActivity {
 
 
-    private ContentObserver presentationObersever;
     private DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        presentationObersever = new ContentObserver(new Handler(getMainLooper())) {
-            @Override
-            public void onChange(boolean selfChange) {
-                super.onChange(selfChange);
-                switchFragment(ScheduleFragment.newInstance(), true, "SessionListFragment");
-            }
-        };
+
 
         setContentView(R.layout.activity_main);
 
@@ -54,7 +47,6 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        getContentResolver().registerContentObserver(PresentationContract.URI, false, presentationObersever);
         if (((LinearLayout)findViewById(R.id.display_fragment)).getChildCount() == 0) {
             Fragment loading = SetupFragment.newInstance();
             FragmentTransaction tx = getFragmentManager().beginTransaction();
@@ -67,7 +59,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        getContentResolver().unregisterContentObserver(presentationObersever);
+
     }
 
     @Override
