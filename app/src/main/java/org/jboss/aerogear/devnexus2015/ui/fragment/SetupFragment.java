@@ -1,8 +1,12 @@
 package org.jboss.aerogear.devnexus2015.ui.fragment;
 
 import android.app.Fragment;
+import android.app.LoaderManager;
 import android.content.ContentResolver;
+import android.content.CursorLoader;
+import android.content.Loader;
 import android.database.ContentObserver;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -19,7 +23,7 @@ import org.jboss.aerogear.devnexus2015.R;
 /**
  * Created by summers on 12/26/14.
  */
-public class SetupFragment extends Fragment {
+public class SetupFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
 
     private ContentObserver presentationObersever;
     private ContentResolver resolver;
@@ -37,7 +41,7 @@ public class SetupFragment extends Fragment {
             public void onChange(boolean selfChange) {
                 super.onChange(selfChange);
                 if (getActivity() != null) {
-                    ((MainActivity) getActivity()).switchFragment(PresentationExplorerFragment.newInstance(), MainActivity.BackStackOperation.ADD, "SessionListFragment");
+                    ((MainActivity) getActivity()).switchFragment(PresentationExplorerFragment.newInstance(), MainActivity.BackStackOperation.RESET, "SessionListFragment");
                 }
             }
         };
@@ -49,22 +53,11 @@ public class SetupFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        getActivity().getContentResolver().registerContentObserver(PresentationContract.URI, false, presentationObersever);
-
-
-        ContentResolver.setSyncAutomatically(SimpleDataAuthenticator.SIMPLE_ACCOUNT, "org.devnexus.sync", true);
-        ContentResolver.addPeriodicSync(SimpleDataAuthenticator.SIMPLE_ACCOUNT,
-                "org.devnexus.sync", new Bundle(), 3600);
-
-        // Pass the settings flags by inserting them in a bundle
-        Bundle settingsBundle = new Bundle();
-
-        settingsBundle.putBoolean(
-                ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-
-
-        ContentResolver.requestSync(SimpleDataAuthenticator.SIMPLE_ACCOUNT,
-                "org.devnexus.sync", settingsBundle);
+        getLoaderManager().initLoader(0, Bundle.EMPTY, this);
+        
+        
+        
+        
     }
 
     @Override
@@ -75,5 +68,45 @@ public class SetupFragment extends Fragment {
 
     public static SetupFragment newInstance() {
         return new SetupFragment();
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(getActivity(), PresentationContract.URI, null, null, null, null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        if (data.getCount() <= 0) {
+            getActivity().getContentResolver().registerContentObserver(PresentationContract.URI, false, presentationObersever);
+
+
+            ContentResolver.setSyncAutomatically(SimpleDataAuthenticator.SIMPLE_ACCOUNT, "org.devnexus.sync", true);
+            ContentResolver.addPeriodicSync(SimpleDataAuthenticator.SIMPLE_ACCOUNT,
+                    "org.devnexus.sync", new Bundle(), 3600);
+
+            // Pass the settings flags by inserting them in a bundle
+            Bundle settingsBundle = new Bundle();
+
+            settingsBundle.putBoolean(
+                    ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+
+
+            ContentResolver.requestSync(SimpleDataAuthenticator.SIMPLE_ACCOUNT,
+                    "org.devnexus.sync", settingsBundle);
+        } else {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    Fragment explorer = PresentationExplorerFragment.newInstance();
+                    ((MainActivity)getActivity()).switchFragment(explorer, MainActivity.BackStackOperation.RESET, "Open");
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
     }
 }

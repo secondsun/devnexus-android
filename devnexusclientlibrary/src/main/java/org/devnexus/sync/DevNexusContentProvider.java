@@ -3,19 +3,23 @@ package org.devnexus.sync;
 import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 
 import com.google.gson.Gson;
 
+import org.apache.commons.io.IOUtils;
 import org.devnexus.util.CountDownCallback;
 import org.devnexus.util.GsonUtils;
 import org.devnexus.vo.Presentation;
+import org.devnexus.vo.PresentationResponse;
 import org.devnexus.vo.Schedule;
 import org.devnexus.vo.ScheduleItem;
 import org.devnexus.vo.UserCalendar;
 import org.devnexus.vo.contract.PresentationContract;
+import org.devnexus.vo.contract.PreviousYearPresentationContract;
 import org.devnexus.vo.contract.ScheduleContract;
 import org.devnexus.vo.contract.ScheduleItemContract;
 import org.devnexus.vo.contract.SingleColumnJsonArrayList;
@@ -26,7 +30,10 @@ import org.jboss.aerogear.android.impl.datamanager.SQLStore;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -76,6 +83,8 @@ public class DevNexusContentProvider extends ContentProvider {
             return execute(uri, null, selection, selectionArgs, new ScheduleItemQuery());
         } else if (uri.equals(PresentationContract.URI)) {
             return execute(uri, null, selection, selectionArgs, new PresentationQuery());
+        } else if (uri.equals(PreviousYearPresentationContract.URI)) {
+            return execute(uri, null, selection, selectionArgs, new PreviousYearPresentationQuery(getContext()));
         } else
             throw new IllegalArgumentException(String.format("%s not supported", uri.toString()));
     }
@@ -89,6 +98,8 @@ public class DevNexusContentProvider extends ContentProvider {
         } else if (uri.equals(ScheduleItemContract.URI)) {
             return uri.toString();
         } else if (uri.equals(PresentationContract.URI)) {
+            return uri.toString();
+        } else if (uri.equals(PreviousYearPresentationContract.URI)) {
             return uri.toString();
         } else
             throw new IllegalArgumentException(String.format("%s not supported", uri.toString()));
@@ -204,7 +215,7 @@ public class DevNexusContentProvider extends ContentProvider {
             tempStore = calendarSQLStore;
         } else if (uri.equals(ScheduleContract.URI) || uri.equals(ScheduleItemContract.URI) ) {
             tempStore = scheduleSQLStore;
-        } else if (uri.equals(PresentationContract.URI) || uri.equals(PresentationContract.URI_NOTIFY)  ) {
+        } else if (uri.equals(PresentationContract.URI) || uri.equals(PresentationContract.URI_NOTIFY) || uri.equals(PreviousYearPresentationContract.URI) ) {
             tempStore = presentationSQLStore;
         } else {
             throw new IllegalArgumentException(String.format("%s not supported", uri.toString()));
@@ -477,6 +488,74 @@ public class DevNexusContentProvider extends ContentProvider {
                 filter.setWhere(where);
 
                 return new SingleColumnJsonArrayList(new ArrayList<Presentation>(presentationStore.readWithFilter(filter)));
+            }
+        }
+    }
+
+
+    private static class PreviousYearPresentationQuery implements Operation<Cursor> {
+
+        private final Context context;
+
+        private PreviousYearPresentationQuery(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        public SingleColumnJsonArrayList exec(Gson gson, SQLStore presentationStore, Uri uri, ContentValues[] values, String selection, String[] selectionArgs) {
+            
+
+            if (selection == null ||selection.isEmpty()) {
+                return new SingleColumnJsonArrayList(new ArrayList<Presentation>(0));//No Event selected
+            } else {
+                
+                String[] queries = selection.split(" && ");
+                JSONObject where = new JSONObject();
+                for (int i = 0; i <queries.length; i++) {
+                    try {
+                        where.put(queries[i], selectionArgs[i]);
+                    } catch (JSONException e) {
+                        Log.e(TAG, e.getMessage(), e);
+                    }
+                }
+
+                try {
+                    String eventId = where.getString(PreviousYearPresentationContract.EVENT_LABEL);
+                    PreviousYearPresentationContract.Events event = PreviousYearPresentationContract.Events.fromLabel(eventId);
+
+                    PresentationResponse presentationsObject = gson.fromJson(IOUtils.toString(context.getResources().openRawResource(event.getRawResourceId())), PresentationResponse.class);
+                    List<Presentation> presentations = presentationsObject.presentationList.presentation;
+                    Iterator<String> keys = where.keys();
+                    
+                    while(keys.hasNext()) {
+                        String key = keys.next();
+                        if (key == PreviousYearPresentationContract.EVENT_LABEL) {
+                            continue;
+                        }
+                        
+                        if (key.equals(PreviousYearPresentationContract.PRESENTATION_ID)) {
+                            for (Presentation presentation :presentations) {
+                                if (Integer.toString(presentation.getId()).equals(where.getString(key))){
+                                    ArrayList<Presentation> toReturn = new ArrayList<>(1);
+                                    toReturn.add(presentation);
+                                    return new SingleColumnJsonArrayList(toReturn);
+                                }
+                            }
+                        }
+                        
+                    }
+                    
+                    return new SingleColumnJsonArrayList(presentations);
+                    
+                } catch (JSONException e) {
+                    Log.e(TAG, e.getMessage(), e);
+                    return new SingleColumnJsonArrayList(new ArrayList<Presentation>(0));//No Event selected
+                } catch (IOException e) {
+                    Log.e(TAG, e.getMessage(), e);
+                    return new SingleColumnJsonArrayList(new ArrayList<Presentation>(0));//No Event selected
+                }
+
+
             }
         }
     }

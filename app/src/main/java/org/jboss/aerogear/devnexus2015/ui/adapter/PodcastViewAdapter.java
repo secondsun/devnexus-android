@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import org.devnexus.util.TrackRoomUtil;
+import org.devnexus.vo.Podcast;
 import org.devnexus.vo.Presentation;
 import org.jboss.aerogear.devnexus2015.R;
 
@@ -23,13 +24,13 @@ import java.util.List;
 /**
  * Created by summers on 12/28/14.
  */
-public class PresentationViewAdapter extends RecyclerView.Adapter<PresentationViewAdapter.ViewHolder>  {
+public class PodcastViewAdapter extends RecyclerView.Adapter<PodcastViewAdapter.ViewHolder>  {
 
-    private final List<Presentation> items;
+    private final List<Podcast> items;
     private final Context mContext;
     private final SessionClickListener clickListener;
 
-    public PresentationViewAdapter(List<Presentation> items, Context context, SessionClickListener clickListener) {
+    public PodcastViewAdapter(List<Podcast> items, Context context, SessionClickListener clickListener) {
         this.items = new ArrayList<>(items);
         this.mContext = context;
         this.clickListener = clickListener;
@@ -47,19 +48,19 @@ public class PresentationViewAdapter extends RecyclerView.Adapter<PresentationVi
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
-        final Presentation item = items.get(i);
+        final Podcast item = items.get(i);
         ImageView photo = (ImageView) viewHolder.presentationView.findViewById(R.id.photo);
         int trackColor = mContext.getResources().getColor(R.color.dn_default);
         
         if (item.track != null) {
-            trackColor = mContext.getResources().getColor(TrackRoomUtil.forTrack(item.track.name));
+            trackColor = mContext.getResources().getColor(TrackRoomUtil.forTrack(item.track));
         }
         photo.setBackgroundColor(trackColor);
+
         if (trackColor != mContext.getResources().getColor(R.color.dn_default)) {
             photo.setColorFilter(new LightingColorFilter(trackColor, 1));
         }
-        Log.d("Presentation Image", "http://devnexus.com/s/speakers/"+item.speakers.get(0).id+".jpg");
-        Picasso.with(mContext).load("http://devnexus.com/s/speakers/"+item.speakers.get(0).id+".jpg").placeholder(new ColorDrawable(trackColor)).fit().centerCrop().into(photo);
+        
         ((TextView) viewHolder.presentationView.findViewById(R.id.info_text)).setText(item.title);
 
         viewHolder.presentationView.setOnClickListener(new View.OnClickListener() {
@@ -87,7 +88,7 @@ public class PresentationViewAdapter extends RecyclerView.Adapter<PresentationVi
 
     public interface SessionClickListener {
 
-        public void loadSession(Presentation presentation);
+        public void loadSession(Podcast presentation);
 
     }
 

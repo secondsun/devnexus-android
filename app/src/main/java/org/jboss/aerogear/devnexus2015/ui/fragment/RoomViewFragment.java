@@ -57,7 +57,7 @@ public class RoomViewFragment extends DialogFragment {
 
 
         if (adapter == null) {
-            adapter = new ScheduleItemViewAdapter(new ArrayList<ScheduleItem>(0));
+            adapter = new ScheduleItemViewAdapter(new ArrayList<ScheduleItem>(0), activity);
         }
 
         new AsyncTask<Object, Object, Object>() {
@@ -104,7 +104,7 @@ public class RoomViewFragment extends DialogFragment {
                     scheduleItems.add(item);
                 }
 
-                adapter = new ScheduleItemViewAdapter(scheduleItems);
+                adapter = new ScheduleItemViewAdapter(scheduleItems, getActivity());
                 adapter.notifyDataSetChanged();
                 if (listView != null) {
                     listView.setAdapter(adapter);

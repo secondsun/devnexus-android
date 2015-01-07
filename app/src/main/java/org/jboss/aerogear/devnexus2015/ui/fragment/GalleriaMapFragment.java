@@ -152,7 +152,7 @@ public class GalleriaMapFragment extends Fragment implements
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        RoomViewFragment.newInstance(marker.getTitle()).show(getChildFragmentManager(), TAG);
+        RoomViewFragment.newInstance(marker.getTitle()).show(getFragmentManager(), TAG);
     }
 
     @Override

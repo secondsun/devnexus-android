@@ -12,6 +12,7 @@
         android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
 
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <permission
@@ -52,8 +53,9 @@
             </intent-filter>
         </activity>
 
+        <activity android:name="org.jboss.aerogear.devnexus2015.GoogleConnectActivity"/>
         <service
-            android:name="org.devnexus.sync.simple.SimpleAuthenticatorService">
+            android:name=".sync.LiveAuthenticatorService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator"/>
             </intent-filter>
@@ -63,7 +65,7 @@
         </service>
 
         <service
-            android:name="org.devnexus.sync.simple.SimpleSyncService"
+            android:name=".sync.LiveSyncService"
             android:exported="true"
             android:process=":sync">
             <intent-filter>

@@ -18,6 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Log In"
+        android:id="@+id/login"
         android:layout_margin="5dp"
         />
 
@@ -38,22 +39,23 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/home"
-        android:text="Home"
+        android:id="@+id/presentations"
+        android:text="All Presentations"
+        android:layout_margin="5dp"
+        />
+
+    <TextView
+        android:id="@+id/my_schedule"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="My Schedule"
         android:layout_margin="5dp"
         />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Schedule"
-        android:layout_margin="5dp"
-        />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/map"
+        android:id="@+id/map_option"
         android:text="Map"
         android:layout_margin="5dp"
         />
@@ -68,6 +70,7 @@
 
 
     <TextView
+        android:id="@+id/previous_conference_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Previous Year"
@@ -76,10 +79,21 @@
 
 
     <TextView
+        android:id="@+id/podcast_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Podcasts"
         android:layout_margin="5dp"
         />
+
+
+    <TextView
+        android:id="@+id/infoq"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="InfoQ Videos"
+        android:layout_margin="5dp"
+        />
+
 
 </LinearLayout>

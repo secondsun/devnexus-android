@@ -3,6 +3,7 @@ package org.jboss.aerogear.devnexus2015.ui.fragment;
 import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
@@ -15,28 +16,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import org.devnexus.util.GsonUtils;
 import org.devnexus.vo.Presentation;
-import org.devnexus.vo.ScheduleItem;
-import org.devnexus.vo.contract.PresentationContract;
+import org.devnexus.vo.contract.PreviousYearPresentationContract;
+import org.devnexus.vo.contract.PreviousYearPresentationContract.Events;
 import org.jboss.aerogear.devnexus2015.MainActivity;
 import org.jboss.aerogear.devnexus2015.R;
 import org.jboss.aerogear.devnexus2015.ui.adapter.PresentationViewAdapter;
-import org.jboss.aerogear.devnexus2015.ui.adapter.ScheduleItemViewAdapter;
-import org.jboss.aerogear.devnexus2015.ui.adapter.SessionSpinnerAdaper;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.devnexus.vo.contract.PresentationContract.toQuery;
+import static org.devnexus.vo.contract.PreviousYearPresentationContract.toQuery;
 
 /**
- * Created by summers on 12/28/14.
+ * Created by summers on 1/7/15.
  */
-public class PresentationExplorerFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,PresentationViewAdapter.SessionClickListener {
+public class PreviousConferencesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, PresentationViewAdapter.SessionClickListener {
 
     private static final int SCHEDULE_LOADER = 0x0100;
     private RecyclerView recycler;
@@ -44,6 +45,7 @@ public class PresentationExplorerFragment extends Fragment implements LoaderMana
     private ContentResolver resolver;
     private Toolbar toolbar;
 
+    private Events event = Events.DEVNEXUX2014;
 
     @Nullable
     @Override
@@ -55,7 +57,7 @@ public class PresentationExplorerFragment extends Fragment implements LoaderMana
         recycler = (RecyclerView) view.findViewById(R.id.my_recycler_view);
         recycler.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         resolver = getActivity().getContentResolver();
-        recycler.setAdapter(new ScheduleItemViewAdapter(new ArrayList<ScheduleItem>(1), getActivity()));
+        recycler.setAdapter(new PresentationViewAdapter(new ArrayList<Presentation>(1), getActivity(), this));
 
         Spinner spinner = (Spinner) toolbar.findViewById(R.id.spinner_nav);
         loadSpinnerNav(spinner);
@@ -63,44 +65,43 @@ public class PresentationExplorerFragment extends Fragment implements LoaderMana
     }
 
     private void loadSpinnerNav(final Spinner spinner) {
-        spinner.setAdapter(new SessionSpinnerAdaper(getActivity()));
+        spinner.setAdapter(new ArrayAdapter<Events>(getActivity(), R.layout.textview){
+            @Override
+            public Events getItem(int position) {
+                return Events.values()[position];
+            }
+
+            @Override
+            public int getCount() {
+                return Events.values().length;
+            }
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                return getDropDownView(position, convertView, parent);
+            }
+
+            @Override
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                if (convertView == null) {
+                    LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    convertView = inflater.inflate(R.layout.textview, null);
+                }
+                
+                ((TextView)convertView.findViewById(R.id.header_label)).setText(getItem(position).getLabel());
+                
+                return convertView;
+            }
+        });
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                SessionSpinnerAdaper.ITEMS item = (SessionSpinnerAdaper.ITEMS) spinner.getAdapter().getItem(position);
+                Events item = (Events) spinner.getAdapter().getItem(position);
                 Bundle args = new Bundle();
-                toolbar.setBackgroundColor(getResources().getColor(item.getRightDrawable()));
-                switch (item) {
-
-                    case ALL_EVENTS:
-                        getLoaderManager().restartLoader(SCHEDULE_LOADER, Bundle.EMPTY, PresentationExplorerFragment.this);
-                        break;
-                    case WORKSHOP:
-                        getLoaderManager().restartLoader(SCHEDULE_LOADER, Bundle.EMPTY, PresentationExplorerFragment.this);
-                        break;
-                    case BREAKOUTS:
-                        getLoaderManager().restartLoader(SCHEDULE_LOADER, Bundle.EMPTY, PresentationExplorerFragment.this);
-                        break;
-                    case BREAKS_AND_SOCIAL:
-                        getLoaderManager().restartLoader(SCHEDULE_LOADER, Bundle.EMPTY, PresentationExplorerFragment.this);
-                        break;
-                    case AGILE:
-                    case CLOUD_DEVOPTS:
-                    case DATA_INTEGRATION_IOT:
-                    case FUNCTIONAL_PROGRAMMING:
-                    case HTML_5:
-                    case JAVA:
-                    case JAVASCRIPT:
-                    case JVM_LANGUAGES:
-                    case KEYNOTES:
-                    case MICROSERVICES_SECURITY:
-                    case MOBILE:
-                    case USER_EXPERIENCE_AND_TOOLS:
-                    case WEB:
-                        args.putString(PresentationContract.TRACK, getResources().getString(item.getTitleStringResource()));
-                        getLoaderManager().restartLoader(SCHEDULE_LOADER, args, PresentationExplorerFragment.this);
-                        break;
-                }
+                event = item;
+                args.putString(PreviousYearPresentationContract.EVENT_LABEL, item.getLabel());
+                getLoaderManager().restartLoader(SCHEDULE_LOADER, args, PreviousConferencesFragment.this);
+        
             }
 
             @Override
@@ -113,24 +114,23 @@ public class PresentationExplorerFragment extends Fragment implements LoaderMana
     @Override
     public void onStart() {
         super.onStart();
-        getLoaderManager().initLoader(SCHEDULE_LOADER, Bundle.EMPTY, this);
-    }
+        Bundle args = new Bundle();
 
-    public static Fragment newInstance() {
-        return new PresentationExplorerFragment();
+        args.putString(PreviousYearPresentationContract.EVENT_LABEL, event.getLabel());
+        getLoaderManager().initLoader(SCHEDULE_LOADER, args, this);
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         if (args.isEmpty())
-            return new CursorLoader(getActivity(), PresentationContract.URI, new String[]{}, null, null, null);
+            return new CursorLoader(getActivity(), PreviousYearPresentationContract.URI, new String[]{}, null, null, null);
         else {
             String[] queryKeys = args.keySet().toArray(new String[]{});
             String[] queryValues = new String[queryKeys.length];
-            for (int i = 0; i <queryKeys.length; i++) {
+            for (int i = 0; i < queryKeys.length; i++) {
                 queryValues[i] = args.getString(queryKeys[i]);
             }
-            return new CursorLoader(getActivity(), PresentationContract.URI, new String[]{}, toQuery(queryKeys), queryValues, null);
+            return new CursorLoader(getActivity(), PreviousYearPresentationContract.URI, new String[]{}, toQuery(queryKeys), queryValues, null);
         }
     }
 
@@ -157,8 +157,15 @@ public class PresentationExplorerFragment extends Fragment implements LoaderMana
 
     @Override
     public void loadSession(Presentation presentation) {
-        Fragment sessionDetailFragment = SessionDetailFragment.newInstance(presentation.title, presentation.id);
+        Fragment sessionDetailFragment = SessionDetailFragment.newInstance(presentation.title, presentation.id, PreviousYearPresentationContract.URI, this.event.getLabel());
 
-        ((MainActivity)getActivity()).switchFragment(sessionDetailFragment, MainActivity.BackStackOperation.ADD, "SessionDetailFragment");
+        ((MainActivity) getActivity()).switchFragment(sessionDetailFragment, MainActivity.BackStackOperation.ADD, "SessionDetailFragment");
     }
+
+
+    public static Fragment newInstance() {
+        return new PreviousConferencesFragment();
+    }
+
+
 }

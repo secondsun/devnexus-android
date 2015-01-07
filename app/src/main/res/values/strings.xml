@@ -24,5 +24,6 @@
     <string name="topic_java">Java</string>
     <string name="topic_functional_programming">Functional Programming</string>
     <string name="topic_user_experience_plus_tools">User Experience + Tools</string>
+    <string name="all_tracks">All Topics</string>
 
 </resources>

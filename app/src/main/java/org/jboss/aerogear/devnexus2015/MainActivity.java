@@ -20,6 +20,7 @@ import org.jboss.aerogear.devnexus2015.ui.fragment.SetupFragment;
 public class MainActivity extends ActionBarActivity {
 
 
+
     public enum BackStackOperation {NONE, ADD, RESET};
 
     private DrawerLayout drawerLayout;
@@ -27,8 +28,6 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
 
         setContentView(R.layout.activity_main);
 
@@ -94,9 +93,12 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void switchFragment(Fragment fragment, BackStackOperation operation, String tag) {
-        FragmentTransaction tx = getFragmentManager().beginTransaction();
 
-        tx.replace(R.id.display_fragment, fragment, tag);
+        if (getFragmentManager().findFragmentByTag(tag) != null) {
+            return;
+        }
+
+        FragmentTransaction tx = getFragmentManager().beginTransaction();
 
         switch (operation) {
 
@@ -107,10 +109,14 @@ public class MainActivity extends ActionBarActivity {
                 break;
             case RESET:
                 while(getFragmentManager().getBackStackEntryCount() > 0) {
-                    getFragmentManager().popBackStack();
+                    getFragmentManager().popBackStackImmediate();
                 }
+
                 break;
         }
+
+        tx.replace(R.id.display_fragment, fragment, tag);
+
         tx.commit();
     }
 
@@ -122,4 +128,10 @@ public class MainActivity extends ActionBarActivity {
             super.onBackPressed();
         }
     }
+
+
+    public void closeDrawer() {
+        drawerLayout.closeDrawers();
+    }
+
 }

@@ -88,6 +88,8 @@
     <orderEntry type="library" exported="" name="aerogear-android-store-2.0.0-SNAPSHOT" level="project" />
     <orderEntry type="library" exported="" name="aerogear-android-pipe-2.0.0-SNAPSHOT" level="project" />
     <orderEntry type="library" exported="" name="aerogear-android-core-2.0.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" exported="" name="commons-io-2.4" level="project" />
+    <orderEntry type="library" exported="" name="aerogear-android-auth-2.0.0-SNAPSHOT" level="project" />
   </component>
 </module>
 
