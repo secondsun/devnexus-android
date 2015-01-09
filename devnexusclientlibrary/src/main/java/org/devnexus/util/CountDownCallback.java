@@ -2,9 +2,9 @@ package org.devnexus.util;
 
 import android.util.Log;
 
+import org.jboss.aerogear.android.core.Callback;
 
 import java.util.concurrent.CountDownLatch;
-import org.jboss.aerogear.android.Callback;
 
 /**
  * Created by summers on 12/12/13.

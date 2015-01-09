@@ -4,13 +4,9 @@ import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.os.Bundle;
 
-import com.google.gson.Gson;
-
 import org.apache.commons.io.IOUtils;
-import org.devnexus.R;
 
 import java.io.IOException;
-import java.util.List;
 
 /**
  * Created by summers on 1/7/15.

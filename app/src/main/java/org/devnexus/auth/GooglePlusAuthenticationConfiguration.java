@@ -2,7 +2,7 @@ package org.devnexus.auth;
 
 import android.content.Context;
 
-import org.jboss.aerogear.android.ConfigurationProvider;
+import org.jboss.aerogear.android.core.ConfigurationProvider;
 import org.jboss.aerogear.android.authentication.AuthenticationConfiguration;
 import org.jboss.aerogear.android.authentication.AuthenticationManager;
 

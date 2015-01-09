@@ -3,9 +3,7 @@ package org.jboss.aerogear.devnexus2015.ui.fragment;
 import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.ContentResolver;
-import android.content.CursorLoader;
 import android.content.Loader;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
@@ -17,18 +15,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Spinner;
 
-import org.devnexus.util.GsonUtils;
 import org.devnexus.util.JsonLoader;
 import org.devnexus.vo.Podcast;
 import org.devnexus.vo.PodcastList;
-import org.devnexus.vo.Presentation;
 import org.devnexus.vo.ScheduleItem;
-import org.devnexus.vo.contract.PresentationContract;
 import org.jboss.aerogear.devnexus2015.MainActivity;
 import org.jboss.aerogear.devnexus2015.R;
 import org.jboss.aerogear.devnexus2015.ui.adapter.PodcastSpinnerAdaper;
 import org.jboss.aerogear.devnexus2015.ui.adapter.PodcastViewAdapter;
-import org.jboss.aerogear.devnexus2015.ui.adapter.PresentationViewAdapter;
 import org.jboss.aerogear.devnexus2015.ui.adapter.ScheduleItemViewAdapter;
 
 import java.util.ArrayList;

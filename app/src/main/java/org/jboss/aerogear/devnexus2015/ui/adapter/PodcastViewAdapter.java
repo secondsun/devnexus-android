@@ -2,20 +2,15 @@ package org.jboss.aerogear.devnexus2015.ui.adapter;
 
 import android.content.Context;
 import android.graphics.LightingColorFilter;
-import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
 import org.devnexus.util.TrackRoomUtil;
 import org.devnexus.vo.Podcast;
-import org.devnexus.vo.Presentation;
 import org.jboss.aerogear.devnexus2015.R;
 
 import java.util.ArrayList;

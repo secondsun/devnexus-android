@@ -3,7 +3,6 @@ package org.jboss.aerogear.devnexusclientsdktest;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
-
 import android.test.InstrumentationTestCase;
 
 import com.google.gson.Gson;
@@ -11,7 +10,6 @@ import com.google.gson.Gson;
 import junit.framework.Assert;
 
 import org.apache.commons.io.IOUtils;
-
 import org.devnexus.util.GsonUtils;
 import org.devnexus.vo.Schedule;
 import org.devnexus.vo.ScheduleItem;

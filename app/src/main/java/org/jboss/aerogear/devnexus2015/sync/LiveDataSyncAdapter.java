@@ -17,11 +17,11 @@ import org.devnexus.vo.Schedule;
 import org.devnexus.vo.UserCalendar;
 import org.devnexus.vo.contract.PresentationContract;
 import org.devnexus.vo.contract.ScheduleContract;
-import org.jboss.aerogear.android.Callback;
-import org.jboss.aerogear.android.impl.pipeline.GsonResponseParser;
-import org.jboss.aerogear.android.impl.pipeline.RestfulPipeConfiguration;
-import org.jboss.aerogear.android.pipeline.Pipe;
-import org.jboss.aerogear.android.pipeline.PipeManager;
+import org.jboss.aerogear.android.core.Callback;
+import org.jboss.aerogear.android.pipe.Pipe;
+import org.jboss.aerogear.android.pipe.PipeManager;
+import org.jboss.aerogear.android.pipe.rest.RestfulPipeConfiguration;
+import org.jboss.aerogear.android.pipe.rest.gson.GsonResponseParser;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -40,7 +40,7 @@ public class LiveDataSyncAdapter extends AbstractThreadedSyncAdapter {
 
     static {
         try {
-            SCHEDULE_PIPE =PipeManager.config("schedule", RestfulPipeConfiguration.class)
+            SCHEDULE_PIPE = PipeManager.config("schedule", RestfulPipeConfiguration.class)
                 .withUrl(new URL("http://devnexus.com/s/schedule.json"))
                 .responseParser(new GsonResponseParser(GsonUtils.GSON))
                 .forClass(Schedule.class);

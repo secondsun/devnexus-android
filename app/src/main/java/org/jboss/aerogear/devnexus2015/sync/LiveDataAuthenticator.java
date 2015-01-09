@@ -12,16 +12,17 @@ import android.util.Log;
 
 import org.devnexus.auth.GooglePlusAuthenticationModule;
 import org.devnexus.util.AccountUtil;
-import org.jboss.aerogear.android.Callback;
 import org.jboss.aerogear.android.authentication.AuthenticationManager;
 import org.jboss.aerogear.android.authentication.AuthenticationModule;
-import org.jboss.aerogear.android.http.HeaderAndBody;
+import org.jboss.aerogear.android.core.Callback;
+import org.jboss.aerogear.android.pipe.http.HeaderAndBody;
 import org.jboss.aerogear.devnexus2015.GoogleConnectActivity;
 
 import java.util.HashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
+
 
 public class LiveDataAuthenticator extends AbstractAccountAuthenticator {
 

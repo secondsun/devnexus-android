@@ -1,6 +1,6 @@
 package org.devnexus.vo;
 
-import org.jboss.aerogear.android.RecordId;
+import org.jboss.aerogear.android.core.RecordId;
 
 import java.io.Serializable;
 import java.util.ArrayList;

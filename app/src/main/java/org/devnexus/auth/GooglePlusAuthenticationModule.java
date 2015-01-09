@@ -3,19 +3,20 @@ package org.devnexus.auth;
 import android.content.Context;
 import android.util.Log;
 
-import com.google.android.gms.auth.*;
+import com.google.android.gms.auth.GoogleAuthException;
+import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.auth.UserRecoverableAuthException;
 
 import org.devnexus.util.AccountUtil;
 import org.devnexus.util.Constants;
-import org.jboss.aerogear.android.Callback;
-import org.jboss.aerogear.android.Provider;
 import org.jboss.aerogear.android.authentication.AbstractAuthenticationModule;
-import org.jboss.aerogear.android.authentication.AuthorizationFields;
-import org.jboss.aerogear.android.code.ModuleFields;
-import org.jboss.aerogear.android.http.HeaderAndBody;
-import org.jboss.aerogear.android.http.HttpException;
-import org.jboss.aerogear.android.http.HttpProvider;
-import org.jboss.aerogear.android.impl.core.HttpProviderFactory;
+import org.jboss.aerogear.android.core.Callback;
+import org.jboss.aerogear.android.core.Provider;
+import org.jboss.aerogear.android.pipe.http.HeaderAndBody;
+import org.jboss.aerogear.android.pipe.http.HttpException;
+import org.jboss.aerogear.android.pipe.http.HttpProvider;
+import org.jboss.aerogear.android.pipe.http.HttpProviderFactory;
+import org.jboss.aerogear.android.pipe.module.ModuleFields;
 import org.json.JSONObject;
 
 import java.io.IOException;

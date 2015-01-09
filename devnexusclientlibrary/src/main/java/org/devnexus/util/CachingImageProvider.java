@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;

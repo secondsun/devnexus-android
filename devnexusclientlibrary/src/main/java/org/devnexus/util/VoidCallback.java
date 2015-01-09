@@ -1,6 +1,6 @@
 package org.devnexus.util;
 
-import org.jboss.aerogear.android.Callback;
+import org.jboss.aerogear.android.core.Callback;
 
 /**
  * Created by summers on 2/16/14.

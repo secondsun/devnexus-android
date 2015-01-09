@@ -24,9 +24,9 @@ import org.devnexus.vo.contract.ScheduleContract;
 import org.devnexus.vo.contract.ScheduleItemContract;
 import org.devnexus.vo.contract.SingleColumnJsonArrayList;
 import org.devnexus.vo.contract.UserCalendarContract;
-import org.jboss.aerogear.android.ReadFilter;
-import org.jboss.aerogear.android.impl.datamanager.DefaultIdGenerator;
-import org.jboss.aerogear.android.impl.datamanager.SQLStore;
+import org.jboss.aerogear.android.core.ReadFilter;
+import org.jboss.aerogear.android.store.generator.DefaultIdGenerator;
+import org.jboss.aerogear.android.store.sql.SQLStore;
 import org.json.JSONException;
 import org.json.JSONObject;
 

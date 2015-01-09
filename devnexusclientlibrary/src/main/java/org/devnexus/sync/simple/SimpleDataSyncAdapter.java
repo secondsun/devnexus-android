@@ -15,16 +15,17 @@ import org.devnexus.vo.PresentationResponse;
 import org.devnexus.vo.Schedule;
 import org.devnexus.vo.contract.PresentationContract;
 import org.devnexus.vo.contract.ScheduleContract;
-import org.jboss.aerogear.android.Callback;
-import org.jboss.aerogear.android.impl.pipeline.GsonResponseParser;
-import org.jboss.aerogear.android.impl.pipeline.RestfulPipeConfiguration;
-import org.jboss.aerogear.android.pipeline.Pipe;
-import org.jboss.aerogear.android.pipeline.PipeManager;
+import org.jboss.aerogear.android.core.Callback;
+import org.jboss.aerogear.android.pipe.Pipe;
+import org.jboss.aerogear.android.pipe.PipeManager;
+import org.jboss.aerogear.android.pipe.rest.RestfulPipeConfiguration;
+import org.jboss.aerogear.android.pipe.rest.gson.GsonResponseParser;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+
 
 /**
  * This class downloads relatively static data that needs no authentication nor upstream.
