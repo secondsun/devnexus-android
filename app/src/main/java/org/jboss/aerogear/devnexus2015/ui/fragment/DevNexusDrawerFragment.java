@@ -32,6 +32,15 @@ public class DevNexusDrawerFragment extends Fragment {
             }
         });
 
+        view.findViewById(R.id.my_schedule).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity)getActivity()).switchFragment(new MyScheduleFragment(), MainActivity.BackStackOperation.RESET, "Schedule");
+                ((MainActivity)getActivity()).closeDrawer();
+            }
+        });
+
+
         view.findViewById(R.id.map_option).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -44,7 +53,7 @@ public class DevNexusDrawerFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 
-                Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.infoq.com/devnexus/"));
+                Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.infoq.com/devnexus/"));
                 ((MainActivity)getActivity()).startActivity(myIntent);
                 ((MainActivity)getActivity()).closeDrawer();
             }

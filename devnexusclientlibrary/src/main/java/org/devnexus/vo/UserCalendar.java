@@ -17,10 +17,14 @@ public class UserCalendar implements Comparable<UserCalendar>, Serializable {
     public Date updatedDate;
     public int version;
     public String username;
+    public String fixedTitle;
     public Date fromTime;
+    public int duration;//inMinutes
+
     public ScheduleItem item;
     public Boolean fixed;
     public Boolean template;
+    
 
     public Long getId() {
         return id;

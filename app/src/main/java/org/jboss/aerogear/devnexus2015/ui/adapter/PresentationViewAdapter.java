@@ -58,11 +58,11 @@ public class PresentationViewAdapter extends RecyclerView.Adapter<PresentationVi
         if (trackColor != mContext.getResources().getColor(R.color.dn_default)) {
             photo.setColorFilter(new LightingColorFilter(trackColor, 1));
         }
-        Log.d("Presentation Image", "http://devnexus.com/s/speakers/"+item.speakers.get(0).id+".jpg");
+        Log.d("Presentation Image", "https://devnexus.com/s/speakers/"+item.speakers.get(0).id+".jpg");
         Picasso picasso = Picasso.with(mContext);
-        picasso.setIndicatorsEnabled(true);
-        picasso.setLoggingEnabled(true);
-        picasso.load("http://devnexus.com/s/speakers/"+item.speakers.get(0).id+".jpg").placeholder(new ColorDrawable(trackColor)).fit().centerCrop().into(photo);
+        picasso.setDebugging(true);
+        
+        picasso.load("https://devnexus.com/s/speakers/"+item.speakers.get(0).id+".jpg").placeholder(new ColorDrawable(trackColor)).fit().centerCrop().into(photo);
         ((TextView) viewHolder.presentationView.findViewById(R.id.info_text)).setText(item.title);
 
         viewHolder.presentationView.setOnClickListener(new View.OnClickListener() {

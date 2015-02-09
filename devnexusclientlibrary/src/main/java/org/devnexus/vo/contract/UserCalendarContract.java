@@ -23,6 +23,7 @@ public final class UserCalendarContract {
     public static final String[] COLUMNS = {DATA, NOTIFY};
 
     private static final Gson GSON = GsonUtils.GSON;
+    public static final String DATE = "DATE";
 
     /**
      * This method will turn a calendarItem into the appropriate ContentValues for the app.

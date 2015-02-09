@@ -195,7 +195,7 @@ public class SessionDetailFragment extends Fragment implements LoaderManager.Loa
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             Speaker speaker = getItem(position);
-            Picasso.with(mContext).load("http://devnexus.com/s/speakers/" + speaker.id + ".jpg").placeholder(R.drawable.speaker).fit().centerCrop().into((holder).photo);
+            Picasso.with(mContext).load("https://devnexus.com/s/speakers/" + speaker.id + ".jpg").placeholder(R.drawable.speaker).fit().centerCrop().into((holder).photo);
             holder.bio.setText(speaker.bio);
 
         }
