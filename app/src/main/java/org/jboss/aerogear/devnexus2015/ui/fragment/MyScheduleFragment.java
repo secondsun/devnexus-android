@@ -27,7 +27,7 @@ import org.devnexus.vo.UserCalendar;
 import org.devnexus.vo.contract.UserCalendarContract;
 import org.jboss.aerogear.devnexus2015.MainActivity;
 import org.jboss.aerogear.devnexus2015.R;
-import org.jboss.aerogear.devnexus2015.ui.adapter.PresentationViewAdapter;
+import org.jboss.aerogear.devnexus2015.ui.adapter.MyScheduleViewAdapter;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -115,33 +115,13 @@ public class MyScheduleFragment extends Fragment implements LoaderManager.Loader
     }
 
     private void refreshData(List<UserCalendar> calendarItems) {
-        recycler.setAdapter(new CalendarViewAdapter(calendarItems, getActivity()));
+        recycler.setAdapter(new MyScheduleViewAdapter(new ArrayList<UserCalendar>(calendarItems), getActivity()));
 
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
-    }
-
-    private static class CalendarViewAdapter extends RecyclerView.Adapter {
-        public CalendarViewAdapter(List<UserCalendar> scheduleItems, Activity activity) {
-        }
-
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return null;
-        }
-
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
-        }
-
-        @Override
-        public int getItemCount() {
-            return 0;
-        }
     }
 
     private class CalendarDateAdapter extends BaseAdapter implements SpinnerAdapter {

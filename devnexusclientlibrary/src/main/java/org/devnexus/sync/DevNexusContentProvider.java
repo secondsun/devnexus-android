@@ -50,7 +50,7 @@ public class DevNexusContentProvider extends ContentProvider {
 
     private static ContentResolver resolver;
     private static ArrayList<Presentation> presentations;
-    private SQLStore<UserCalendar> calendarSQLStore;
+    private SQLStore<UserCalendar> userCalendarStore;
     private SQLStore<Schedule> scheduleSQLStore;
     private SQLStore<Presentation> presentationSQLStore;
     private final CountDownLatch createdLatch = new CountDownLatch(3);
@@ -62,8 +62,8 @@ public class DevNexusContentProvider extends ContentProvider {
         resolver = getContext().getContentResolver();
 
 
-        calendarSQLStore = new SQLStore<UserCalendar>(UserCalendar.class, getContext(), GsonUtils.builder(), new DefaultIdGenerator());
-        calendarSQLStore.open(new CountDownCallback<SQLStore<UserCalendar>>(createdLatch));
+        userCalendarStore = new SQLStore<UserCalendar>(UserCalendar.class, getContext(), GsonUtils.builder(), new DefaultIdGenerator());
+        userCalendarStore.open(new CountDownCallback<SQLStore<UserCalendar>>(createdLatch));
         scheduleSQLStore = new SQLStore<Schedule>(Schedule.class, getContext(), GsonUtils.builder(), new DefaultIdGenerator());
         scheduleSQLStore.open(new CountDownCallback<SQLStore<Schedule>>(createdLatch));
         presentationSQLStore = new SQLStore<Presentation>(Presentation.class, getContext(), GsonUtils.builder(), new DefaultIdGenerator());
@@ -76,7 +76,7 @@ public class DevNexusContentProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         if (uri.equals(UserCalendarContract.URI)) {
-            return execute(uri, null, null, null, new CalendarQuery());
+            return execute(uri, null, selection, selectionArgs, new UserCalendarQuery());
         } else if (uri.equals(ScheduleContract.URI)) {
             return execute(uri, null, null, null, new ScheduleQuery());
         } else if (uri.equals(ScheduleItemContract.URI)) {
@@ -108,7 +108,7 @@ public class DevNexusContentProvider extends ContentProvider {
     @Override
     public Uri insert(final Uri uri, final ContentValues values) {
         if (uri.equals(UserCalendarContract.URI)) {
-            return execute(uri, new ContentValues[]{values}, null, null, new CalendarInsert());
+            return execute(uri, new ContentValues[]{values}, null, null, new UserCalendarInsert());
         } else if (uri.equals(ScheduleContract.URI)) {
             return execute(uri, new ContentValues[]{values}, null, null, new ScheduleInsert());
         } else if (uri.equals(PresentationContract.URI)) {
@@ -151,7 +151,7 @@ public class DevNexusContentProvider extends ContentProvider {
         Operation<Integer> op;
 
         if (uri.equals(UserCalendarContract.URI)) {
-            op = new CalendarDelete();
+            op = new UserCalendarDelete();
         } else if (uri.equals(ScheduleContract.URI)) {
             op = new ScheduleDelete();
         } else if (uri.equals(PresentationContract.URI) ||uri.equals(PresentationContract.URI_NOTIFY)) {
@@ -175,10 +175,10 @@ public class DevNexusContentProvider extends ContentProvider {
         if (uri.equals(UserCalendarContract.URI)) {
             if (values == null) {
                 vals = new ContentValues[]{null};
-                op = new CalendarUpdate();
+                op = new UserCalendarUpdate();
             } else {
                 vals = new ContentValues[]{values};
-                op = new CalendarUpdate();
+                op = new UserCalendarUpdate();
             }
         } else if (uri.equals(ScheduleContract.URI)) {
             if (values == null) {
@@ -212,7 +212,7 @@ public class DevNexusContentProvider extends ContentProvider {
 
         SQLStore tempStore;
         if (uri.equals(UserCalendarContract.URI)) {
-            tempStore = calendarSQLStore;
+            tempStore = userCalendarStore;
         } else if (uri.equals(ScheduleContract.URI) || uri.equals(ScheduleItemContract.URI) ) {
             tempStore = scheduleSQLStore;
         } else if (uri.equals(PresentationContract.URI) || uri.equals(PresentationContract.URI_NOTIFY) || uri.equals(PreviousYearPresentationContract.URI) ) {
@@ -234,7 +234,7 @@ public class DevNexusContentProvider extends ContentProvider {
         T exec(Gson gson, SQLStore calendarStore, Uri uri, ContentValues[] values, String selection, String[] selectionArgs);
     }
 
-    private static class CalendarInsert implements Operation<Uri> {
+    private static class UserCalendarInsert implements Operation<Uri> {
 
         @Override
         public Uri exec(Gson gson, SQLStore calendarStore, Uri uri, ContentValues[] values, String selection, String[] selectionArgs) {
@@ -261,7 +261,7 @@ public class DevNexusContentProvider extends ContentProvider {
     }
 
 
-    private static class CalendarDelete implements Operation<Integer> {
+    private static class UserCalendarDelete implements Operation<Integer> {
 
         @Override
         public Integer exec(Gson gson, SQLStore calendarStore, Uri uri, ContentValues[] values, String selection, String[] selectionArgs) {
@@ -276,7 +276,7 @@ public class DevNexusContentProvider extends ContentProvider {
         }
     }
 
-    private static class CalendarUpdate implements Operation<Integer> {
+    private static class UserCalendarUpdate implements Operation<Integer> {
 
         @Override
         public Integer exec(Gson gson, SQLStore calendarStore, Uri uri, ContentValues[] values, String selection, String[] selectionArgs) {
@@ -296,7 +296,7 @@ public class DevNexusContentProvider extends ContentProvider {
         }
     }
 
-    private static class CalendarQuery implements Operation<SingleColumnJsonArrayList> {
+    private static class UserCalendarQuery implements Operation<SingleColumnJsonArrayList> {
 
         @Override
         public SingleColumnJsonArrayList exec(Gson gson, SQLStore calendarStore, Uri uri, ContentValues[] values, String selection, String[] selectionArgs) {

@@ -60,7 +60,6 @@ public class PresentationViewAdapter extends RecyclerView.Adapter<PresentationVi
         }
         Log.d("Presentation Image", "https://devnexus.com/s/speakers/"+item.speakers.get(0).id+".jpg");
         Picasso picasso = Picasso.with(mContext);
-        picasso.setDebugging(true);
         
         picasso.load("https://devnexus.com/s/speakers/"+item.speakers.get(0).id+".jpg").placeholder(new ColorDrawable(trackColor)).fit().centerCrop().into(photo);
         ((TextView) viewHolder.presentationView.findViewById(R.id.info_text)).setText(item.title);
