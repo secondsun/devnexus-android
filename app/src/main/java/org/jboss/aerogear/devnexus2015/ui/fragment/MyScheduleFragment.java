@@ -22,16 +22,19 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
+import org.devnexus.util.GsonUtils;
 import org.devnexus.vo.UserCalendar;
 import org.devnexus.vo.contract.UserCalendarContract;
 import org.jboss.aerogear.devnexus2015.MainActivity;
 import org.jboss.aerogear.devnexus2015.R;
+import org.jboss.aerogear.devnexus2015.ui.adapter.PresentationViewAdapter;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -102,6 +105,17 @@ public class MyScheduleFragment extends Fragment implements LoaderManager.Loader
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        List<UserCalendar> calendarItems = new ArrayList<>(data.getCount());
+        while (data.moveToNext()) {
+            UserCalendar calendarItem = GsonUtils.GSON.fromJson(data.getString(0), UserCalendar.class);
+            calendarItems.add(calendarItem);
+        }
+        Collections.sort(calendarItems);
+        refreshData(calendarItems);
+    }
+
+    private void refreshData(List<UserCalendar> calendarItems) {
+        recycler.setAdapter(new CalendarViewAdapter(calendarItems, getActivity()));
 
     }
 
@@ -110,8 +124,8 @@ public class MyScheduleFragment extends Fragment implements LoaderManager.Loader
 
     }
 
-    private static class MyScheduleViewAdapter extends RecyclerView.Adapter {
-        public MyScheduleViewAdapter(ArrayList<UserCalendar> scheduleItems, Activity activity) {
+    private static class CalendarViewAdapter extends RecyclerView.Adapter {
+        public CalendarViewAdapter(List<UserCalendar> scheduleItems, Activity activity) {
         }
 
         @Override
