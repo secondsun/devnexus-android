@@ -1,99 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/dn_white"
-    android:layout_height="match_parent">
+    android:orientation="vertical">
 
     <ImageView
+        android:id="@+id/hero"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scaleType="fitXY"
-        android:adjustViewBounds="true"
         android:layout_gravity="bottom"
-        android:src="@drawable/sidebar_header"
-        android:id="@+id/hero" />
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/sidebar_header" />
 
-
-    <TextView
+    <ListView
+        android:id="@+id/list1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Log In"
-        android:id="@+id/login"
-        android:layout_margin="5dp"
-        />
+        android:paddingTop="10dp"
+        android:divider="@null"
+        android:dividerHeight="0dp" />
 
+    <View style="@style/Divider" />
 
-    <TextView
+    <ListView
+        android:id="@+id/list2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Schedule"
-        android:layout_margin="5dp"
-        />
-
-    <View
-        style="@style/Divider"
-        />
-
-
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/presentations"
-        android:text="All Presentations"
-        android:layout_margin="5dp"
-        />
-
-    <TextView
-        android:id="@+id/my_schedule"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="My Schedule"
-        android:layout_margin="5dp"
-        />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/map_option"
-        android:text="Map"
-        android:layout_margin="5dp"
-        />
-
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Social"
-        android:layout_margin="5dp"
-        />
-
-
-    <TextView
-        android:id="@+id/previous_conference_label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Previous Year"
-        android:layout_margin="5dp"
-        />
-
-
-    <TextView
-        android:id="@+id/podcast_label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Podcasts"
-        android:layout_margin="5dp"
-        />
-
-
-    <TextView
-        android:id="@+id/infoq"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="InfoQ Videos"
-        android:layout_margin="5dp"
-        />
-
+        android:paddingTop="10dp"
+        android:divider="@null"
+        android:dividerHeight="0dp" />
 
 </LinearLayout>

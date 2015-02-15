@@ -8,92 +8,95 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 import org.jboss.aerogear.devnexus2015.GoogleConnectActivity;
 import org.jboss.aerogear.devnexus2015.MainActivity;
 import org.jboss.aerogear.devnexus2015.R;
+import org.jboss.aerogear.devnexus2015.model.DrawerItem;
+import org.jboss.aerogear.devnexus2015.ui.adapter.DrawerListAdapter;
 
-/**
- * Created by summers on 12/23/14.
- */
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+
+import static org.jboss.aerogear.devnexus2015.MainActivity.BackStackOperation.*;
+
 public class DevNexusDrawerFragment extends Fragment {
-    private View view;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view =  inflater.inflate(R.layout.drawer_layout, null);
+        View view = inflater.inflate(R.layout.drawer_layout, null);
 
-        view.findViewById(R.id.presentations).setOnClickListener(new View.OnClickListener() {
+        List<DrawerItem> list1Items = new ArrayList<>();
+        list1Items.add(new DrawerItem(R.drawable.ic_action_key, "Log In"));
+        list1Items.add(new DrawerItem(R.drawable.ic_action_calendar_month, "Schedule"));
+
+        ListView list1 = (ListView) view.findViewById(R.id.list1);
+        list1.setAdapter(new DrawerListAdapter(getActivity(), list1Items));
+        list1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View v) {
-                ((MainActivity)getActivity()).switchFragment(PresentationExplorerFragment.newInstance(), MainActivity.BackStackOperation.RESET, "Open");
-                ((MainActivity)getActivity()).closeDrawer();
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                MainActivity activity = (MainActivity) getActivity();
+                switch (position) {
+                    case 0:
+                        activity.startActivity(new Intent(getActivity(), GoogleConnectActivity.class));
+                        break;
+                    case 1:
+                        // TODO
+                        break;
+                }
+                activity.closeDrawer();
             }
         });
 
-        view.findViewById(R.id.my_schedule).setOnClickListener(new View.OnClickListener() {
+        List<DrawerItem> list2Items = new ArrayList<>();
+        list2Items.add(new DrawerItem(R.drawable.ic_action_book, "All Presentations"));
+        list2Items.add(new DrawerItem(R.drawable.ic_action_calendar_day, "My Schedule"));
+        list2Items.add(new DrawerItem(R.drawable.ic_action_map, "Map"));
+        list2Items.add(new DrawerItem(R.drawable.ic_action_dialog, "Social"));
+        list2Items.add(new DrawerItem(R.drawable.ic_action_dev, "Previous Year"));
+        list2Items.add(new DrawerItem(R.drawable.ic_action_headphones, "Podcasts"));
+        list2Items.add(new DrawerItem(R.drawable.ic_action_video, "InfoQ Videos"));
+
+        ListView list2 = (ListView) view.findViewById(R.id.list2);
+        list2.setAdapter(new DrawerListAdapter(getActivity(), list2Items));
+        list2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View v) {
-                ((MainActivity)getActivity()).switchFragment(new MyScheduleFragment(), MainActivity.BackStackOperation.RESET, "Schedule");
-                ((MainActivity)getActivity()).closeDrawer();
-            }
-        });
-
-
-        view.findViewById(R.id.map_option).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((MainActivity)getActivity()).switchFragment(new GalleriaMapFragment(), MainActivity.BackStackOperation.RESET, "Map");
-                ((MainActivity)getActivity()).closeDrawer();
-            }
-        });
-
-        view.findViewById(R.id.infoq).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                
-                Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.infoq.com/devnexus/"));
-                ((MainActivity)getActivity()).startActivity(myIntent);
-                ((MainActivity)getActivity()).closeDrawer();
-            }
-        });
-
-        view.findViewById(R.id.login).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((MainActivity)getActivity()).startActivity(new Intent(getActivity(), GoogleConnectActivity.class));
-                ((MainActivity)getActivity()).closeDrawer();
-            }
-        });
-
-        view.findViewById(R.id.podcast_label).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((MainActivity)getActivity()).switchFragment(PodcastFragment.newInstance(), MainActivity.BackStackOperation.RESET, "{Pdcast");
-                ((MainActivity)getActivity()).closeDrawer();
-            }
-        });
-
-
-        view.findViewById(R.id.previous_conference_label).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((MainActivity)getActivity()).switchFragment(PreviousConferencesFragment.newInstance(), MainActivity.BackStackOperation.RESET, "Previous");
-                ((MainActivity)getActivity()).closeDrawer();
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                MainActivity activity = (MainActivity) getActivity();
+                switch (position) {
+                    case 0:
+                        activity.switchFragment(PresentationExplorerFragment.newInstance(), RESET, "Open");
+                        break;
+                    case 1:
+                        activity.switchFragment(new MyScheduleFragment(), RESET, "Schedule");
+                        break;
+                    case 2:
+                        activity.switchFragment(new GalleriaMapFragment(), RESET, "Map");
+                        break;
+                    case 3:
+                        // TODO
+                        break;
+                    case 4:
+                        activity.switchFragment(PreviousConferencesFragment.newInstance(), RESET, "Previous");
+                        break;
+                    case 5:
+                        activity.switchFragment(PodcastFragment.newInstance(), RESET, "{Pdcast");
+                        break;
+                    case 6:
+                        Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.infoq.com/devnexus/"));
+                        activity.startActivity(myIntent);
+                        break;
+                }
+                activity.closeDrawer();
             }
         });
 
         return view;
+
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
 }
