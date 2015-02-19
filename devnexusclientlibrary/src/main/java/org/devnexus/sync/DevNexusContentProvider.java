@@ -9,8 +9,10 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.io.IOUtils;
+import org.devnexus.R;
 import org.devnexus.util.CountDownCallback;
 import org.devnexus.util.GsonUtils;
 import org.devnexus.vo.Presentation;
@@ -31,7 +33,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -49,6 +56,7 @@ public class DevNexusContentProvider extends ContentProvider {
     private static final Gson GSON = GsonUtils.GSON;
 
     private static ContentResolver resolver;
+    private static Context context;
     private static ArrayList<Presentation> presentations;
     private SQLStore<UserCalendar> userCalendarStore;
     private SQLStore<Schedule> scheduleSQLStore;
@@ -60,7 +68,7 @@ public class DevNexusContentProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
         resolver = getContext().getContentResolver();
-
+        context = getContext();
 
         userCalendarStore = new SQLStore<UserCalendar>(UserCalendar.class, getContext(), GsonUtils.builder(), new DefaultIdGenerator());
         userCalendarStore.open(new CountDownCallback<SQLStore<UserCalendar>>(createdLatch));
@@ -154,7 +162,7 @@ public class DevNexusContentProvider extends ContentProvider {
             op = new UserCalendarDelete();
         } else if (uri.equals(ScheduleContract.URI)) {
             op = new ScheduleDelete();
-        } else if (uri.equals(PresentationContract.URI) ||uri.equals(PresentationContract.URI_NOTIFY)) {
+        } else if (uri.equals(PresentationContract.URI) || uri.equals(PresentationContract.URI_NOTIFY)) {
             op = new PresentationDelete();
         } else
             throw new IllegalArgumentException(String.format("%s not supported", uri.toString()));
@@ -213,9 +221,9 @@ public class DevNexusContentProvider extends ContentProvider {
         SQLStore tempStore;
         if (uri.equals(UserCalendarContract.URI)) {
             tempStore = userCalendarStore;
-        } else if (uri.equals(ScheduleContract.URI) || uri.equals(ScheduleItemContract.URI) ) {
+        } else if (uri.equals(ScheduleContract.URI) || uri.equals(ScheduleItemContract.URI)) {
             tempStore = scheduleSQLStore;
-        } else if (uri.equals(PresentationContract.URI) || uri.equals(PresentationContract.URI_NOTIFY) || uri.equals(PreviousYearPresentationContract.URI) ) {
+        } else if (uri.equals(PresentationContract.URI) || uri.equals(PresentationContract.URI_NOTIFY) || uri.equals(PreviousYearPresentationContract.URI)) {
             tempStore = presentationSQLStore;
         } else {
             throw new IllegalArgumentException(String.format("%s not supported", uri.toString()));
@@ -301,7 +309,44 @@ public class DevNexusContentProvider extends ContentProvider {
         @Override
         public SingleColumnJsonArrayList exec(Gson gson, SQLStore calendarStore, Uri uri, ContentValues[] values, String selection, String[] selectionArgs) {
 
-            return new SingleColumnJsonArrayList(new ArrayList<UserCalendar>(calendarStore.readAll()));
+            List<UserCalendar> results = new ArrayList<UserCalendar>(calendarStore.readAll());
+            if (results.isEmpty()) {
+                results = loadTemplate(calendarStore);
+            }
+
+            if (selection != null &&selection.contains(UserCalendarContract.DATE)) {
+                List<UserCalendar> toRemove = new ArrayList<>(results.size());
+                int dateIndex = Integer.parseInt(selectionArgs[0]);
+                Date startDate = UserCalendarContract.DATES.get(dateIndex);
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(startDate);
+                cal.add(Calendar.DATE, 1);
+                Date startDateNextDay = cal.getTime();
+                for (UserCalendar userCalendarItem :results) {
+                    if (!(userCalendarItem.fromTime.after(startDate) && userCalendarItem.fromTime.before(startDateNextDay) )){
+                        toRemove.add(userCalendarItem);
+                    }
+                }
+                results.removeAll(toRemove);
+                Collections.sort(results);
+            }
+            
+            return new SingleColumnJsonArrayList(new ArrayList<UserCalendar>(results));
+        }
+
+        private List<UserCalendar> loadTemplate(SQLStore calendarStore) {
+
+            InputStream templateStream = context.getResources().openRawResource(R.raw.calendar_template);
+            String calendarTemplateJson = null;
+            try {
+                calendarTemplateJson = IOUtils.toString(templateStream);
+            } catch (IOException ignore) {
+                Log.e(TAG, ignore.getMessage(), ignore);
+            }
+            List<UserCalendar> userCalendarItems = GsonUtils.gson(new SimpleDateFormat("M/dd/yy hh:mm a"), resolver).fromJson(calendarTemplateJson, new TypeToken<List<UserCalendar>>() {
+            }.getType());
+            resolver.bulkInsert(UserCalendarContract.URI, UserCalendarContract.valueize(userCalendarItems, true));
+            return userCalendarItems;
         }
     }
 
@@ -335,10 +380,10 @@ public class DevNexusContentProvider extends ContentProvider {
 
                 String[] selections = selection.split(" && ");
 
-                for (int i = 0; i <selections.length; i++) {
-                    for (ScheduleItem item :items) {
+                for (int i = 0; i < selections.length; i++) {
+                    for (ScheduleItem item : items) {
                         String value = selectionArgs[i];
-                        switch (selections[i])  {
+                        switch (selections[i]) {
                             case ScheduleItemContract.PRESENTATION_ID:
                                 if ((item.presentation == null) || !Integer.toString(item.presentation.id).equals(value)) {
                                     filteredItems.add(item);
@@ -470,12 +515,12 @@ public class DevNexusContentProvider extends ContentProvider {
                 DevNexusContentProvider.presentations = new ArrayList<Presentation>(presentationStore.readAll());
             }
 
-            if (selection == null ||selection.isEmpty()) {
+            if (selection == null || selection.isEmpty()) {
                 return new SingleColumnJsonArrayList(new ArrayList<Presentation>(DevNexusContentProvider.presentations));
             } else {
                 String[] queries = selection.split(" && ");
                 JSONObject where = new JSONObject();
-                for (int i = 0; i <queries.length; i++) {
+                for (int i = 0; i < queries.length; i++) {
                     try {
                         where.put(queries[i], selectionArgs[i]);
                     } catch (JSONException e) {
@@ -503,15 +548,15 @@ public class DevNexusContentProvider extends ContentProvider {
 
         @Override
         public SingleColumnJsonArrayList exec(Gson gson, SQLStore presentationStore, Uri uri, ContentValues[] values, String selection, String[] selectionArgs) {
-            
 
-            if (selection == null ||selection.isEmpty()) {
+
+            if (selection == null || selection.isEmpty()) {
                 return new SingleColumnJsonArrayList(new ArrayList<Presentation>(0));//No Event selected
             } else {
-                
+
                 String[] queries = selection.split(" && ");
                 JSONObject where = new JSONObject();
-                for (int i = 0; i <queries.length; i++) {
+                for (int i = 0; i < queries.length; i++) {
                     try {
                         where.put(queries[i], selectionArgs[i]);
                     } catch (JSONException e) {
@@ -526,27 +571,27 @@ public class DevNexusContentProvider extends ContentProvider {
                     PresentationResponse presentationsObject = gson.fromJson(IOUtils.toString(context.getResources().openRawResource(event.getRawResourceId())), PresentationResponse.class);
                     List<Presentation> presentations = presentationsObject.presentationList.presentation;
                     Iterator<String> keys = where.keys();
-                    
-                    while(keys.hasNext()) {
+
+                    while (keys.hasNext()) {
                         String key = keys.next();
                         if (key == PreviousYearPresentationContract.EVENT_LABEL) {
                             continue;
                         }
-                        
+
                         if (key.equals(PreviousYearPresentationContract.PRESENTATION_ID)) {
-                            for (Presentation presentation :presentations) {
-                                if (Integer.toString(presentation.getId()).equals(where.getString(key))){
+                            for (Presentation presentation : presentations) {
+                                if (Integer.toString(presentation.getId()).equals(where.getString(key))) {
                                     ArrayList<Presentation> toReturn = new ArrayList<>(1);
                                     toReturn.add(presentation);
                                     return new SingleColumnJsonArrayList(toReturn);
                                 }
                             }
                         }
-                        
+
                     }
-                    
+
                     return new SingleColumnJsonArrayList(presentations);
-                    
+
                 } catch (JSONException e) {
                     Log.e(TAG, e.getMessage(), e);
                     return new SingleColumnJsonArrayList(new ArrayList<Presentation>(0));//No Event selected

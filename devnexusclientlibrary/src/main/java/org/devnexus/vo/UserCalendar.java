@@ -11,7 +11,7 @@ import java.util.Date;
 public class UserCalendar implements Comparable<UserCalendar>, Serializable {
 
     @RecordId
-    private Long id;
+    private Long id = -1l;
 
     public Date createdDate;
     public Date updatedDate;
@@ -24,7 +24,6 @@ public class UserCalendar implements Comparable<UserCalendar>, Serializable {
     public ScheduleItem item;
     public Boolean fixed;
     public Boolean template;
-    
 
     public Long getId() {
         return id;
@@ -78,4 +77,6 @@ public class UserCalendar implements Comparable<UserCalendar>, Serializable {
             return id.compareTo(another.id);
         }
     }
+    
+    
 }

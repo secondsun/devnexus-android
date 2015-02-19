@@ -8,12 +8,18 @@ import com.google.gson.Gson;
 import org.devnexus.util.GsonUtils;
 import org.devnexus.vo.UserCalendar;
 
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
 /**
  * Created by summers on 2/8/14.
  */
 public final class UserCalendarContract {
 
     public static final Uri URI = Uri.parse("content://org.devnexus.sync/UserCalendar");
+    public static final List<Date> DATES = Arrays.asList(new Date[]{asDate(Calendar.MARCH, 10, 2015), asDate(Calendar.MARCH, 11, 2015), asDate(Calendar.MARCH, 12, 2015)});
 
     public static final String DATA = "DATA";
     public static final Integer DATA_IDX = 0;
@@ -37,4 +43,26 @@ public final class UserCalendarContract {
         values.put(NOTIFY, notify);
         return values;
     }
+
+    public static ContentValues[] valueize(List<UserCalendar> userCalendarItems, boolean notify) {
+        ContentValues[] values = new ContentValues[userCalendarItems.size()];
+        for (int i = 0; i < values.length; i++) {
+            values[i] = valueize(userCalendarItems.get(i), notify);
+        }
+        return values;
+    }
+
+    private static Date asDate(int month, int day, int year) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DATE, day);
+        cal.set(Calendar.MONTH, month);
+        cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.MILLISECOND, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.HOUR, 0);
+        return cal.getTime();
+    }
+
+
 }

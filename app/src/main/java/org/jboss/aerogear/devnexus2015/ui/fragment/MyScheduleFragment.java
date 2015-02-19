@@ -7,8 +7,11 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Loader;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,8 +35,6 @@ import org.jboss.aerogear.devnexus2015.ui.adapter.MyScheduleViewAdapter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -45,7 +46,7 @@ import static org.devnexus.vo.contract.UserCalendarContract.DATE;
  */
 public class MyScheduleFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private final List<Date> DATES = Arrays.asList(new Date[]{asDate(Calendar.MARCH, 10, 2015), asDate(Calendar.MARCH, 11, 2015), asDate(Calendar.MARCH, 12, 2015)});
+    private static final String TAG = MyScheduleFragment.class.getSimpleName();
     private static final int SCHEDULE_LOADER = 0x0100;
     private static final String DATE_KEY = "Schedule.dateKey";
     private RecyclerView recycler;
@@ -53,6 +54,12 @@ public class MyScheduleFragment extends Fragment implements LoaderManager.Loader
     private ContentResolver resolver;
     private Toolbar toolbar;
 
+    private ContentObserver userCalendarObserver = new ContentObserver(new Handler(Looper.getMainLooper())) {
+        @Override
+        public void onChange(boolean selfChange) {
+            getLoaderManager().restartLoader(SCHEDULE_LOADER, Bundle.EMPTY, MyScheduleFragment.this);
+        }
+    };
 
     @Nullable
     @Override
@@ -71,6 +78,18 @@ public class MyScheduleFragment extends Fragment implements LoaderManager.Loader
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().getContentResolver().registerContentObserver(UserCalendarContract.URI, true, userCalendarObserver);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().getContentResolver().unregisterContentObserver(userCalendarObserver);
+    }
+
     private void loadSpinnerNav(final Spinner spinner) {
         spinner.setAdapter(new CalendarDateAdapter(getActivity()));
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -79,7 +98,7 @@ public class MyScheduleFragment extends Fragment implements LoaderManager.Loader
                 
                 Bundle args = new Bundle();
                 args.putInt(DATE_KEY, position);
-                getLoaderManager().restartLoader(SCHEDULE_LOADER, Bundle.EMPTY, MyScheduleFragment.this);
+                getLoaderManager().restartLoader(SCHEDULE_LOADER, args, MyScheduleFragment.this);
                 
 
             }
@@ -105,13 +124,17 @@ public class MyScheduleFragment extends Fragment implements LoaderManager.Loader
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        List<UserCalendar> calendarItems = new ArrayList<>(data.getCount());
-        while (data.moveToNext()) {
-            UserCalendar calendarItem = GsonUtils.GSON.fromJson(data.getString(0), UserCalendar.class);
-            calendarItems.add(calendarItem);
+        if ( data.getCount() == 0 ) {
+            
+        } else {
+            List<UserCalendar> calendarItems = new ArrayList<>(data.getCount());
+            while (data.moveToNext()) {
+                UserCalendar calendarItem = GsonUtils.GSON.fromJson(data.getString(0), UserCalendar.class);
+                calendarItems.add(calendarItem);
+            }
+            Collections.sort(calendarItems);
+            refreshData(calendarItems);
         }
-        Collections.sort(calendarItems);
-        refreshData(calendarItems);
     }
 
     private void refreshData(List<UserCalendar> calendarItems) {
@@ -140,7 +163,7 @@ public class MyScheduleFragment extends Fragment implements LoaderManager.Loader
 
         @Override
         public Object getItem(int position) {
-            return DATES.get(position);
+            return UserCalendarContract.DATES.get(position);
         }
 
         @Override
@@ -166,12 +189,5 @@ public class MyScheduleFragment extends Fragment implements LoaderManager.Loader
         }
     }
 
-    private static Date asDate(int month, int day, int year) {
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.DATE, day);
-        cal.set(Calendar.MONTH, month);
-        cal.set(Calendar.YEAR, year);
-        return cal.getTime();
-    }
 
 }
