@@ -16,6 +16,7 @@ public class ScheduleContract {
     public static final String _ID = "id";
     public static final String DATA = "DATA";
     public static String NOTIFY = "NOTIFY";
+    public static String FROM_TIME = "FROM_TIME";
 
     public static final String[] COLUMNS = {DATA, NOTIFY};
 

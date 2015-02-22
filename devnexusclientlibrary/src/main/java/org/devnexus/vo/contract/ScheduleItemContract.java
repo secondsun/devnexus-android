@@ -25,6 +25,7 @@ public class ScheduleItemContract {
     public static final String[] COLUMNS = {DATA, NOTIFY};
 
     private static final Gson GSON = GsonUtils.GSON;
+    public static final String FROM_TIME = "scheduleItemList.scheduleItems.fromTime";
 
 
     /**

@@ -32,6 +32,7 @@ import org.jboss.aerogear.devnexus2015.MainActivity;
 import org.jboss.aerogear.devnexus2015.R;
 import org.jboss.aerogear.devnexus2015.ui.adapter.TagAdapter;
 import org.jboss.aerogear.devnexus2015.ui.view.HorizontalListView;
+import org.jboss.aerogear.devnexus2015.util.ColorUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -128,8 +129,12 @@ public class SessionDetailFragment extends Fragment implements LoaderManager.Loa
         if (presentation.track != null) {
             color = getResources().getColor(TrackRoomUtil.forTrack(presentation.track.name));
         }
+        
+        int textColor = ColorUtils.getTextColor(getActivity(), color);
 
         toolbar.setBackgroundColor(color);
+        toolbar.setNavigationIcon(ColorUtils.getDrawerDrawable(color));
+        toolbar.setTitleTextColor(textColor);
         skill.setText(presentation.skillLevel);
         if (presentation.track != null ) {
             track.setText(presentation.track.name);

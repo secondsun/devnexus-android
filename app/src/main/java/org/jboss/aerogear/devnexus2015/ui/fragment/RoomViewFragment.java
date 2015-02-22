@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 
 import com.google.gson.Gson;
 
@@ -39,8 +38,7 @@ public class RoomViewFragment extends DialogFragment {
     private List<ScheduleItem> schedule;
     private RecyclerView listView;
     private static final Gson GSON = GsonUtils.GSON;
-    private ProgressBar progress;
-
+    
 
     public static RoomViewFragment newInstance(String roomName) {
         Bundle args = new Bundle();
@@ -108,7 +106,6 @@ public class RoomViewFragment extends DialogFragment {
                 adapter.notifyDataSetChanged();
                 if (listView != null) {
                     listView.setAdapter(adapter);
-                    progress.setVisibility(View.GONE);
                     listView.requestLayout();
                     listView.refreshDrawableState();
                 }
@@ -127,7 +124,6 @@ public class RoomViewFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.session_picker, null);
-        progress = (ProgressBar) view.findViewById(R.id.progress);
         listView = (RecyclerView) view.findViewById(R.id.listView);
         listView.setLayoutManager(new LinearLayoutManager(getActivity()));
 //

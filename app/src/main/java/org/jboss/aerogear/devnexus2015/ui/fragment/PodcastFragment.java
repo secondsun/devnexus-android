@@ -21,6 +21,7 @@ import org.devnexus.vo.PodcastList;
 import org.devnexus.vo.ScheduleItem;
 import org.jboss.aerogear.devnexus2015.MainActivity;
 import org.jboss.aerogear.devnexus2015.R;
+import org.jboss.aerogear.devnexus2015.util.PodcastClickListener;
 import org.jboss.aerogear.devnexus2015.ui.adapter.PodcastSpinnerAdaper;
 import org.jboss.aerogear.devnexus2015.ui.adapter.PodcastViewAdapter;
 import org.jboss.aerogear.devnexus2015.ui.adapter.ScheduleItemViewAdapter;
@@ -34,7 +35,7 @@ import java.util.List;
 /**
  * Created by summers on 1/7/15.
  */
-public class PodcastFragment extends Fragment implements LoaderManager.LoaderCallbacks<PodcastList>,PodcastViewAdapter.SessionClickListener {
+public class PodcastFragment extends Fragment implements LoaderManager.LoaderCallbacks<PodcastList>,PodcastClickListener {
 
     private static final int SCHEDULE_LOADER = 0x0100;
     private static final String TRACK = "PodcastFragment.trackName";

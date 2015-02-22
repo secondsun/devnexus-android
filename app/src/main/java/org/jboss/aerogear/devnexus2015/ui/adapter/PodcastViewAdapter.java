@@ -12,6 +12,7 @@ import android.widget.TextView;
 import org.devnexus.util.TrackRoomUtil;
 import org.devnexus.vo.Podcast;
 import org.jboss.aerogear.devnexus2015.R;
+import org.jboss.aerogear.devnexus2015.util.PodcastClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,9 +24,9 @@ public class PodcastViewAdapter extends RecyclerView.Adapter<PodcastViewAdapter.
 
     private final List<Podcast> items;
     private final Context mContext;
-    private final SessionClickListener clickListener;
+    private final PodcastClickListener clickListener;
 
-    public PodcastViewAdapter(List<Podcast> items, Context context, SessionClickListener clickListener) {
+    public PodcastViewAdapter(List<Podcast> items, Context context, PodcastClickListener clickListener) {
         this.items = new ArrayList<>(items);
         this.mContext = context;
         this.clickListener = clickListener;
@@ -79,12 +80,6 @@ public class PodcastViewAdapter extends RecyclerView.Adapter<PodcastViewAdapter.
             super(itemView);
             presentationView = itemView;
         }
-    }
-
-    public interface SessionClickListener {
-
-        public void loadSession(Podcast presentation);
-
     }
 
 

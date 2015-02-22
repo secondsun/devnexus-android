@@ -24,13 +24,19 @@ import android.widget.BaseAdapter;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.devnexus.util.GsonUtils;
+import org.devnexus.vo.Presentation;
+import org.devnexus.vo.ScheduleItem;
 import org.devnexus.vo.UserCalendar;
 import org.devnexus.vo.contract.UserCalendarContract;
 import org.jboss.aerogear.devnexus2015.MainActivity;
 import org.jboss.aerogear.devnexus2015.R;
 import org.jboss.aerogear.devnexus2015.ui.adapter.MyScheduleViewAdapter;
+import org.jboss.aerogear.devnexus2015.util.AddSessionClickListener;
+import org.jboss.aerogear.devnexus2015.util.SessionClickListener;
+import org.jboss.aerogear.devnexus2015.util.SessionPickerReceiver;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -44,7 +50,7 @@ import static org.devnexus.vo.contract.UserCalendarContract.DATE;
 /**
  * Created by summers on 1/7/15.
  */
-public class MyScheduleFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class MyScheduleFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, SessionClickListener, AddSessionClickListener, SessionPickerReceiver {
 
     private static final String TAG = MyScheduleFragment.class.getSimpleName();
     private static final int SCHEDULE_LOADER = 0x0100;
@@ -71,7 +77,7 @@ public class MyScheduleFragment extends Fragment implements LoaderManager.Loader
         recycler = (RecyclerView) view.findViewById(R.id.my_recycler_view);
         recycler.setLayoutManager(new GridLayoutManager(getActivity(), 1));
         resolver = getActivity().getContentResolver();
-        recycler.setAdapter(new MyScheduleViewAdapter(new ArrayList<UserCalendar>(1), getActivity()));
+        recycler.setAdapter(new MyScheduleViewAdapter(new ArrayList<UserCalendar>(1), getActivity(), this, this));
 
         Spinner spinner = (Spinner) toolbar.findViewById(R.id.spinner_nav);
         loadSpinnerNav(spinner);
@@ -138,13 +144,32 @@ public class MyScheduleFragment extends Fragment implements LoaderManager.Loader
     }
 
     private void refreshData(List<UserCalendar> calendarItems) {
-        recycler.setAdapter(new MyScheduleViewAdapter(new ArrayList<UserCalendar>(calendarItems), getActivity()));
+        recycler.setAdapter(new MyScheduleViewAdapter(new ArrayList<UserCalendar>(calendarItems), getActivity(), this, this));
 
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
+    }
+
+    @Override
+    public void loadSession(Presentation presentation) {
+        Fragment sessionDetailFragment = SessionDetailFragment.newInstance(presentation.title, presentation.id);
+        ((MainActivity)getActivity()).switchFragment(sessionDetailFragment, MainActivity.BackStackOperation.ADD, "SessionDetailFragment");
+    }
+
+    @Override
+    public void showPicker(UserCalendar userCalendar) {
+
+        SessionPickerFragment pickerFragment = SessionPickerFragment.newInstance(userCalendar);
+        pickerFragment.setReceiver(this);
+        pickerFragment.show(getFragmentManager(), "SessionPicker");
+    }
+
+    @Override
+    public void receiveSessionItem(UserCalendar calendarItem, ScheduleItem session) {
+        Toast.makeText(getActivity(), "Got " +session.presentation.title, Toast.LENGTH_SHORT).show();       
     }
 
     private class CalendarDateAdapter extends BaseAdapter implements SpinnerAdapter {

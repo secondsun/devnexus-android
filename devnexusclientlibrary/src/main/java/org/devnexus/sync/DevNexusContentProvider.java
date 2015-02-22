@@ -391,6 +391,11 @@ public class DevNexusContentProvider extends ContentProvider {
                                     filteredItems.add(item);
                                 }
                                 break;
+                            case ScheduleItemContract.FROM_TIME:
+                                if ((item.fromTime == null) || !item.fromTime.equals(new Date(Long.parseLong(value)))) {
+                                    filteredItems.add(item);
+                                }
+                                break;
                             case ScheduleItemContract.SPEAKER_FNAME:
 
                                 break;

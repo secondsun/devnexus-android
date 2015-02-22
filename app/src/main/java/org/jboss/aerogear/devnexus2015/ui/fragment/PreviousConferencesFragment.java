@@ -27,6 +27,7 @@ import org.devnexus.vo.contract.PreviousYearPresentationContract.Events;
 import org.jboss.aerogear.devnexus2015.MainActivity;
 import org.jboss.aerogear.devnexus2015.R;
 import org.jboss.aerogear.devnexus2015.ui.adapter.PresentationViewAdapter;
+import org.jboss.aerogear.devnexus2015.util.SessionClickListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,7 +38,7 @@ import static org.devnexus.vo.contract.PreviousYearPresentationContract.toQuery;
 /**
  * Created by summers on 1/7/15.
  */
-public class PreviousConferencesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, PresentationViewAdapter.SessionClickListener {
+public class PreviousConferencesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, SessionClickListener {
 
     private static final int SCHEDULE_LOADER = 0x0100;
     private RecyclerView recycler;

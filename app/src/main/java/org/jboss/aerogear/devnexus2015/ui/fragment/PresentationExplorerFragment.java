@@ -25,6 +25,7 @@ import org.jboss.aerogear.devnexus2015.MainActivity;
 import org.jboss.aerogear.devnexus2015.R;
 import org.jboss.aerogear.devnexus2015.ui.adapter.PresentationViewAdapter;
 import org.jboss.aerogear.devnexus2015.ui.adapter.ScheduleItemViewAdapter;
+import org.jboss.aerogear.devnexus2015.util.SessionClickListener;
 import org.jboss.aerogear.devnexus2015.ui.adapter.SessionSpinnerAdaper;
 
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ import static org.devnexus.vo.contract.PresentationContract.toQuery;
 /**
  * Created by summers on 12/28/14.
  */
-public class PresentationExplorerFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,PresentationViewAdapter.SessionClickListener {
+public class PresentationExplorerFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,SessionClickListener {
 
     private static final int SCHEDULE_LOADER = 0x0100;
     private RecyclerView recycler;

@@ -16,6 +16,7 @@ import com.squareup.picasso.Picasso;
 import org.devnexus.util.TrackRoomUtil;
 import org.devnexus.vo.Presentation;
 import org.jboss.aerogear.devnexus2015.R;
+import org.jboss.aerogear.devnexus2015.util.SessionClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,12 +87,5 @@ public class PresentationViewAdapter extends RecyclerView.Adapter<PresentationVi
             presentationView = itemView;
         }
     }
-
-    public interface SessionClickListener {
-
-        public void loadSession(Presentation presentation);
-
-    }
-
 
 }
