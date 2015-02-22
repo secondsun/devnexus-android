@@ -72,7 +72,7 @@
     "template":"TRUE"
   },
   {
-      "id":-9,
+    "id":-9,
     "fromTime":"03/11/15 06:45 PM",
     "duration":75,
     "item":null,
@@ -100,7 +100,7 @@
   },
   {
       "id":-12,
-    "fromTime":"03/11/15 10:45 AM",
+    "fromTime":"03/11/15 10:15 AM",
     "duration":15,
     "item":null,
     "fixedTitle":"Break",
@@ -172,7 +172,7 @@
   },
   {
       "id":-20,
-    "fromTime":"03/11/15 09:15 AM",
+    "fromTime":"03/12/15 09:15 AM",
     "duration":60,
     "item":4881,
     "fixedTitle":"Keynote",
@@ -181,7 +181,7 @@
   },
   {
   "id":-21,
-    "fromTime":"03/11/15 11:45 AM",
+    "fromTime":"03/12/15 11:45 AM",
     "duration":45,
     "item":null,
     "fixedTitle":"Lunch",
@@ -190,7 +190,7 @@
   },
   {
   "id":-22,
-    "fromTime":"03/11/15 12:30 PM",
+    "fromTime":"03/12/15 12:30 PM",
     "duration":30,
     "item":null,
     "fixedTitle":"Dessert",
@@ -199,7 +199,7 @@
   },
   {
   "id":-23,
-    "fromTime":"03/11/15 10:45 AM",
+    "fromTime":"03/12/15 10:45 AM",
     "duration":15,
     "item":null,
     "fixedTitle":"Break",
@@ -208,7 +208,7 @@
   },
   {
   "id":-24,
-    "fromTime":"03/11/15 03:45 PM",
+    "fromTime":"03/12/15 03:45 PM",
     "duration":15,
     "item":null,
     "fixedTitle":"Break",
@@ -217,16 +217,16 @@
   },
   {
   "id":-25,
-    "fromTime":"03/11/15 05:15 PM",
-    "duration":15,
+    "fromTime":"03/12/15 05:15 PM",
+    "duration":30,
     "item":null,
-    "fixedTitle":"Break",
+    "fixedTitle":"Closing Ceremonies",
     "fixed":"TRUE",
     "template":"TRUE"
   },
   {
   "id":-26,
-    "fromTime":"03/11/15 10:30 AM",
+    "fromTime":"03/12/15 10:30 AM",
     "duration":75,
     "item":null,
     "fixedTitle":"",
@@ -235,7 +235,7 @@
   },
   {
   "id":-27,
-    "fromTime":"03/11/15 01:00 PM",
+    "fromTime":"03/12/15 01:00 PM",
     "duration":75,
     "item":null,
     "fixedTitle":"",
@@ -244,7 +244,7 @@
   },
   {
   "id":-28,
-    "fromTime":"03/11/15 02:30 PM",
+    "fromTime":"03/12/15 02:30 PM",
     "duration":75,
     "item":null,
     "fixedTitle":"",
@@ -253,11 +253,29 @@
   },
   {
   "id":-29,
-    "fromTime":"03/11/15 04:00 PM",
+    "fromTime":"03/12/15 04:00 PM",
     "duration":75,
     "item":null,
     "fixedTitle":"",
     "fixed":"FALSE",
     "template":"TRUE"
-  }
+  },
+        {
+            "id":-30,
+          "fromTime":"03/11/15 02:15 PM",
+          "duration":15,
+          "item":null,
+          "fixedTitle":"Break",
+          "fixed":"TRUE",
+          "template":"TRUE"
+        },
+              {
+                  "id":-31,
+                "fromTime":"03/12/15 10:15 AM",
+                "duration":15,
+                "item":null,
+                "fixedTitle":"Break",
+                "fixed":"TRUE",
+                "template":"TRUE"
+              }
 ]

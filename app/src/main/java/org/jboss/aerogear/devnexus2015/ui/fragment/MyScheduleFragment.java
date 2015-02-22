@@ -69,7 +69,7 @@ public class MyScheduleFragment extends Fragment implements LoaderManager.Loader
         toolbar.setTitle("");
         ((MainActivity) getActivity()).attachToolbar(toolbar);
         recycler = (RecyclerView) view.findViewById(R.id.my_recycler_view);
-        recycler.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        recycler.setLayoutManager(new GridLayoutManager(getActivity(), 1));
         resolver = getActivity().getContentResolver();
         recycler.setAdapter(new MyScheduleViewAdapter(new ArrayList<UserCalendar>(1), getActivity()));
 

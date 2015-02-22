@@ -314,6 +314,8 @@ public class DevNexusContentProvider extends ContentProvider {
                 results = loadTemplate(calendarStore);
             }
 
+            Collections.sort(results);
+            
             if (selection != null &&selection.contains(UserCalendarContract.DATE)) {
                 List<UserCalendar> toRemove = new ArrayList<>(results.size());
                 int dateIndex = Integer.parseInt(selectionArgs[0]);

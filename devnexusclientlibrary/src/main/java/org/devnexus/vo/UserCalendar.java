@@ -77,6 +77,9 @@ public class UserCalendar implements Comparable<UserCalendar>, Serializable {
             return id.compareTo(another.id);
         }
     }
-    
-    
+
+
+    public Date getToTime() {
+        return new Date(fromTime.getTime() + 60*1000*duration);
+    }
 }
