@@ -3,6 +3,7 @@ package org.jboss.aerogear.devnexus2015.ui.fragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.InflateException;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.devnexus.util.ResourceUtils;
 import org.devnexus.util.TrackRoomUtil;
+import org.jboss.aerogear.devnexus2015.MainActivity;
 import org.jboss.aerogear.devnexus2015.R;
 
 /**
@@ -54,6 +56,7 @@ public class GalleriaMapFragment extends Fragment implements
     private GoogleMap mMap;
     private static View view;
     private MapFragment mapFragment;
+    private Toolbar toolbar;
 
 
     @Override
@@ -69,6 +72,11 @@ public class GalleriaMapFragment extends Fragment implements
         } catch (InflateException e) {
         /* map is already there, just return view as it is */
         }
+
+        toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        toolbar.setTitle("Cobb Galleria");
+        ((MainActivity) getActivity()).attachToolbar(toolbar);
+        
         return view;
     }
 
