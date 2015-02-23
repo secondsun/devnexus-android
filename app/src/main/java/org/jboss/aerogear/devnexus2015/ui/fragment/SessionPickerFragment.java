@@ -115,6 +115,7 @@ public class SessionPickerFragment extends DialogFragment implements LoaderManag
                     ScheduleItem item = new ScheduleItem();
                     item.presentation = presentation;
                     receiver.receiveSessionItem(calendarItem, item);
+                    dismiss();
                 }
             });
         }

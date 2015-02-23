@@ -15,6 +15,7 @@ import com.squareup.picasso.Picasso;
 import org.devnexus.util.TrackRoomUtil;
 import org.devnexus.vo.ScheduleItem;
 import org.devnexus.vo.UserCalendar;
+import org.devnexus.vo.contract.UserCalendarContract;
 import org.jboss.aerogear.devnexus2015.R;
 import org.jboss.aerogear.devnexus2015.util.AddSessionClickListener;
 import org.jboss.aerogear.devnexus2015.util.ColorUtils;
@@ -62,7 +63,7 @@ public class MyScheduleViewAdapter extends RecyclerView.Adapter<MyScheduleViewAd
             holder.title.setText( "Select a Session ");
             holder.title.setTextColor(context.getResources().getColor(R.color.dn_black));
             holder.titleBar.setBackgroundColor(context.getResources().getColor(R.color.dn_white));
-            holder.feedbackButton.setVisibility(View.GONE);
+            holder.removeButton.setVisibility(View.GONE);
             
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -72,14 +73,14 @@ public class MyScheduleViewAdapter extends RecyclerView.Adapter<MyScheduleViewAd
             });
             
         } else {
-            ScheduleItem item = userCalendarItem.item;
+            final ScheduleItem item = userCalendarItem.item;
             if (item!= null) {
                 int color = context.getResources().getColor(TrackRoomUtil.forTrack(item.presentation.track.name));
                 holder.title.setText(item.presentation.title);
                 holder.title.setTextColor(context.getResources().getColor(R.color.dn_black));
                 Picasso.with(context).load("https://devnexus.com/s/speakers/"+item.presentation.speakers.get(0).id+".jpg").into(holder.image);
                 holder.titleBar.setBackgroundColor(color);
-                holder.feedbackButton.setVisibility(View.VISIBLE);
+                holder.removeButton.setVisibility(View.VISIBLE);
 
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -88,6 +89,13 @@ public class MyScheduleViewAdapter extends RecyclerView.Adapter<MyScheduleViewAd
                     }
                 });
 
+                holder.removeButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        userCalendarItem.item = null;
+                        context.getContentResolver().update(UserCalendarContract.URI, UserCalendarContract.valueize(userCalendarItem, true), UserCalendarContract.ID, new String[]{userCalendarItem.getId() +""});
+                    }
+                });
 
                 holder.title.setTextColor(ColorUtils.getTextColor(context, color));
                 
@@ -98,7 +106,7 @@ public class MyScheduleViewAdapter extends RecyclerView.Adapter<MyScheduleViewAd
                 holder.title.setTextColor(context.getResources().getColor(R.color.dn_black));
                 holder.titleBar.setBackgroundColor(context.getResources().getColor(R.color.dn_white));
                 holder.image.setImageDrawable(new ColorDrawable(context.getResources().getColor(R.color.dn_white)));
-                holder.feedbackButton.setVisibility(View.GONE);
+                holder.removeButton.setVisibility(View.GONE);
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -133,7 +141,7 @@ public class MyScheduleViewAdapter extends RecyclerView.Adapter<MyScheduleViewAd
         final ImageView image;
         final TextView title;
         final View titleBar;
-        final ImageButton feedbackButton;
+        final ImageButton removeButton;
         
         final View itemView;
         
@@ -145,7 +153,7 @@ public class MyScheduleViewAdapter extends RecyclerView.Adapter<MyScheduleViewAd
             image = (ImageView) itemView.findViewById(R.id.image);
             title = (TextView) itemView.findViewById(R.id.title);
             titleBar = itemView.findViewById(R.id.title_bar);
-            feedbackButton = (ImageButton) itemView.findViewById(R.id.give_feedback_button);
+            removeButton = (ImageButton) itemView.findViewById(R.id.remove_session_from_schedule);
         }
         
         

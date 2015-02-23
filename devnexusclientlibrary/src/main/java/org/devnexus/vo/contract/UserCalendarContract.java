@@ -22,6 +22,7 @@ public final class UserCalendarContract {
     public static final List<Date> DATES = Arrays.asList(new Date[]{asDate(Calendar.MARCH, 10, 2015), asDate(Calendar.MARCH, 11, 2015), asDate(Calendar.MARCH, 12, 2015)});
 
     public static final String DATA = "DATA";
+    public static final String ID = "ID";
     public static final Integer DATA_IDX = 0;
     public static final String NOTIFY = "NOTIFY";
     public static final Integer NOTIFY_IDX = 1;

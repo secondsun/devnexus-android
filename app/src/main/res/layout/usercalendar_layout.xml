@@ -92,7 +92,7 @@
                     
                     android:gravity="top|left"
                     android:maxLines="2"
-                    android:layout_toLeftOf="@+id/give_feedback_button"
+                    android:layout_toLeftOf="@+id/remove_session_from_schedule"
                     android:layout_alignParentLeft="true"
                     
                     android:layout_alignParentBottom="true"
@@ -100,14 +100,14 @@
                     android:textSize="14sp" />
 
                 <ImageButton
-                    android:id="@+id/give_feedback_button"
+                    android:id="@+id/remove_session_from_schedule"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_weight="1"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentBottom="true"
                     android:scaleType="center"
-                    android:src="@drawable/ic_schedule_feedback" />
+                    android:src="@android:drawable/ic_menu_delete" />
             </RelativeLayout>
 
         </RelativeLayout>

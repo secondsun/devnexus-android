@@ -24,7 +24,6 @@ import android.widget.BaseAdapter;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.devnexus.util.GsonUtils;
 import org.devnexus.vo.Presentation;
@@ -59,13 +58,18 @@ public class MyScheduleFragment extends Fragment implements LoaderManager.Loader
     private View contentView;
     private ContentResolver resolver;
     private Toolbar toolbar;
+    private Spinner spinner;
 
     private ContentObserver userCalendarObserver = new ContentObserver(new Handler(Looper.getMainLooper())) {
         @Override
         public void onChange(boolean selfChange) {
-            getLoaderManager().restartLoader(SCHEDULE_LOADER, Bundle.EMPTY, MyScheduleFragment.this);
+
+            Bundle args = new Bundle();
+            args.putInt(DATE_KEY, spinner.getSelectedItemPosition());
+            getLoaderManager().restartLoader(SCHEDULE_LOADER, args, MyScheduleFragment.this);
         }
     };
+    private SessionPickerFragment pickerFragment;
 
     @Nullable
     @Override
@@ -79,7 +83,7 @@ public class MyScheduleFragment extends Fragment implements LoaderManager.Loader
         resolver = getActivity().getContentResolver();
         recycler.setAdapter(new MyScheduleViewAdapter(new ArrayList<UserCalendar>(1), getActivity(), this, this));
 
-        Spinner spinner = (Spinner) toolbar.findViewById(R.id.spinner_nav);
+        spinner = (Spinner) toolbar.findViewById(R.id.spinner_nav);
         loadSpinnerNav(spinner);
         return view;
     }
@@ -144,7 +148,12 @@ public class MyScheduleFragment extends Fragment implements LoaderManager.Loader
     }
 
     private void refreshData(List<UserCalendar> calendarItems) {
+        GridLayoutManager gridLayoutManager = (GridLayoutManager) recycler.getLayoutManager();
+        int index = gridLayoutManager.findFirstVisibleItemPosition(); 
+        View v = gridLayoutManager.getChildAt(0); 
+        
         recycler.setAdapter(new MyScheduleViewAdapter(new ArrayList<UserCalendar>(calendarItems), getActivity(), this, this));
+        gridLayoutManager.scrollToPosition(index);
 
     }
 
@@ -162,14 +171,19 @@ public class MyScheduleFragment extends Fragment implements LoaderManager.Loader
     @Override
     public void showPicker(UserCalendar userCalendar) {
 
-        SessionPickerFragment pickerFragment = SessionPickerFragment.newInstance(userCalendar);
+        pickerFragment = SessionPickerFragment.newInstance(userCalendar);
         pickerFragment.setReceiver(this);
         pickerFragment.show(getFragmentManager(), "SessionPicker");
     }
 
     @Override
     public void receiveSessionItem(UserCalendar calendarItem, ScheduleItem session) {
-        Toast.makeText(getActivity(), "Got " +session.presentation.title, Toast.LENGTH_SHORT).show();       
+        calendarItem.item = session;
+        resolver.update(UserCalendarContract.URI, UserCalendarContract.valueize(calendarItem, true), UserCalendarContract.ID, new String[]{calendarItem.getId() + ""} );
+        if (pickerFragment != null) {
+            pickerFragment.dismiss();
+            pickerFragment = null;
+        }
     }
 
     private class CalendarDateAdapter extends BaseAdapter implements SpinnerAdapter {

@@ -111,7 +111,7 @@ public class GalleriaMapFragment extends Fragment implements
         mMap.addMarker(new MarkerOptions().position(ROOM_104).title("Room 104"));
         mMap.addMarker(new MarkerOptions().position(ROOM_105).title("Room 105"));
 
-
+        
 
         mMap.setOnMarkerClickListener(this);
         mMap.setOnInfoWindowClickListener(this);
