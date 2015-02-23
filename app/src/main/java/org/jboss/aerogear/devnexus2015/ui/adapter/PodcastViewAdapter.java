@@ -1,7 +1,6 @@
 package org.jboss.aerogear.devnexus2015.ui.adapter;
 
 import android.content.Context;
-import android.graphics.LightingColorFilter;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,18 +45,19 @@ public class PodcastViewAdapter extends RecyclerView.Adapter<PodcastViewAdapter.
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         final Podcast item = items.get(i);
         ImageView photo = (ImageView) viewHolder.presentationView.findViewById(R.id.photo);
+        photo.setVisibility(View.GONE);
+
         int trackColor = mContext.getResources().getColor(R.color.dn_default);
-        
+
         if (item.track != null) {
             trackColor = mContext.getResources().getColor(TrackRoomUtil.forTrack(item.track));
         }
-        photo.setBackgroundColor(trackColor);
 
-        if (trackColor != mContext.getResources().getColor(R.color.dn_default)) {
-            photo.setColorFilter(new LightingColorFilter(trackColor, 1));
-        }
-        
-        ((TextView) viewHolder.presentationView.findViewById(R.id.info_text)).setText(item.title);
+
+        TextView infoText = ((TextView) viewHolder.presentationView.findViewById(R.id.info_text));
+        infoText.setText(item.title);
+        infoText.setBackgroundColor(trackColor);
+        infoText.setTextColor( mContext.getResources().getColor(R.color.dn_white));
 
         viewHolder.presentationView.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -53,9 +53,9 @@ public class PodcastFragment extends Fragment implements LoaderManager.LoaderCal
         toolbar.setTitle("");
         ((MainActivity) getActivity()).attachToolbar(toolbar);
         recycler = (RecyclerView) view.findViewById(R.id.my_recycler_view);
-        recycler.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        recycler.setLayoutManager(new GridLayoutManager(getActivity(), 1));
         resolver = getActivity().getContentResolver();
-        recycler.setAdapter(new ScheduleItemViewAdapter(new ArrayList<ScheduleItem>(1), getActivity()));
+        recycler.setAdapter(new ScheduleItemViewAdapter(new ArrayList<ScheduleItem>(1), getActivity(), true));
 
         Spinner spinner = (Spinner) toolbar.findViewById(R.id.spinner_nav);
         loadSpinnerNav(spinner);

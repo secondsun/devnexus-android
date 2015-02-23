@@ -1,7 +1,6 @@
 package org.jboss.aerogear.devnexus2015.ui.adapter;
 
 import android.content.Context;
-import android.graphics.LightingColorFilter;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -56,9 +55,12 @@ public class PresentationViewAdapter extends RecyclerView.Adapter<PresentationVi
             trackColor = mContext.getResources().getColor(TrackRoomUtil.forTrack(item.track.name));
         }
         photo.setBackgroundColor(trackColor);
-        if (trackColor != mContext.getResources().getColor(R.color.dn_default)) {
-            photo.setColorFilter(new LightingColorFilter(trackColor, 1));
-        }
+
+        TextView infoText = ((TextView) viewHolder.presentationView.findViewById(R.id.info_text));
+        infoText.setText(item.title);
+        infoText.setBackgroundColor(trackColor);
+        infoText.setTextColor( mContext.getResources().getColor(R.color.dn_white));
+
         Log.d("Presentation Image", "https://devnexus.com/s/speakers/"+item.speakers.get(0).id+".jpg");
         Picasso picasso = Picasso.with(mContext);
         

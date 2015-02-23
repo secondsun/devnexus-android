@@ -80,7 +80,6 @@ public class PresentationExplorerFragment extends Fragment implements LoaderMana
                     case CLOUD_DEVOPTS:
                     case DATA_INTEGRATION_IOT:
                     case FUNCTIONAL_PROGRAMMING:
-                    case HTML_5:
                     case JAVA:
                     case JAVASCRIPT:
                     case JVM_LANGUAGES:
