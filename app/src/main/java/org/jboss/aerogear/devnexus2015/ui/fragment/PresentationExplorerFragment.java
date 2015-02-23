@@ -76,15 +76,6 @@ public class PresentationExplorerFragment extends Fragment implements LoaderMana
                     case ALL_EVENTS:
                         getLoaderManager().restartLoader(SCHEDULE_LOADER, Bundle.EMPTY, PresentationExplorerFragment.this);
                         break;
-                    case WORKSHOP:
-                        getLoaderManager().restartLoader(SCHEDULE_LOADER, Bundle.EMPTY, PresentationExplorerFragment.this);
-                        break;
-                    case BREAKOUTS:
-                        getLoaderManager().restartLoader(SCHEDULE_LOADER, Bundle.EMPTY, PresentationExplorerFragment.this);
-                        break;
-                    case BREAKS_AND_SOCIAL:
-                        getLoaderManager().restartLoader(SCHEDULE_LOADER, Bundle.EMPTY, PresentationExplorerFragment.this);
-                        break;
                     case AGILE:
                     case CLOUD_DEVOPTS:
                     case DATA_INTEGRATION_IOT:
@@ -93,7 +84,6 @@ public class PresentationExplorerFragment extends Fragment implements LoaderMana
                     case JAVA:
                     case JAVASCRIPT:
                     case JVM_LANGUAGES:
-                    case KEYNOTES:
                     case MICROSERVICES_SECURITY:
                     case MOBILE:
                     case USER_EXPERIENCE_AND_TOOLS:

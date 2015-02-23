@@ -159,12 +159,6 @@ public class SessionSpinnerAdaper extends BaseAdapter implements SpinnerAdapter 
     public enum ITEMS {
         ALL_EVENTS(R.string.all_events, true, false, false, R.color.dn_white),
         SPACER_0(0, false, false, true, R.color.dn_white),
-        EVENT_TYPES(R.string.event_type, false, true, false, R.color.dn_white),
-        WORKSHOP(R.string.workshops, true, false, false, R.color.dn_white),
-        BREAKOUTS(R.string.breakouts, true, false, false, R.color.dn_white),
-        KEYNOTES(R.string.keynote, true, false, false, R.color.dn_white),
-        BREAKS_AND_SOCIAL(R.string.breaks_and_social, true, false, false, R.color.dn_white),
-        SPACER_1(0, false, false, true, R.color.dn_white),
         SESSION_TOPIC(R.string.topics, false, true, false, R.color.dn_white),
         AGILE(R.string.topic_agile, true, false, false, R.color.Agile),
         CLOUD_DEVOPTS(R.string.topic_cloud_and_devopts, true, false, false, R.color.Cloud_DevOps),

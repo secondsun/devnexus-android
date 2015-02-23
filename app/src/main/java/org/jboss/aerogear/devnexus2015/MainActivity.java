@@ -66,6 +66,7 @@ public class MainActivity extends ActionBarActivity {
                 drawerLayout.openDrawer(Gravity.START);
             }
         });
+        
     }
 
     public void switchFragment(Fragment fragment, BackStackOperation operation, String tag) {

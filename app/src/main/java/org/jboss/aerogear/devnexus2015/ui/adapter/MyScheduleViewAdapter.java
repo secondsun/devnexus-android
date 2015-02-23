@@ -80,8 +80,17 @@ public class MyScheduleViewAdapter extends RecyclerView.Adapter<MyScheduleViewAd
                 holder.title.setTextColor(context.getResources().getColor(R.color.dn_black));
                 Picasso.with(context).load("https://devnexus.com/s/speakers/"+item.presentation.speakers.get(0).id+".jpg").into(holder.image);
                 holder.titleBar.setBackgroundColor(color);
-                holder.removeButton.setVisibility(View.VISIBLE);
-
+                if (!userCalendarItem.fixed) {
+                    holder.removeButton.setVisibility(View.VISIBLE);
+                    
+                    holder.removeButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            userCalendarItem.item = null;
+                            context.getContentResolver().update(UserCalendarContract.URI, UserCalendarContract.valueize(userCalendarItem, true), UserCalendarContract.ID, new String[]{userCalendarItem.getId() +""});
+                        }
+                    });
+                }
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -89,13 +98,7 @@ public class MyScheduleViewAdapter extends RecyclerView.Adapter<MyScheduleViewAd
                     }
                 });
 
-                holder.removeButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        userCalendarItem.item = null;
-                        context.getContentResolver().update(UserCalendarContract.URI, UserCalendarContract.valueize(userCalendarItem, true), UserCalendarContract.ID, new String[]{userCalendarItem.getId() +""});
-                    }
-                });
+                
 
                 holder.title.setTextColor(ColorUtils.getTextColor(context, color));
                 

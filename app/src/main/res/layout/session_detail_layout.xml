@@ -16,6 +16,10 @@
             android:layout_height="wrap_content" />
 
     </android.support.v7.widget.Toolbar>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/dn_spacer"/>
 
     <ScrollView
         android:layout_width="match_parent"

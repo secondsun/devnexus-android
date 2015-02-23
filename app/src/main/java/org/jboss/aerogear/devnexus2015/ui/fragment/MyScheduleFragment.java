@@ -55,7 +55,6 @@ public class MyScheduleFragment extends Fragment implements LoaderManager.Loader
     private static final int SCHEDULE_LOADER = 0x0100;
     private static final String DATE_KEY = "Schedule.dateKey";
     private RecyclerView recycler;
-    private View contentView;
     private ContentResolver resolver;
     private Toolbar toolbar;
     private Spinner spinner;
@@ -74,7 +73,7 @@ public class MyScheduleFragment extends Fragment implements LoaderManager.Loader
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = contentView = inflater.inflate(R.layout.my_schedule, null);
+        View view = inflater.inflate(R.layout.my_schedule, null);
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         toolbar.setTitle("");
         ((MainActivity) getActivity()).attachToolbar(toolbar);
@@ -212,11 +211,19 @@ public class MyScheduleFragment extends Fragment implements LoaderManager.Loader
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            return getDropDownView(position, convertView, parent);
-        }
+
+            if (convertView == null) {
+                LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                convertView = inflater.inflate(R.layout.textview_dropdown, null);
+            }
+
+            ((TextView) convertView.findViewById(R.id.header_label)).setText(FORMAT.format((Date) getItem(position)));
+
+            return convertView;        }
 
         @Override
         public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 convertView = inflater.inflate(R.layout.textview, null);

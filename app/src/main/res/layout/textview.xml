@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@color/dn_white"
+    android:layout_height="42dp"
+
+    >
+
     <TextView
         android:id="@+id/header_label"
         android:layout_width="wrap_content"
@@ -18,4 +22,15 @@
 
         android:text="@string/topic_mobile"
         android:textColor="@color/dn_black" />
-</LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/color"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_alignParentRight="true"
+        android:adjustViewBounds="true"
+        android:background="@android:color/transparent"
+        android:scaleType="centerInside" />
+
+</RelativeLayout>
