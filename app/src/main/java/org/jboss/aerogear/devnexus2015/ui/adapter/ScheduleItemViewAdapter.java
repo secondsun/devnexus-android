@@ -78,7 +78,6 @@ public class ScheduleItemViewAdapter  extends RecyclerView.Adapter<ScheduleItemV
             viewHolder.sessionView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //clickListener.loadSession(item);
                 }
             });
         } else {

@@ -62,7 +62,7 @@ public class PodcastViewAdapter extends RecyclerView.Adapter<PodcastViewAdapter.
         viewHolder.presentationView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clickListener.loadSession(item);
+                clickListener.playPodcast(item);
             }
         });
 
