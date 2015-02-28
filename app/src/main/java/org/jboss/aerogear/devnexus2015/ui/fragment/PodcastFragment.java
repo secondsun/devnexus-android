@@ -62,7 +62,7 @@ public class PodcastFragment extends Fragment implements LoaderManager.LoaderCal
     private SeekBar seekBar;
     private PodcastPlaybackService2 playbackService;
     private final Handler mHandler = new Handler();
-    private MediaPlayer mp;
+
     private Runnable mRunnable;
     private ServiceConnection playbackConnection = new ServiceConnection() {
 
@@ -70,8 +70,8 @@ public class PodcastFragment extends Fragment implements LoaderManager.LoaderCal
         public void onServiceConnected(ComponentName name, IBinder service) {
             playbackService = ((PodcastPlaybackService2.PlaybackBinder) service).service;
             playbackService.podcastFragment = PodcastFragment.this;
-            mp = playbackService.mp;
-            if (mp.isPlaying()) {
+
+            if (playbackService.isPrepared() && (playbackService.isPlaying() || playbackService.isPaused())){
                 beginPlayback();
             }
         }
@@ -80,7 +80,7 @@ public class PodcastFragment extends Fragment implements LoaderManager.LoaderCal
         public void onServiceDisconnected(ComponentName name) {
             playbackService.podcastFragment = null;
             playbackService = null;
-            mp = null;
+
         }
     };
 
@@ -245,12 +245,12 @@ public class PodcastFragment extends Fragment implements LoaderManager.LoaderCal
         playPauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mp != null) {
-                    if (mp.isPlaying()) {
-                        mp.pause();
+                if (playbackService.isPrepared()) {
+                    if (playbackService.isPlaying()) {
+                        playbackService.pauseMedia();
                         playPauseButton.setImageResource(android.R.drawable.ic_media_play);
                     } else {
-                        mp.start();
+                        playbackService.playMedia();
                         playPauseButton.setImageResource(android.R.drawable.ic_media_pause);
                     }
                 }
@@ -258,7 +258,9 @@ public class PodcastFragment extends Fragment implements LoaderManager.LoaderCal
             }
         });
 
-        seekBar.setMax(mp.getDuration());
+        seekBar.setMax(playbackService.getDuration());
+        int mCurrentPosition = playbackService.getCurrentPosition();
+        seekBar.setProgress(mCurrentPosition);
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
@@ -274,8 +276,13 @@ public class PodcastFragment extends Fragment implements LoaderManager.LoaderCal
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (mp != null && fromUser) {
-                    mp.seekTo(progress);
+                if (fromUser) {
+                    playbackService.seekTo(progress);
+                    if (playbackService.isPrepared() && !playbackService.isPlaying()) {
+                        playPauseButton.setImageResource(android.R.drawable.ic_media_play);
+                    } else {
+                        playPauseButton.setImageResource(android.R.drawable.ic_media_play);
+                    }
                 }
             }
         });
@@ -284,18 +291,25 @@ public class PodcastFragment extends Fragment implements LoaderManager.LoaderCal
         mRunnable = new Runnable() {
             @Override
             public void run() {
-                if (mp != null) {
-                    int mCurrentPosition = mp.getCurrentPosition();
+                if (playbackService.isPrepared()) {
+                    int mCurrentPosition = playbackService.getCurrentPosition();
                     seekBar.setProgress(mCurrentPosition);
+                    if (playbackService.isPrepared() && !playbackService.isPlaying()) {
+                        playPauseButton.setImageResource(android.R.drawable.ic_media_play);
+                    } else {
+                        playPauseButton.setImageResource(android.R.drawable.ic_media_pause);
+                    }
                 }
-                if (playbackService != null && mp.isPlaying()) {
+                if (playbackService != null && playbackService.isPlaying()) {
                     mHandler.postDelayed(this, 1000);
                 }
             }
         };
 
-        mHandler.postDelayed(mRunnable, 1000);
-        mp.start();
+        mHandler.postDelayed(mRunnable, 0);
+        if (!playbackService.isPaused()) {
+            playbackService.playMedia();
+        }
     }
 
     private void endPlayback() {

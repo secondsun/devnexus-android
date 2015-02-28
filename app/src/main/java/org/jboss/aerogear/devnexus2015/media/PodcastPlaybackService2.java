@@ -43,14 +43,15 @@ public class PodcastPlaybackService2 extends Service implements MediaPlayer.OnCo
     private PowerManager.WakeLock wakeLock;
     private Notification notification;
 
-    public MediaPlayer mp;
+    private MediaPlayer mp;
     private String uri;
     private String fileName;
     private String title;
 
     public PodcastFragment podcastFragment;
-
-
+    private boolean paused = true;
+    private boolean prepared = false;
+    private int duration;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -68,7 +69,7 @@ public class PodcastPlaybackService2 extends Service implements MediaPlayer.OnCo
         if (mp.isPlaying()) {
             cleanUpOldPlayback();
         }
-        
+
         startPlayback();
 
     }
@@ -99,16 +100,16 @@ public class PodcastPlaybackService2 extends Service implements MediaPlayer.OnCo
         startNotification();
         String link = getMediaLink();
         acquireWifiLockIfNecessary();
-        
+
         try {
             mp.setDataSource(link);
-            
+
             mp.prepareAsync();
         } catch (IOException e) {
             Log.d("PodcastPlayer", e.getMessage(), e);
         }
-        
-        
+
+
 
     }
 
@@ -156,7 +157,7 @@ public class PodcastPlaybackService2 extends Service implements MediaPlayer.OnCo
                 build();
         notification.flags |= NotificationCompat.FLAG_ONGOING_EVENT;
         notification.icon = R.drawable.ic_launcher;
-        
+
         startForeground(NOTIFICATION_ID, notification);
     }
 
@@ -210,13 +211,25 @@ public class PodcastPlaybackService2 extends Service implements MediaPlayer.OnCo
     public void pauseMedia() {
         if(mp.isPlaying()){
             mp.pause();
-        }
+            paused = true;
+            AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+            audioManager.abandonAudioFocus(this);
 
+        }
+        closeNotification();
+    }
+
+    private void focusPause() {
+        if(mp.isPlaying()){
+            mp.pause();
+        }
     }
 
     public void playMedia() {
         if(!mp.isPlaying()) {
             mp.start();
+            startNotification();
+            paused = false;
         }
     }
 
@@ -243,6 +256,7 @@ public class PodcastPlaybackService2 extends Service implements MediaPlayer.OnCo
             mp.setOnPreparedListener(this);
         } else {
             mp.reset();
+            prepared = false;
         }
 
         AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
@@ -253,9 +267,9 @@ public class PodcastPlaybackService2 extends Service implements MediaPlayer.OnCo
         if (result != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
             Log.e(TAG, "Could not get Audio Focus");
         }
-        
+
     }
-    
+
     @Override
     public IBinder onBind(Intent intent) {
         return new PlaybackBinder(this);
@@ -264,6 +278,7 @@ public class PodcastPlaybackService2 extends Service implements MediaPlayer.OnCo
     public void stop() {
         stopMedia();
         mp.reset();
+        prepared = false;
     }
 
     @Override
@@ -280,7 +295,7 @@ public class PodcastPlaybackService2 extends Service implements MediaPlayer.OnCo
                 Log.e(TAG, "There was a playback error with an Unknown What:" +what);
                 break;
         }
-        
+
         switch (extra) {
 
             case MEDIA_ERROR_IO:
@@ -301,7 +316,7 @@ public class PodcastPlaybackService2 extends Service implements MediaPlayer.OnCo
         }
 
         String message = errorMessageBuilder.toString();
-        
+
         Log.e(TAG, message);
         Log.e(TAG, fileName);
         sendFailure(new RuntimeException(message));
@@ -310,8 +325,10 @@ public class PodcastPlaybackService2 extends Service implements MediaPlayer.OnCo
 
     @Override
     public void onPrepared(MediaPlayer mp) {
+        paused = false;
+        prepared = true;
         callPlaybackFragment();
-        
+
     }
 
     @Override
@@ -319,7 +336,9 @@ public class PodcastPlaybackService2 extends Service implements MediaPlayer.OnCo
         switch (focusChange) {
             case AudioManager.AUDIOFOCUS_GAIN:
                 // resume playback
-                playMedia();
+                if (paused) {
+                    playMedia();
+                }
                 mp.setVolume(1.0f, 1.0f);
                 break;
 
@@ -327,14 +346,14 @@ public class PodcastPlaybackService2 extends Service implements MediaPlayer.OnCo
                 // Lost focus for an unbounded amount of time: stop playback and release media player
                 stopMedia();
                 mp.release();
-                
+                prepared = false;
                 break;
 
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
                 // Lost focus for a short time, but we have to stop
                 // playback. We don't release the media player because playback
                 // is likely to resume
-                pauseMedia();
+                focusPause();
                 break;
 
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
@@ -345,6 +364,37 @@ public class PodcastPlaybackService2 extends Service implements MediaPlayer.OnCo
         }
     }
 
+    public boolean isPaused() {
+        return paused;
+    }
+
+    public boolean isPrepared() {
+        return prepared;
+    }
+
+    public boolean isPlaying() {
+        return mp.isPlaying();
+    }
+
+    public int getDuration() {
+        if (isPrepared())
+            return mp.getDuration();
+        else
+            return 0;
+    }
+
+    public int getCurrentPosition() {
+        if (isPrepared())
+            return mp.getCurrentPosition();
+        else
+            return 0;
+    }
+
+    public void seekTo(int progress) {
+        if (isPrepared()) {
+            mp.seekTo(progress);
+        }
+    }
 
     public class PlaybackBinder extends Binder {
         public final PodcastPlaybackService2 service;
@@ -353,5 +403,5 @@ public class PodcastPlaybackService2 extends Service implements MediaPlayer.OnCo
             service = podcastPlaybackService;
         }
     }
-    
+
 }
