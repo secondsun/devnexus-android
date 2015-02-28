@@ -33,7 +33,7 @@ import org.devnexus.vo.PodcastList;
 import org.devnexus.vo.ScheduleItem;
 import org.jboss.aerogear.devnexus2015.MainActivity;
 import org.jboss.aerogear.devnexus2015.R;
-import org.jboss.aerogear.devnexus2015.media.PodcastPlaybackService;
+import org.jboss.aerogear.devnexus2015.media.PodcastPlaybackService2;
 import org.jboss.aerogear.devnexus2015.ui.adapter.PodcastSpinnerAdaper;
 import org.jboss.aerogear.devnexus2015.ui.adapter.PodcastViewAdapter;
 import org.jboss.aerogear.devnexus2015.ui.adapter.ScheduleItemViewAdapter;
@@ -42,7 +42,6 @@ import org.jboss.aerogear.devnexus2015.util.PodcastClickListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 
 
 /**
@@ -61,15 +60,15 @@ public class PodcastFragment extends Fragment implements LoaderManager.LoaderCal
     private ImageButton playPauseButton;
     private ImageButton downloadButton;
     private SeekBar seekBar;
-    private PodcastPlaybackService playbackService;
+    private PodcastPlaybackService2 playbackService;
     private final Handler mHandler = new Handler();
     private MediaPlayer mp;
     private Runnable mRunnable;
     private ServiceConnection playbackConnection = new ServiceConnection() {
-        
+
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            playbackService = ((PodcastPlaybackService.PlaybackBinder)service).service;
+            playbackService = ((PodcastPlaybackService2.PlaybackBinder) service).service;
             playbackService.podcastFragment = PodcastFragment.this;
             mp = playbackService.mp;
             if (mp.isPlaying()) {
@@ -79,15 +78,12 @@ public class PodcastFragment extends Fragment implements LoaderManager.LoaderCal
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            playbackService.podcastFragment  = null;
+            playbackService.podcastFragment = null;
             playbackService = null;
-            if (mp.isPlaying()) {
-                endPlayback();
-            }
             mp = null;
         }
     };
-    
+
 
     @Nullable
     @Override
@@ -106,7 +102,7 @@ public class PodcastFragment extends Fragment implements LoaderManager.LoaderCal
         playPauseButton = (ImageButton) playbackLayout.findViewById(R.id.playpause_button);
         downloadButton = (ImageButton) playbackLayout.findViewById(R.id.download_button);
         seekBar = (SeekBar) playbackLayout.findViewById(R.id.seekbar);
-        
+
         Spinner spinner = (Spinner) toolbar.findViewById(R.id.spinner_nav);
         loadSpinnerNav(spinner);
         return view;
@@ -162,7 +158,7 @@ public class PodcastFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public void onResume() {
         super.onResume();
-        Intent playbackIntent = new Intent(getActivity(), PodcastPlaybackService.class);
+        Intent playbackIntent = new Intent(getActivity(), PodcastPlaybackService2.class);
         getActivity().bindService(playbackIntent, playbackConnection, Context.BIND_ABOVE_CLIENT);
     }
 
@@ -177,12 +173,12 @@ public class PodcastFragment extends Fragment implements LoaderManager.LoaderCal
 
     @Override
     public void onLoadFinished(Loader<PodcastList> loader, PodcastList data) {
-        
+
         List<Podcast> finalList = new ArrayList<>();
         List<Podcast> podcasts = data.podcasts;
-        Bundle args = ((JsonLoader)loader).getArgs();
+        Bundle args = ((JsonLoader) loader).getArgs();
         if (args.isEmpty()) {
-            finalList =podcasts;
+            finalList = podcasts;
         } else {
             for (Podcast podcast : podcasts) {
                 if (podcast.track.equals(args.getString(TRACK))) {
@@ -190,7 +186,7 @@ public class PodcastFragment extends Fragment implements LoaderManager.LoaderCal
                 }
             }
         }
-        
+
         Collections.sort(finalList);
         refreshData(finalList);
 
@@ -218,49 +214,52 @@ public class PodcastFragment extends Fragment implements LoaderManager.LoaderCal
         String title = podcast.title;
         String uri = podcast.link;
         String fileName = Uri.parse(uri).getLastPathSegment();
-        Intent playbackIntent = new Intent(getActivity(), PodcastPlaybackService.class);
-        
-        playbackIntent.putExtra(PodcastPlaybackService.TITLE_KEY, title);
-        playbackIntent.putExtra(PodcastPlaybackService.REMOTE_URI, uri);
-        playbackIntent.putExtra(PodcastPlaybackService.FILE_NAME, fileName);
-        
+        Intent playbackIntent = new Intent(getActivity(), PodcastPlaybackService2.class);
+
+        playbackIntent.putExtra(PodcastPlaybackService2.TITLE_KEY, title);
+        playbackIntent.putExtra(PodcastPlaybackService2.REMOTE_URI, uri);
+        playbackIntent.putExtra(PodcastPlaybackService2.FILE_NAME, fileName);
+
         getActivity().startService(playbackIntent);
     }
 
-    private void initializePlaybackUI(){
-        
+    private void initializePlaybackUI() {
+
         progress.setVisibility(View.VISIBLE);
         playbackLayout.setVisibility(View.VISIBLE);
         playPauseButton.setVisibility(View.GONE);
         seekBar.setVisibility(View.GONE);
         downloadButton.setVisibility(View.GONE);
-        
+
     }
-    
-    public void beginPlayback(){
+
+    public void beginPlayback() {
         playbackLayout.setVisibility(View.VISIBLE);
         progress.setVisibility(View.GONE);
         playPauseButton.setVisibility(View.VISIBLE);
-        playPauseButton.setImageResource(android.R.drawable.ic_media_pause);        
+        playPauseButton.setImageResource(android.R.drawable.ic_media_pause);
         seekBar.setVisibility(View.VISIBLE);
         downloadButton.setVisibility(View.GONE);
 
-        
+
         playPauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mp.isPlaying()) {
-                    mp.pause();
-                    playPauseButton.setImageResource(android.R.drawable.ic_media_play);
-                } else {
-                    mp.start();
-                    playPauseButton.setImageResource(android.R.drawable.ic_media_pause);
+                if (mp != null) {
+                    if (mp.isPlaying()) {
+                        mp.pause();
+                        playPauseButton.setImageResource(android.R.drawable.ic_media_play);
+                    } else {
+                        mp.start();
+                        playPauseButton.setImageResource(android.R.drawable.ic_media_pause);
+                    }
                 }
+
             }
         });
 
         seekBar.setMax(mp.getDuration());
-        
+
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             @Override
@@ -275,18 +274,18 @@ public class PodcastFragment extends Fragment implements LoaderManager.LoaderCal
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if(mp != null && fromUser){
+                if (mp != null && fromUser) {
                     mp.seekTo(progress);
                 }
             }
         });
 
-        
+
         mRunnable = new Runnable() {
             @Override
             public void run() {
-                if(mp != null){
-                    int mCurrentPosition = mp.getCurrentPosition() ;
+                if (mp != null) {
+                    int mCurrentPosition = mp.getCurrentPosition();
                     seekBar.setProgress(mCurrentPosition);
                 }
                 if (playbackService != null && mp.isPlaying()) {
@@ -299,9 +298,9 @@ public class PodcastFragment extends Fragment implements LoaderManager.LoaderCal
         mp.start();
     }
 
-    private void endPlayback(){
+    private void endPlayback() {
         playbackLayout.setVisibility(View.GONE);
     }
-    
-    
+
+
 }
