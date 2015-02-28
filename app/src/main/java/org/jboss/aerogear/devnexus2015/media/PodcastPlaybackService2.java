@@ -153,10 +153,10 @@ public class PodcastPlaybackService2 extends Service implements MediaPlayer.OnCo
         PendingIntent pi = PendingIntent.getActivity(getApplicationContext(), 0,
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
-        notification = new NotificationCompat.Builder(this).setContentText("Playing ").setSubText(title).setContentIntent(pi).setSmallIcon(R.drawable.ic_launcher).setContentTitle("DevNexus 2015").
+        notification = new NotificationCompat.Builder(this).setContentText("Playing ").setSubText(title).setContentIntent(pi).setSmallIcon(R.mipmap.ic_launcher).setContentTitle("DevNexus 2015").
                 build();
         notification.flags |= NotificationCompat.FLAG_ONGOING_EVENT;
-        notification.icon = R.drawable.ic_launcher;
+        notification.icon = R.mipmap.ic_launcher;
 
         startForeground(NOTIFICATION_ID, notification);
     }
