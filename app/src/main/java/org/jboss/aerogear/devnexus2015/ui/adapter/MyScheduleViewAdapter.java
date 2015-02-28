@@ -90,6 +90,8 @@ public class MyScheduleViewAdapter extends RecyclerView.Adapter<MyScheduleViewAd
                             context.getContentResolver().update(UserCalendarContract.URI, UserCalendarContract.valueize(userCalendarItem, true), UserCalendarContract.ID, new String[]{userCalendarItem.getId() +""});
                         }
                     });
+                } else {
+                    holder.removeButton.setVisibility(View.GONE);
                 }
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override

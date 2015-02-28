@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -25,15 +26,21 @@ import com.squareup.picasso.Picasso;
 import org.devnexus.util.GsonUtils;
 import org.devnexus.util.TrackRoomUtil;
 import org.devnexus.vo.Presentation;
+import org.devnexus.vo.ScheduleItem;
 import org.devnexus.vo.Speaker;
+import org.devnexus.vo.UserCalendar;
 import org.devnexus.vo.contract.PresentationContract;
 import org.devnexus.vo.contract.PreviousYearPresentationContract;
+import org.devnexus.vo.contract.ScheduleContract;
+import org.devnexus.vo.contract.ScheduleItemContract;
+import org.devnexus.vo.contract.UserCalendarContract;
 import org.jboss.aerogear.devnexus2015.MainActivity;
 import org.jboss.aerogear.devnexus2015.R;
 import org.jboss.aerogear.devnexus2015.ui.adapter.TagAdapter;
 import org.jboss.aerogear.devnexus2015.ui.view.HorizontalListView;
 import org.jboss.aerogear.devnexus2015.util.ColorUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +52,7 @@ public class SessionDetailFragment extends Fragment implements LoaderManager.Loa
     private static final String TOOLBAR_TITLE = "SessionDetailFragment.toolbar_title";
     private static final String PRESENTATION_ID = "SessionDetailFragment.presentation_id";
     private static final int DETAIL_LOADER = 0x0100;
+    private static final int CALENDAR_LOADER = 0x0200;
     private static final String CONTENT_URI = "SessionDetailFragment.content_uri";
     private static final String EVENT_LABEL = "SessionDetailFragment.event_label";
     private Toolbar toolbar;
@@ -64,7 +72,7 @@ public class SessionDetailFragment extends Fragment implements LoaderManager.Loa
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.session_detail_layout, null);
-
+        view.setVisibility(View.INVISIBLE);
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         toolbar.setTitle(getArguments().getString(TOOLBAR_TITLE));
         contentUri = getArguments().getParcelable(CONTENT_URI);
@@ -82,6 +90,9 @@ public class SessionDetailFragment extends Fragment implements LoaderManager.Loa
 
         Spinner spinner = (Spinner) toolbar.findViewById(R.id.spinner_nav);
         getLoaderManager().initLoader(DETAIL_LOADER, getArguments(), this);
+        if (contentUri.equals(PresentationContract.URI)) {
+            getLoaderManager().initLoader(CALENDAR_LOADER, getArguments(), this);
+        }
         return view;
     }
 
@@ -109,68 +120,156 @@ public class SessionDetailFragment extends Fragment implements LoaderManager.Loa
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
-        if (contentUri.equals(PresentationContract.URI)) {
-            return new CursorLoader(getActivity(), contentUri, null, PresentationContract.toQuery(PresentationContract.PRESENTATION_ID), new String[]{"" + args.getInt(PRESENTATION_ID)}, null);
-        } else if (contentUri.equals(PreviousYearPresentationContract.URI)) {
-            return new CursorLoader(getActivity(), contentUri, null, PresentationContract.toQuery(PresentationContract.PRESENTATION_ID, PreviousYearPresentationContract.EVENT_LABEL), new String[]{"" + args.getInt(PRESENTATION_ID), args.getString(EVENT_LABEL)}, null);
+        switch (id) {
+            case CALENDAR_LOADER:
+                return new CursorLoader(getActivity(), UserCalendarContract.URI, null, UserCalendarContract.PRESENTATION_ID, new String[]{"" + args.getInt(PRESENTATION_ID)}, null);
+            case DETAIL_LOADER:
+                if (contentUri.equals(PresentationContract.URI)) {
+                    return new CursorLoader(getActivity(), ScheduleItemContract.URI, null, ScheduleItemContract.toQuery(ScheduleItemContract.PRESENTATION_ID), new String[]{"" + args.getInt(PRESENTATION_ID)}, null);
+                } else if (contentUri.equals(PreviousYearPresentationContract.URI)) {
+                    view.findViewById(R.id.date).setVisibility(View.INVISIBLE);
+                    view.findViewById(R.id.date_label).setVisibility(View.INVISIBLE);
+                    return new CursorLoader(getActivity(), contentUri, null, PresentationContract.toQuery(PresentationContract.PRESENTATION_ID, PreviousYearPresentationContract.EVENT_LABEL), new String[]{"" + args.getInt(PRESENTATION_ID), args.getString(EVENT_LABEL)}, null);
+                }
+                throw new IllegalStateException("Unsupported content Uri");
+            default:
+                throw new IllegalStateException("Unsupported loader");
         }
-        throw new IllegalStateException("Unsupported content Uri");
+
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        data.moveToFirst();
-        final Presentation presentation = GsonUtils.GSON.fromJson(data.getString(0), Presentation.class);
+        final Button button = (Button) view.findViewById(R.id.add_session);
+        switch (loader.getId()) {
+            case CALENDAR_LOADER:
 
-        description.setText(presentation.description);
+                if ( data.getCount() == 0 ) {
+                    button.setVisibility(View.VISIBLE);
+                    button.setText("Add to my schedule");
+                    button.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Cursor scheduleItemCursor = resolver.query(ScheduleItemContract.URI, null, ScheduleItemContract.PRESENTATION_ID, new String[]{getArguments().getInt(PRESENTATION_ID) + ""}, null);
+                            scheduleItemCursor.moveToFirst();
+                            ScheduleItem item = GsonUtils.GSON.fromJson(scheduleItemCursor.getString(0), ScheduleItem.class);
+                            scheduleItemCursor.close();
 
-        int color = getResources().getColor(R.color.dn_default);
+                            Cursor userItemCursor = resolver.query(UserCalendarContract.URI, null, UserCalendarContract.START_TIME, new String[]{item.fromTime.getTime() + ""}, null);
+                            userItemCursor.moveToFirst();
+                            UserCalendar userItem = GsonUtils.GSON.fromJson(userItemCursor.getString(0), UserCalendar.class);
+                            userItemCursor.close();
 
-        if (presentation.track != null) {
-            color = getResources().getColor(TrackRoomUtil.forTrack(presentation.track.name));
-        }
-        
-        int textColor = ColorUtils.getTextColor(getActivity(), color);
+                            Presentation presentation = null;
+                            Cursor presentationCursor = resolver.query(PresentationContract.URI, null, PresentationContract._ID, new String[]{getArguments().getInt(PRESENTATION_ID) + ""}, null);
+                            presentationCursor.moveToFirst();
+                            presentation = GsonUtils.GSON.fromJson(presentationCursor.getString(0), Presentation.class);
+                            presentationCursor.close();
 
-        toolbar.setBackgroundColor(color);
-        toolbar.setNavigationIcon(ColorUtils.getDrawerDrawable(color));
-        toolbar.setTitleTextColor(textColor);
-        skill.setText(presentation.skillLevel);
-        if (presentation.track != null ) {
-            track.setText(presentation.track.name);
-            track.setVisibility(View.VISIBLE);
-        } else {
-            track.setVisibility(View.INVISIBLE);
-        }
-        //todo slot
-        if (presentation.presentationTags.size() > 0) {
-            view.findViewById(R.id.tags_label).setVisibility(View.VISIBLE);
-            tags.setVisibility(View.VISIBLE);
-            tags.setAdapter(new TagAdapter(presentation, getActivity()));
-        } else {
-            view.findViewById(R.id.tags_label).setVisibility(View.INVISIBLE);
-            tags.setVisibility(View.INVISIBLE);
-        }
+                            item = new ScheduleItem();
+                            item.presentation = presentation;
 
-        TextView speakersLabel = ((TextView) view.findViewById(R.id.speakersLabel));
-        speakersLabel.setTextColor(color);
-        switch (presentation.speakers.size()) {
-            case 1:
-                speakersLabel.setText("Speaker");
-                break;
+                            userItem.item = item;
+
+                            resolver.update(UserCalendarContract.URI, UserCalendarContract.valueize(userItem, true), UserCalendarContract.ID, new String[]{userItem.getId() + ""});
+                            button.setText("Scheduled!");
+                        }
+                    });
+
+                } else {
+                    data.moveToFirst();
+                    final UserCalendar userCalendarItem = GsonUtils.GSON.fromJson(data.getString(0), UserCalendar.class);
+                    if (userCalendarItem.fixed) {
+                        button.setVisibility(View.GONE);
+                    } else {
+                        button.setVisibility(View.VISIBLE);
+                        button.setText("Remove from my schedule");
+                        button.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                userCalendarItem.item = null;
+                                resolver.update(UserCalendarContract.URI, UserCalendarContract.valueize(userCalendarItem, true), UserCalendarContract.ID, new String[]{userCalendarItem.getId() + ""});
+                                button.setText("Removed!");
+                            }
+                        });
+                    }
+                }
+                data.close();
+                return;
+            case DETAIL_LOADER:
+                data.moveToFirst();
+                view.setVisibility(View.VISIBLE);
+                final Presentation presentation;
+                final ScheduleItem item;
+                if (contentUri.equals(PresentationContract.URI)) {
+                    item = GsonUtils.GSON.fromJson(data.getString(0), ScheduleItem.class);
+                    presentation = item.presentation;
+                    ((TextView)view.findViewById(R.id.date)).setText(new SimpleDateFormat("MMM dd hh:mm a").format(item.fromTime));
+                } else {
+                    item = null;
+                    presentation = GsonUtils.GSON.fromJson(data.getString(0), Presentation.class);;
+                    button.setVisibility(View.GONE);
+                }
+
+
+                description.setText(presentation.description);
+
+                int color = getResources().getColor(R.color.dn_default);
+
+                if (presentation.track != null) {
+                    color = getResources().getColor(TrackRoomUtil.forTrack(presentation.track.name));
+                }
+
+                int textColor = ColorUtils.getTextColor(getActivity(), color);
+
+                button.setBackgroundColor(color);
+                button.setTextColor(textColor);
+
+                toolbar.setBackgroundColor(color);
+                toolbar.setNavigationIcon(ColorUtils.getDrawerDrawable(color));
+                toolbar.setTitleTextColor(textColor);
+                skill.setText(presentation.skillLevel);
+                if (presentation.track != null ) {
+                    track.setText(presentation.track.name);
+                    track.setVisibility(View.VISIBLE);
+                } else {
+                    track.setVisibility(View.INVISIBLE);
+                }
+                //todo slot
+                if (presentation.presentationTags.size() > 0) {
+                    view.findViewById(R.id.tags_label).setVisibility(View.VISIBLE);
+                    tags.setVisibility(View.VISIBLE);
+                    tags.setAdapter(new TagAdapter(presentation, getActivity()));
+                } else {
+                    view.findViewById(R.id.tags_label).setVisibility(View.INVISIBLE);
+                    tags.setVisibility(View.INVISIBLE);
+                }
+
+                TextView speakersLabel = ((TextView) view.findViewById(R.id.speakersLabel));
+                speakersLabel.setTextColor(color);
+                switch (presentation.speakers.size()) {
+                    case 1:
+                        speakersLabel.setText("Speaker");
+                        break;
+                    default:
+                        speakersLabel.setText("Speakers");
+                        break;
+                }
+                adapter = (new SpeakerSessionAdapter(presentation.speakers, loader.getContext()));
+
+                for (int i = 0; i < adapter.getItemCount(); i++) {
+                    SpeakerSessionAdapter.ViewHolder holder = adapter.createViewHolder(speakersView, 0);
+                    adapter.bindViewHolder(holder, i);
+                    speakersView.addView(holder.speakerView);
+                }
+
+                data.close();
+                return;
             default:
-                speakersLabel.setText("Speakers");
-                break;
-        }
-        adapter = (new SpeakerSessionAdapter(presentation.speakers, loader.getContext()));
-
-        for (int i = 0; i < adapter.getItemCount(); i++) {
-            SpeakerSessionAdapter.ViewHolder holder = adapter.createViewHolder(speakersView, 0);
-            adapter.bindViewHolder(holder, i);
-            speakersView.addView(holder.speakerView);
+                return;
         }
 
-        data.close();
+
     }
 
     @Override

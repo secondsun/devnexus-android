@@ -31,6 +31,8 @@ public final class UserCalendarContract {
 
     private static final Gson GSON = GsonUtils.GSON;
     public static final String DATE = "DATE";
+    public static final String PRESENTATION_ID = "PRESENTATION_ID";
+    public static final String START_TIME = "START_TIME";
 
     /**
      * This method will turn a calendarItem into the appropriate ContentValues for the app.
