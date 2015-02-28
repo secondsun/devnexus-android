@@ -65,8 +65,6 @@ public class ScheduleItemViewAdapter  extends RecyclerView.Adapter<ScheduleItemV
             final int trackColor = mContext.getResources().getColor(TrackRoomUtil.forTrack(item.presentation.track.name));
             if (!hideImages) {
                 photo.setBackgroundColor(trackColor);
-                photo.setColorFilter(new LightingColorFilter(trackColor, 1));
-
                 Log.d("Presentation Image", "https://devnexus.com/s/speakers/" + item.presentation.speakers.get(0).id + ".jpg");
                 Picasso.with(mContext).load("https://devnexus.com/s/speakers/" + item.presentation.speakers.get(0).id + ".jpg").placeholder(new ColorDrawable(trackColor)).fit().centerCrop().into(photo);
             }

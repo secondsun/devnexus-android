@@ -2,6 +2,7 @@ package org.jboss.aerogear.devnexus2015.ui.fragment;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -16,6 +17,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.IndoorBuilding;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -25,12 +27,16 @@ import org.devnexus.util.TrackRoomUtil;
 import org.jboss.aerogear.devnexus2015.MainActivity;
 import org.jboss.aerogear.devnexus2015.R;
 
+import java.util.AbstractCollection;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by summers on 11/13/13.
  */
 public class GalleriaMapFragment extends Fragment implements
         GoogleMap.OnInfoWindowClickListener, GoogleMap.OnMarkerClickListener,
-        GoogleMap.OnCameraChangeListener, OnMapReadyCallback {
+        GoogleMap.OnCameraChangeListener, OnMapReadyCallback, GoogleMap.OnIndoorStateChangeListener {
 
     private static final LatLng GALLERIA = new LatLng(33.88346, -84.46695);
 
@@ -48,7 +54,6 @@ public class GalleriaMapFragment extends Fragment implements
     private static final LatLng ROOM_105 = new LatLng(toDec(33, 53.063, 0), toDec(-84, 27.988, 0));
 
 
-
     // Initial camera position
     private static final LatLng CAMERA_GALLERIA = new LatLng(33.88346, -84.46695);
     private static final float CAMERA_ZOOM = 17.75f;
@@ -57,6 +62,7 @@ public class GalleriaMapFragment extends Fragment implements
     private static View view;
     private MapFragment mapFragment;
     private Toolbar toolbar;
+    private List<Marker> markers = new ArrayList<>();
 
 
     @Override
@@ -76,7 +82,7 @@ public class GalleriaMapFragment extends Fragment implements
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         toolbar.setTitle("Cobb Galleria");
         ((MainActivity) getActivity()).attachToolbar(toolbar);
-        
+
         return view;
     }
 
@@ -106,25 +112,24 @@ public class GalleriaMapFragment extends Fragment implements
             }
         });
 
-        mMap.addMarker(new MarkerOptions().position(BALLROOM_A).title("Ballroom A"));
-        mMap.addMarker(new MarkerOptions().position(BALLROOM_B).title("Ballroom B"));
-        mMap.addMarker(new MarkerOptions().position(BALLROOM_C).title("Ballroom C"));
-        mMap.addMarker(new MarkerOptions().position(BALLROOM_D).title("Ballroom D"));
-        mMap.addMarker(new MarkerOptions().position(BALLROOM_E).title("Ballroom E"));
-        mMap.addMarker(new MarkerOptions().position(BALLROOM_F).title("Ballroom F"));
-        mMap.addMarker(new MarkerOptions().position(BALLROOM_G).title("Ballroom G"));
+        markers.add(mMap.addMarker(new MarkerOptions().position(BALLROOM_A).title("Ballroom A")));
+        markers.add(mMap.addMarker(new MarkerOptions().position(BALLROOM_B).title("Ballroom B")));
+        markers.add(mMap.addMarker(new MarkerOptions().position(BALLROOM_C).title("Ballroom C")));
+        markers.add(mMap.addMarker(new MarkerOptions().position(BALLROOM_D).title("Ballroom D")));
+        markers.add(mMap.addMarker(new MarkerOptions().position(BALLROOM_E).title("Ballroom E")));
+        markers.add(mMap.addMarker(new MarkerOptions().position(BALLROOM_F).title("Ballroom F")));
+        markers.add(mMap.addMarker(new MarkerOptions().position(BALLROOM_G).title("Ballroom G")));
 
-        mMap.addMarker(new MarkerOptions().position(ROOM_102).title("Room 102"));
-        mMap.addMarker(new MarkerOptions().position(ROOM_103).title("Room 103"));
-        mMap.addMarker(new MarkerOptions().position(ROOM_104).title("Room 104"));
-        mMap.addMarker(new MarkerOptions().position(ROOM_105).title("Room 105"));
+        markers.add(mMap.addMarker(new MarkerOptions().position(ROOM_102).title("Room 102")));
+        markers.add(mMap.addMarker(new MarkerOptions().position(ROOM_103).title("Room 103")));
+        markers.add(mMap.addMarker(new MarkerOptions().position(ROOM_104).title("Room 104")));
+        markers.add(mMap.addMarker(new MarkerOptions().position(ROOM_105).title("Room 105")));
 
-        
 
         mMap.setOnMarkerClickListener(this);
         mMap.setOnInfoWindowClickListener(this);
         mMap.setOnCameraChangeListener(this);
-
+        mMap.setOnIndoorStateChangeListener(this);
         if (resetCamera) {
             mMap.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(
                     CAMERA_GALLERIA, CAMERA_ZOOM)));
@@ -133,7 +138,6 @@ public class GalleriaMapFragment extends Fragment implements
         mMap.setIndoorEnabled(true);
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.getUiSettings().setZoomControlsEnabled(false);
-
 
     }
 
@@ -192,6 +196,49 @@ public class GalleriaMapFragment extends Fragment implements
     @Override
     public void onMapReady(GoogleMap googleMap) {
         setupMap(true);
+    }
+
+    @Override
+    public void onIndoorBuildingFocused() {
+        LatLng camera = mMap.getCameraPosition().target;
+        IndoorBuilding building = mMap.getFocusedBuilding();
+        if (building == null) {
+            for (Marker marker : markers) {
+                marker.setVisible(false);
+            }
+        } else if (nearGalleria(camera)) {
+            building.getLevels().get(0).activate();
+            for (Marker marker : markers) {
+                marker.setVisible(true);
+            }
+        }
+    }
+
+    private boolean nearGalleria(LatLng camera) {
+        Location galleria = new Location("");
+        galleria.setLatitude(GALLERIA.latitude);
+        galleria.setLongitude(GALLERIA.longitude);
+
+        Location building = new Location("");
+        building.setLatitude(camera.latitude);
+        building.setLongitude(camera.longitude);
+
+        return galleria.distanceTo(building) < 1000;
+    }
+
+    @Override
+    public void onIndoorLevelActivated(IndoorBuilding indoorBuilding) {
+        LatLng camera = mMap.getCameraPosition().target;
+
+        if (nearGalleria(camera) && indoorBuilding.getActiveLevelIndex() == 0) {
+            for (Marker marker : markers) {
+                marker.setVisible(true);
+            }
+        } else {
+            for (Marker marker : markers) {
+                marker.setVisible(false);
+            }
+        }
     }
 }
 
