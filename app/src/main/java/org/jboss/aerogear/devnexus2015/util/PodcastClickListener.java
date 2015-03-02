@@ -7,6 +7,6 @@ import org.devnexus.vo.Podcast;
 */
 public interface PodcastClickListener {
 
-    public void loadSession(Podcast presentation);
+    public void playPodcast(Podcast presentation);
 
 }

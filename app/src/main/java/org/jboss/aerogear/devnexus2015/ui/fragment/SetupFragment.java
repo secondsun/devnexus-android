@@ -78,8 +78,12 @@ public class SetupFragment extends Fragment implements LoaderManager.LoaderCallb
         resolver.unregisterContentObserver(presentationObersever);
     }
 
-    public static SetupFragment newInstance() {
-        return new SetupFragment();
+    public static SetupFragment newInstance(int launch) {
+        Bundle attrs = new Bundle();
+        attrs.putInt(MainActivity.LAUNCH_SCREEN, launch);
+        SetupFragment setup = new SetupFragment();
+        setup.setArguments(attrs);
+        return setup;
     }
 
     @Override
@@ -110,8 +114,18 @@ public class SetupFragment extends Fragment implements LoaderManager.LoaderCallb
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
-                    Fragment explorer = PresentationExplorerFragment.newInstance();
-                    ((MainActivity)getActivity()).switchFragment(explorer, MainActivity.BackStackOperation.RESET, "Open");
+                    int launch = getArguments().getInt(MainActivity.LAUNCH_SCREEN, MainActivity.LAUNCH_EXPLORE);
+                    
+                    Fragment fragment;
+                    switch (launch){
+                        case MainActivity.LAUNCH_PODCAST:
+                            fragment = PodcastFragment.newInstance();
+                            break;
+                     default:
+                         fragment = PresentationExplorerFragment.newInstance();
+                            break;
+                    }
+                    ((MainActivity)getActivity()).switchFragment(fragment, MainActivity.BackStackOperation.RESET, "Open");
                 }
             });
         }

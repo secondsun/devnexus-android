@@ -16,6 +16,10 @@
             android:layout_height="wrap_content" />
 
     </android.support.v7.widget.Toolbar>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/dn_spacer"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -32,6 +36,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
+            <Button
+                android:id="@+id/add_session"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
             <View style="@style/Divider" />
 
             <RelativeLayout
@@ -44,14 +53,22 @@
                     android:layout_height="1dp"
                     android:layout_centerHorizontal="true"
                     android:visibility="invisible" />
+                <TextView
+                    android:id="@+id/date_label"
+                    style="@style/Label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
 
+                    android:text="Time:" />
                 <TextView
                     android:id="@+id/track_label"
                     style="@style/Label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:layout_alignParentTop="true"
+                    android:layout_below="@id/date_label"
 
                     android:text="Track:" />
 
@@ -87,11 +104,20 @@
                     android:text="Tags:"
                     android:visibility="invisible" />
 
+
+                <TextView
+                    android:id="@+id/date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_toRightOf="@id/center"
+                    android:text="HTML5" />
+
                 <TextView
                     android:id="@+id/track"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
+                    android:layout_below="@id/date"
                     android:layout_toRightOf="@id/center"
                     android:text="HTML5" />
 

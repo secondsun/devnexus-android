@@ -20,7 +20,11 @@ public class MainActivity extends ActionBarActivity {
 
 
     public enum BackStackOperation {NONE, ADD, RESET};
+    public static final String LAUNCH_SCREEN = "LaunchScreen";
+    public static final int LAUNCH_EXPLORE = 0;
+    public static final int LAUNCH_PODCAST = 0x4200;
 
+    private int launch = LAUNCH_EXPLORE;
     private DrawerLayout drawerLayout;
 
     @Override
@@ -43,12 +47,15 @@ public class MainActivity extends ActionBarActivity {
     protected void onStart() {
         super.onStart();
         if (((LinearLayout)findViewById(R.id.display_fragment)).getChildCount() == 0) {
-            Fragment loading = SetupFragment.newInstance();
+            if (getIntent() != null) {
+                launch = getIntent().getIntExtra(LAUNCH_SCREEN, LAUNCH_EXPLORE);
+            }
+            Fragment loading = SetupFragment.newInstance(launch);
             FragmentTransaction tx = getFragmentManager().beginTransaction();
             tx.add(R.id.display_fragment, loading);
             tx.commit();
         }
-
+        
     }
 
     @Override
@@ -66,6 +73,7 @@ public class MainActivity extends ActionBarActivity {
                 drawerLayout.openDrawer(Gravity.START);
             }
         });
+        
     }
 
     public void switchFragment(Fragment fragment, BackStackOperation operation, String tag) {

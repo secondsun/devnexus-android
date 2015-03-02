@@ -79,7 +79,14 @@ public class PreviousConferencesFragment extends Fragment implements LoaderManag
 
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
-                return getDropDownView(position, convertView, parent);
+                if (convertView == null) {
+                    LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    convertView = inflater.inflate(R.layout.textview_dropdown, null);
+                }
+
+                ((TextView)convertView.findViewById(R.id.header_label)).setText(getItem(position).getLabel());
+
+                return convertView;
             }
 
             @Override

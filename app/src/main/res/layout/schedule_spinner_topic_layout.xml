@@ -21,7 +21,8 @@
         android:textSize="18sp"
 
         android:text="@string/topic_mobile"
-        android:textColor="@color/dn_black" />
+        android:textColor="@color/dn_black" 
+        android:drawableRight="@drawable/spinner_triangle_blue"/>
 
     <TextView
         android:id="@+id/label"
@@ -36,7 +37,7 @@
         android:gravity="center_vertical|start"
         android:fontFamily="sans-serif-medium"
         android:textSize="16sp"
-
+        android:drawableRight="@drawable/spinner_triangle_blue"
         android:text="@string/topic_mobile"
         android:textColor="@color/dn_black" />
 

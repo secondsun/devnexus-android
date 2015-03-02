@@ -31,8 +31,6 @@ public class DevNexusDrawerFragment extends Fragment {
         View view = inflater.inflate(R.layout.drawer_layout, null);
 
         List<DrawerItem> list1Items = new ArrayList<>();
-        list1Items.add(new DrawerItem(R.drawable.ic_action_key, "Log In"));
-        list1Items.add(new DrawerItem(R.drawable.ic_action_calendar_month, "Schedule"));
 
         ListView list1 = (ListView) view.findViewById(R.id.list1);
         list1.setAdapter(new DrawerListAdapter(getActivity(), list1Items));
@@ -56,7 +54,6 @@ public class DevNexusDrawerFragment extends Fragment {
         list2Items.add(new DrawerItem(R.drawable.ic_action_book, "All Presentations"));
         list2Items.add(new DrawerItem(R.drawable.ic_action_calendar_day, "My Schedule"));
         list2Items.add(new DrawerItem(R.drawable.ic_action_map, "Map"));
-        list2Items.add(new DrawerItem(R.drawable.ic_action_dialog, "Social"));
         list2Items.add(new DrawerItem(R.drawable.ic_action_dev, "Previous Year"));
         list2Items.add(new DrawerItem(R.drawable.ic_action_headphones, "Podcasts"));
         list2Items.add(new DrawerItem(R.drawable.ic_action_video, "InfoQ Videos"));
@@ -78,15 +75,12 @@ public class DevNexusDrawerFragment extends Fragment {
                         activity.switchFragment(new GalleriaMapFragment(), RESET, "Map");
                         break;
                     case 3:
-                        // TODO
-                        break;
-                    case 4:
                         activity.switchFragment(PreviousConferencesFragment.newInstance(), RESET, "Previous");
                         break;
-                    case 5:
-                        activity.switchFragment(PodcastFragment.newInstance(), RESET, "{Pdcast");
+                    case 4:
+                        activity.switchFragment(PodcastFragment.newInstance(), RESET, "Podcast");
                         break;
-                    case 6:
+                    case 5:
                         Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.infoq.com/devnexus/"));
                         activity.startActivity(myIntent);
                         break;

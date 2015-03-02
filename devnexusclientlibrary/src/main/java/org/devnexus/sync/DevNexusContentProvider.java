@@ -331,6 +331,28 @@ public class DevNexusContentProvider extends ContentProvider {
                 }
                 results.removeAll(toRemove);
                 Collections.sort(results);
+            } else if (selection != null && selection.contains(UserCalendarContract.PRESENTATION_ID)){
+                List<UserCalendar> toRemove = new ArrayList<>(results.size());
+                int presentationId = Integer.parseInt(selectionArgs[0]);
+
+                for (UserCalendar userCalendarItem :results) {
+                    if (userCalendarItem.item == null || userCalendarItem.item.presentation.id != presentationId){
+                        toRemove.add(userCalendarItem);
+                    }
+                }
+                results.removeAll(toRemove);
+                Collections.sort(results);
+            } else if (selection != null && selection.contains(UserCalendarContract.START_TIME)){
+                List<UserCalendar> toRemove = new ArrayList<>(results.size());
+                Date startTime = new Date(Long.parseLong(selectionArgs[0]));
+
+                for (UserCalendar userCalendarItem :results) {
+                    if (userCalendarItem.fromTime.compareTo(startTime) != 0){
+                        toRemove.add(userCalendarItem);
+                    }
+                }
+                results.removeAll(toRemove);
+                Collections.sort(results);
             }
             
             return new SingleColumnJsonArrayList(new ArrayList<UserCalendar>(results));
