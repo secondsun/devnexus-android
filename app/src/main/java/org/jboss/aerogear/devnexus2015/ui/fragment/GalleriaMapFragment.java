@@ -27,7 +27,6 @@ import org.devnexus.util.TrackRoomUtil;
 import org.jboss.aerogear.devnexus2015.MainActivity;
 import org.jboss.aerogear.devnexus2015.R;
 
-import java.util.AbstractCollection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +45,6 @@ public class GalleriaMapFragment extends Fragment implements
     private static final LatLng BALLROOM_D = new LatLng(toDec(33, 52.977, 0), toDec(-84, 28.022, 0));
     private static final LatLng BALLROOM_E = new LatLng(toDec(33, 53.008, 0), toDec(-84, 28.020, 0));
     private static final LatLng BALLROOM_F = new LatLng(toDec(33, 52.984, 0), toDec(-84, 28.010, 0));
-    private static final LatLng BALLROOM_G = new LatLng(toDec(33, 52.990, 0), toDec(-84, 28.028, 0));
 
     private static final LatLng ROOM_102 = new LatLng(toDec(33, 53.069, 0), toDec(-84, 27.973, 0));
     private static final LatLng ROOM_103 = new LatLng(toDec(33, 53.067, 0), toDec(-84, 27.978, 0));
@@ -118,7 +116,6 @@ public class GalleriaMapFragment extends Fragment implements
         markers.add(mMap.addMarker(new MarkerOptions().position(BALLROOM_D).title("Ballroom D")));
         markers.add(mMap.addMarker(new MarkerOptions().position(BALLROOM_E).title("Ballroom E")));
         markers.add(mMap.addMarker(new MarkerOptions().position(BALLROOM_F).title("Ballroom F")));
-        markers.add(mMap.addMarker(new MarkerOptions().position(BALLROOM_G).title("Ballroom G")));
 
         markers.add(mMap.addMarker(new MarkerOptions().position(ROOM_102).title("Room 102")));
         markers.add(mMap.addMarker(new MarkerOptions().position(ROOM_103).title("Room 103")));
