@@ -8,9 +8,13 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SyncResult;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.gson.reflect.TypeToken;
+
+import org.apache.commons.io.IOUtils;
 import org.devnexus.util.GsonUtils;
 import org.devnexus.vo.PresentationResponse;
 import org.devnexus.vo.Schedule;
@@ -22,7 +26,10 @@ import org.jboss.aerogear.android.pipe.Pipe;
 import org.jboss.aerogear.android.pipe.PipeManager;
 import org.jboss.aerogear.android.pipe.rest.RestfulPipeConfiguration;
 import org.jboss.aerogear.android.pipe.rest.gson.GsonResponseParser;
+import org.jboss.aerogear.devnexus2015.R;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
@@ -41,15 +48,15 @@ public class LiveDataSyncAdapter extends AbstractThreadedSyncAdapter {
     static {
         try {
             SCHEDULE_PIPE = PipeManager.config("schedule", RestfulPipeConfiguration.class)
-                .withUrl(new URL("https://devnexus.com/s/schedule.json"))
-                .responseParser(new GsonResponseParser(GsonUtils.GSON))
-                .forClass(Schedule.class);
-            PRESENTATION_PIPE =PipeManager.config("presentation", RestfulPipeConfiguration.class)
+                    .withUrl(new URL("https://devnexus.com/s/schedule.json"))
+                    .responseParser(new GsonResponseParser(GsonUtils.GSON))
+                    .forClass(Schedule.class);
+            PRESENTATION_PIPE = PipeManager.config("presentation", RestfulPipeConfiguration.class)
                     .withUrl(new URL("https://devnexus.com/s/presentations.json"))
                     .responseParser(new GsonResponseParser(GsonUtils.GSON))
                     .forClass(PresentationResponse.class);
 
-            USER_SCHEDULE_PIPE =PipeManager.config("user_calendar", RestfulPipeConfiguration.class)
+            USER_SCHEDULE_PIPE = PipeManager.config("user_calendar", RestfulPipeConfiguration.class)
                     .withUrl(new URL("https://devnexus.com/s/calendar.json"))
                     .responseParser(new GsonResponseParser(GsonUtils.GSON))
                     .forClass(UserCalendar.class);
@@ -61,6 +68,7 @@ public class LiveDataSyncAdapter extends AbstractThreadedSyncAdapter {
 
 
     ContentResolver mContentResolver;
+
     /**
      * Set up the sync adapter
      */
@@ -86,9 +94,20 @@ public class LiveDataSyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     @Override
-    public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
+    public synchronized void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
         final CountDownLatch syncFinished = new CountDownLatch(2);
 
+        Cursor cursor = null;
+        try {
+            cursor = mContentResolver.query(ScheduleContract.URI, null, null, null, null);
+            if (cursor.getCount() == 0) {
+                loadStatic();
+                return;
+            }
+        } finally {
+            if (cursor != null)
+                cursor.close();
+        }
         SCHEDULE_PIPE.read(new Callback<List<Schedule>>() {
             @Override
             public void onSuccess(List<Schedule> schedules) {
@@ -152,6 +171,39 @@ public class LiveDataSyncAdapter extends AbstractThreadedSyncAdapter {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+    }
+
+    private void loadStatic() {
+
+        InputStream scheduleStream = getContext().getResources().openRawResource(R.raw.schedule);
+        String scheduleTemplateJson = null;
+        try {
+            scheduleTemplateJson = IOUtils.toString(scheduleStream);
+        } catch (IOException ignore) {
+        }
+
+
+        InputStream presentationStream = getContext().getResources().openRawResource(R.raw.presentations);
+        String presentationTemplateJson = null;
+        try {
+            presentationTemplateJson = IOUtils.toString(presentationStream);
+        } catch (IOException ignore) {
+        }
+
+
+        Schedule schedules = GsonUtils.GSON.fromJson(scheduleTemplateJson, Schedule.class);
+
+        ContentValues scheduleValues = ScheduleContract.valueize(schedules);
+        scheduleValues.put(ScheduleContract.NOTIFY, true);
+
+
+        PresentationResponse presentationResponses = GsonUtils.GSON.fromJson(presentationTemplateJson, PresentationResponse.class);
+
+        mContentResolver.insert(ScheduleContract.URI, scheduleValues);
+        ContentValues[] presentationValues = PresentationContract.valueize(presentationResponses.presentationList.presentation);
+
+        mContentResolver.bulkInsert(PresentationContract.URI, presentationValues);
 
     }
 }

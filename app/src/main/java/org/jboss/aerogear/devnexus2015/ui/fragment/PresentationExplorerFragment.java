@@ -44,6 +44,7 @@ public class PresentationExplorerFragment extends Fragment implements LoaderMana
     private View contentView;
     private ContentResolver resolver;
     private Toolbar toolbar;
+    private Spinner spinner;
 
     @Nullable
     @Override
@@ -57,7 +58,7 @@ public class PresentationExplorerFragment extends Fragment implements LoaderMana
         resolver = getActivity().getContentResolver();
         recycler.setAdapter(new ScheduleItemViewAdapter(new ArrayList<ScheduleItem>(1), getActivity()));
 
-        Spinner spinner = (Spinner) toolbar.findViewById(R.id.spinner_nav);
+        spinner = (Spinner) toolbar.findViewById(R.id.spinner_nav);
         loadSpinnerNav(spinner);
         return view;
     }
@@ -102,7 +103,15 @@ public class PresentationExplorerFragment extends Fragment implements LoaderMana
     @Override
     public void onStart() {
         super.onStart();
-        getLoaderManager().initLoader(SCHEDULE_LOADER, Bundle.EMPTY, this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Bundle args = new Bundle();
+        SessionSpinnerAdaper.ITEMS item = (SessionSpinnerAdaper.ITEMS) spinner.getAdapter().getItem(spinner.getSelectedItemPosition());
+        args.putString(PresentationContract.TRACK, getResources().getString(item.getTitleStringResource()));
+        getLoaderManager().restartLoader(SCHEDULE_LOADER, args, PresentationExplorerFragment.this);
     }
 
     public static Fragment newInstance() {

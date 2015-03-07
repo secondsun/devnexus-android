@@ -525,11 +525,14 @@ public class DevNexusContentProvider extends ContentProvider {
 
         @Override
         public Integer exec(Gson gson, SQLStore presentationStore, Uri uri, ContentValues[] values, String selection, String[] selectionArgs) {
+            List<Presentation> presentationsList = new ArrayList<>(values.length);
             for (ContentValues value : values) {
                 Presentation presentation = gson.fromJson(value.getAsString(PresentationContract.DATA), Presentation.class);
-                presentationStore.save(presentation);
+                presentationsList.add(presentation);
+
             }
-            DevNexusContentProvider.schedule = null;
+            presentationStore.save(presentationsList);
+
             resolver.notifyChange(PresentationContract.URI, null, false);
             return values.length;
         }
