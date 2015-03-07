@@ -111,7 +111,17 @@ public class PresentationExplorerFragment extends Fragment implements LoaderMana
         Bundle args = new Bundle();
         SessionSpinnerAdaper.ITEMS item = (SessionSpinnerAdaper.ITEMS) spinner.getAdapter().getItem(spinner.getSelectedItemPosition());
         args.putString(PresentationContract.TRACK, getResources().getString(item.getTitleStringResource()));
-        getLoaderManager().restartLoader(SCHEDULE_LOADER, args, PresentationExplorerFragment.this);
+        if (item == SessionSpinnerAdaper.ITEMS.ALL_EVENTS) {
+            getLoaderManager().restartLoader(SCHEDULE_LOADER, Bundle.EMPTY, PresentationExplorerFragment.this);
+        } else {
+            getLoaderManager().restartLoader(SCHEDULE_LOADER, args, PresentationExplorerFragment.this);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getLoaderManager().destroyLoader(SCHEDULE_LOADER);
     }
 
     public static Fragment newInstance() {

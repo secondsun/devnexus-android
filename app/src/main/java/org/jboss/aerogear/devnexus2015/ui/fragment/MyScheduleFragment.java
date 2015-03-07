@@ -91,12 +91,16 @@ public class MyScheduleFragment extends Fragment implements LoaderManager.Loader
     public void onResume() {
         super.onResume();
         getActivity().getContentResolver().registerContentObserver(UserCalendarContract.URI, true, userCalendarObserver);
+        Bundle args = new Bundle();
+        args.putInt(DATE_KEY, spinner.getSelectedItemPosition());
+        getLoaderManager().restartLoader(SCHEDULE_LOADER, args, MyScheduleFragment.this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         getActivity().getContentResolver().unregisterContentObserver(userCalendarObserver);
+        getLoaderManager().destroyLoader(SCHEDULE_LOADER);
     }
 
     private void loadSpinnerNav(final Spinner spinner) {
@@ -104,11 +108,11 @@ public class MyScheduleFragment extends Fragment implements LoaderManager.Loader
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                
+
                 Bundle args = new Bundle();
                 args.putInt(DATE_KEY, position);
+                getLoaderManager().destroyLoader(SCHEDULE_LOADER);
                 getLoaderManager().restartLoader(SCHEDULE_LOADER, args, MyScheduleFragment.this);
-                
 
             }
 
@@ -127,14 +131,14 @@ public class MyScheduleFragment extends Fragment implements LoaderManager.Loader
         int dateIndex = args.getInt(DATE_KEY, 0);
 
         return new CursorLoader(getActivity(), UserCalendarContract.URI, null, DATE, new String[]{"" +dateIndex}, null);
-        
-        
+
+
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if ( data.getCount() == 0 ) {
-            
+
         } else {
             List<UserCalendar> calendarItems = new ArrayList<>(data.getCount());
             while (data.moveToNext()) {
@@ -148,9 +152,9 @@ public class MyScheduleFragment extends Fragment implements LoaderManager.Loader
 
     private void refreshData(List<UserCalendar> calendarItems) {
         GridLayoutManager gridLayoutManager = (GridLayoutManager) recycler.getLayoutManager();
-        int index = gridLayoutManager.findFirstVisibleItemPosition(); 
-        View v = gridLayoutManager.getChildAt(0); 
-        
+        int index = gridLayoutManager.findFirstVisibleItemPosition();
+        View v = gridLayoutManager.getChildAt(0);
+
         recycler.setAdapter(new MyScheduleViewAdapter(new ArrayList<UserCalendar>(calendarItems), getActivity(), this, this));
         gridLayoutManager.scrollToPosition(index);
 
@@ -187,7 +191,7 @@ public class MyScheduleFragment extends Fragment implements LoaderManager.Loader
 
     private class CalendarDateAdapter extends BaseAdapter implements SpinnerAdapter {
 
-        
+
 
         private final DateFormat FORMAT = new SimpleDateFormat("MMMM dd");
 
@@ -198,7 +202,7 @@ public class MyScheduleFragment extends Fragment implements LoaderManager.Loader
         public int getCount() {
             return 2;
         }
-        
+
         @Override
         public Object getItem(int position) {
             return UserCalendarContract.DATES.get(position);
@@ -223,7 +227,7 @@ public class MyScheduleFragment extends Fragment implements LoaderManager.Loader
 
         @Override
         public View getDropDownView(int position, View convertView, ViewGroup parent) {
-            
+
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 convertView = inflater.inflate(R.layout.textview, null);
