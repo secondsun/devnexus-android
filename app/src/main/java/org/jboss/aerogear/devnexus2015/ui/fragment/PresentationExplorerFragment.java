@@ -25,8 +25,8 @@ import org.jboss.aerogear.devnexus2015.MainActivity;
 import org.jboss.aerogear.devnexus2015.R;
 import org.jboss.aerogear.devnexus2015.ui.adapter.PresentationViewAdapter;
 import org.jboss.aerogear.devnexus2015.ui.adapter.ScheduleItemViewAdapter;
-import org.jboss.aerogear.devnexus2015.util.SessionClickListener;
 import org.jboss.aerogear.devnexus2015.ui.adapter.SessionSpinnerAdaper;
+import org.jboss.aerogear.devnexus2015.util.SessionClickListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,7 +44,6 @@ public class PresentationExplorerFragment extends Fragment implements LoaderMana
     private View contentView;
     private ContentResolver resolver;
     private Toolbar toolbar;
-
 
     @Nullable
     @Override

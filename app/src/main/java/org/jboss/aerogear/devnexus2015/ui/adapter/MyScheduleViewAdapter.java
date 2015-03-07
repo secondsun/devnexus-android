@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -59,11 +60,12 @@ public class MyScheduleViewAdapter extends RecyclerView.Adapter<MyScheduleViewAd
         holder.endTime.setText(TIME_FORMAT.format(userCalendarItem.getToTime()));
         
         if (userCalendarItem.item == null &&!userCalendarItem.fixed) {
+            holder.image.setVisibility(View.GONE);
             holder.image.setImageDrawable(new ColorDrawable(context.getResources().getColor(R.color.dn_white)));
             holder.title.setText( "Select a Session ");
             holder.title.setTextColor(context.getResources().getColor(R.color.dn_black));
             holder.titleBar.setBackgroundColor(context.getResources().getColor(R.color.dn_white));
-            holder.removeButton.setVisibility(View.GONE);
+            holder.image.setVisibility(View.VISIBLE);
             
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -100,8 +102,8 @@ public class MyScheduleViewAdapter extends RecyclerView.Adapter<MyScheduleViewAd
                     }
                 });
 
-                
 
+                holder.image.setVisibility(View.VISIBLE);
                 holder.title.setTextColor(ColorUtils.getTextColor(context, color));
                 
                 
@@ -111,6 +113,7 @@ public class MyScheduleViewAdapter extends RecyclerView.Adapter<MyScheduleViewAd
                 holder.title.setTextColor(context.getResources().getColor(R.color.dn_black));
                 holder.titleBar.setBackgroundColor(context.getResources().getColor(R.color.dn_white));
                 holder.image.setImageDrawable(new ColorDrawable(context.getResources().getColor(R.color.dn_white)));
+                holder.image.setVisibility(View.GONE);
                 holder.removeButton.setVisibility(View.GONE);
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -147,6 +150,7 @@ public class MyScheduleViewAdapter extends RecyclerView.Adapter<MyScheduleViewAd
         final TextView title;
         final View titleBar;
         final ImageButton removeButton;
+        final LinearLayout layout;
         
         final View itemView;
         
@@ -157,6 +161,7 @@ public class MyScheduleViewAdapter extends RecyclerView.Adapter<MyScheduleViewAd
             endTime = (TextView) itemView.findViewById(R.id.end_time);
             image = (ImageView) itemView.findViewById(R.id.image);
             title = (TextView) itemView.findViewById(R.id.title);
+            layout = (LinearLayout) itemView.findViewById(R.id.layout);
             titleBar = itemView.findViewById(R.id.title_bar);
             removeButton = (ImageButton) itemView.findViewById(R.id.remove_session_from_schedule);
         }
@@ -165,3 +170,4 @@ public class MyScheduleViewAdapter extends RecyclerView.Adapter<MyScheduleViewAd
         
     }
 }
+

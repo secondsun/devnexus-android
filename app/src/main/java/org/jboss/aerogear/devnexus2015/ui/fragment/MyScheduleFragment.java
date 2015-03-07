@@ -196,9 +196,9 @@ public class MyScheduleFragment extends Fragment implements LoaderManager.Loader
 
         @Override
         public int getCount() {
-            return 3;
+            return 2;
         }
-
+        
         @Override
         public Object getItem(int position) {
             return UserCalendarContract.DATES.get(position);
