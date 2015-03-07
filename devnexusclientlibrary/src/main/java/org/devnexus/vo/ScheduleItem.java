@@ -66,7 +66,7 @@ public class ScheduleItem implements Serializable, Comparable<ScheduleItem> {
     public int compareTo(ScheduleItem another) {
         int comparison = fromTime.compareTo(another.fromTime);
 
-        if (comparison == 0) {
+        if (comparison != 0) {
             return comparison;
         }
 

@@ -418,6 +418,13 @@ public class DevNexusContentProvider extends ContentProvider {
                                     filteredItems.add(item);
                                 }
                                 break;
+                            case ScheduleItemContract.TRACK:
+                                if ((item.presentation == null) || !item.presentation.track.name.equals(value)) {
+                                    if (!value.equals("All Topics")) {
+                                        filteredItems.add(item);
+                                    }
+                                }
+                                break;
                             case ScheduleItemContract.SPEAKER_FNAME:
 
                                 break;

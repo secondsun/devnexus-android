@@ -26,6 +26,7 @@ public class ScheduleItemContract {
 
     private static final Gson GSON = GsonUtils.GSON;
     public static final String FROM_TIME = "scheduleItemList.scheduleItems.fromTime";
+    public static final String TRACK = "scheduleItemList.scheduleItems.presentation.track.name";
 
 
     /**

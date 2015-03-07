@@ -1,7 +1,6 @@
 package org.jboss.aerogear.devnexus2015.ui.adapter;
 
 import android.content.Context;
-import android.graphics.LightingColorFilter;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,6 +15,8 @@ import com.squareup.picasso.Picasso;
 import org.devnexus.util.TrackRoomUtil;
 import org.devnexus.vo.ScheduleItem;
 import org.jboss.aerogear.devnexus2015.R;
+import org.jboss.aerogear.devnexus2015.ui.fragment.PresentationExplorerFragment;
+import org.jboss.aerogear.devnexus2015.util.SessionClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,19 +29,30 @@ public class ScheduleItemViewAdapter  extends RecyclerView.Adapter<ScheduleItemV
     private final List<ScheduleItem> items;
     private final Context mContext;
     private final boolean hideImages;
+    private SessionClickListener clickListener;
+
 
     public ScheduleItemViewAdapter(List<ScheduleItem> items, Context mContext) {
         this.items = new ArrayList<>(items);
         this.mContext = mContext;
         this.hideImages = false;
+        clickListener = null;
     }
 
     public ScheduleItemViewAdapter(List<ScheduleItem> items, Context mContext, boolean hideImages) {
         this.items = new ArrayList<>(items);
         this.mContext = mContext;
         this.hideImages = hideImages;
+        clickListener = null;
     }
 
+    public ScheduleItemViewAdapter(List<ScheduleItem> items, Context mContext, boolean hideImages, SessionClickListener listener) {
+        this.items = new ArrayList<>(items);
+        this.mContext = mContext;
+        this.hideImages = hideImages;
+        clickListener = listener;
+    }
+    
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext())
@@ -53,7 +65,7 @@ public class ScheduleItemViewAdapter  extends RecyclerView.Adapter<ScheduleItemV
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
-        ScheduleItem item = items.get(i);
+        final ScheduleItem item = items.get(i);
 
         ImageView photo = (ImageView) viewHolder.sessionView.findViewById(R.id.photo);
         
@@ -76,6 +88,9 @@ public class ScheduleItemViewAdapter  extends RecyclerView.Adapter<ScheduleItemV
             viewHolder.sessionView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (clickListener != null) {
+                        clickListener.loadSession(item.presentation);
+                    }
                 }
             });
         } else {
@@ -87,6 +102,10 @@ public class ScheduleItemViewAdapter  extends RecyclerView.Adapter<ScheduleItemV
     @Override
     public int getItemCount() {
         return items.size();
+    }
+
+    public void setClickListener(PresentationExplorerFragment clickListener) {
+        this.clickListener = clickListener;
     }
 
     public static class ViewHolder  extends RecyclerView.ViewHolder {
