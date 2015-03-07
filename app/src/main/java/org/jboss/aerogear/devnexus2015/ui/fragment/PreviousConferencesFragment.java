@@ -122,10 +122,14 @@ public class PreviousConferencesFragment extends Fragment implements LoaderManag
     @Override
     public void onStart() {
         super.onStart();
-        Bundle args = new Bundle();
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Bundle args = new Bundle();
         args.putString(PreviousYearPresentationContract.EVENT_LABEL, event.getLabel());
-        getLoaderManager().initLoader(SCHEDULE_LOADER, args, this);
+        getLoaderManager().restartLoader(SCHEDULE_LOADER, args, this);
     }
 
     @Override
