@@ -117,11 +117,10 @@ public class PodcastFragment extends Fragment implements LoaderManager.LoaderCal
                 Bundle args = new Bundle();
                 toolbar.setBackgroundColor(getResources().getColor(item.getRightDrawable()));
                 switch (item) {
-
+                    case ALL_TOPICS:
                     case AGILE:
                     case CLOUD_DEVOPTS:
                     case DATA_INTEGRATION_IOT:
-                    case FUNCTIONAL_PROGRAMMING:
                     case HTML_5:
                     case JAVA:
                     case JAVASCRIPT:
@@ -146,7 +145,7 @@ public class PodcastFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public void onStart() {
         super.onStart();
-        getLoaderManager().initLoader(SCHEDULE_LOADER, Bundle.EMPTY, this).forceLoad();
+
     }
 
     @Override
@@ -160,6 +159,7 @@ public class PodcastFragment extends Fragment implements LoaderManager.LoaderCal
         super.onResume();
         Intent playbackIntent = new Intent(getActivity(), PodcastPlaybackService2.class);
         getActivity().bindService(playbackIntent, playbackConnection, Context.BIND_ABOVE_CLIENT);
+        getLoaderManager().initLoader(SCHEDULE_LOADER, Bundle.EMPTY, this).forceLoad();
     }
 
     public static Fragment newInstance() {
@@ -177,7 +177,7 @@ public class PodcastFragment extends Fragment implements LoaderManager.LoaderCal
         List<Podcast> finalList = new ArrayList<>();
         List<Podcast> podcasts = data.podcasts;
         Bundle args = ((JsonLoader) loader).getArgs();
-        if (args.isEmpty()) {
+        if (args.isEmpty() || args.getString(TRACK).equals("All Topics")) {
             finalList = podcasts;
         } else {
             for (Podcast podcast : podcasts) {
