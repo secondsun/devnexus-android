@@ -30,6 +30,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 import static org.devnexus.vo.contract.ScheduleItemContract.toQuery;
 
 /**
@@ -38,9 +41,10 @@ import static org.devnexus.vo.contract.ScheduleItemContract.toQuery;
 public class PresentationExplorerFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,SessionClickListener {
 
     private static final int SCHEDULE_LOADER = 0x0100;
-    private RecyclerView recycler;
-    private Toolbar toolbar;
-    private Spinner spinner;
+    @Bind(R.id.my_recycler_view) RecyclerView recycler;
+    @Bind(R.id.toolbar) Toolbar toolbar;
+    @Bind(R.id.spinner_nav) Spinner spinner;
+
     private ArrayList<ScheduleItem> sechduleItemList = new ArrayList<>(1);
     private int scrollPosition = 0;
 
@@ -48,15 +52,17 @@ public class PresentationExplorerFragment extends Fragment implements LoaderMana
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.schedule_layout, null);
-        toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        ButterKnife.bind(this, view);
+
         toolbar.setTitle("");
         ((MainActivity) getActivity()).attachToolbar(toolbar);
-        recycler = (RecyclerView) view.findViewById(R.id.my_recycler_view);
+
+
         recycler.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         recycler.setAdapter(new ScheduleItemWithHeaderViewAdapter(sechduleItemList, getActivity()));
         ((GridLayoutManager)recycler.getLayoutManager()).setSpanSizeLookup(((ScheduleItemWithHeaderViewAdapter)recycler.getAdapter()).getSpanSizeLookup());
         
-        spinner = (Spinner) toolbar.findViewById(R.id.spinner_nav);
+
         loadSpinnerNav(spinner);
         return view;
     }
@@ -96,6 +102,11 @@ public class PresentationExplorerFragment extends Fragment implements LoaderMana
 
             }
         });
+    }
+
+    @Override public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 
     @Override
@@ -179,8 +190,11 @@ public class PresentationExplorerFragment extends Fragment implements LoaderMana
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         this.sechduleItemList = new ArrayList<>(1);
-        recycler.setAdapter(new ScheduleItemWithHeaderViewAdapter(this.sechduleItemList, getActivity(), false, this));
-        ((GridLayoutManager)recycler.getLayoutManager()).setSpanSizeLookup(((ScheduleItemWithHeaderViewAdapter)recycler.getAdapter()).getSpanSizeLookup());
+        if (recycler != null) {
+            recycler.setAdapter(new ScheduleItemWithHeaderViewAdapter(this.sechduleItemList, getActivity(), false, this));
+            ((GridLayoutManager)recycler.getLayoutManager()).setSpanSizeLookup(((ScheduleItemWithHeaderViewAdapter) recycler.getAdapter()).getSpanSizeLookup());
+        }
+
     }
 
     @Override

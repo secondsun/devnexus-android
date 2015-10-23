@@ -4,8 +4,10 @@ import android.accounts.AccountManager;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.View;
@@ -14,8 +16,11 @@ import android.widget.LinearLayout;
 import org.devnexus.sync.simple.SimpleDataAuthenticator;
 import org.jboss.aerogear.devnexus2015.ui.fragment.SetupFragment;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
-public class MainActivity extends ActionBarActivity {
+
+public class MainActivity extends AppCompatActivity {
 
 
 
@@ -25,7 +30,7 @@ public class MainActivity extends ActionBarActivity {
     public static final int LAUNCH_PODCAST = 0x4200;
 
     private int launch = LAUNCH_EXPLORE;
-    private DrawerLayout drawerLayout;
+    @Bind(R.id.my_drawer_layout) DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +38,8 @@ public class MainActivity extends ActionBarActivity {
 
         setContentView(R.layout.activity_main);
 
-        this.drawerLayout = (DrawerLayout) findViewById(R.id.my_drawer_layout);
-        
+        ButterKnife.bind(this);
+
         AccountManager accountManager =
                 (AccountManager) getSystemService(
                         ACCOUNT_SERVICE);
@@ -70,7 +75,7 @@ public class MainActivity extends ActionBarActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                drawerLayout.openDrawer(Gravity.START);
+                drawerLayout.openDrawer(GravityCompat.START);
             }
         });
         

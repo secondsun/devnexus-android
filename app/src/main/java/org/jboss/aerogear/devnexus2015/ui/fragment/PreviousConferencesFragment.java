@@ -33,6 +33,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 import static org.devnexus.vo.contract.PreviousYearPresentationContract.toQuery;
 
 /**
@@ -41,10 +44,13 @@ import static org.devnexus.vo.contract.PreviousYearPresentationContract.toQuery;
 public class PreviousConferencesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, SessionClickListener {
 
     private static final int SCHEDULE_LOADER = 0x0100;
-    private RecyclerView recycler;
+    @Bind(R.id.my_recycler_view)
+    RecyclerView recycler;
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
     private View contentView;
     private ContentResolver resolver;
-    private Toolbar toolbar;
+
 
     private Events event = Events.DEVNEXUX2014;
 
@@ -52,10 +58,10 @@ public class PreviousConferencesFragment extends Fragment implements LoaderManag
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = contentView = inflater.inflate(R.layout.schedule_layout, null);
-        toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        ButterKnife.bind(this, view);
+
         toolbar.setTitle("");
         ((MainActivity) getActivity()).attachToolbar(toolbar);
-        recycler = (RecyclerView) view.findViewById(R.id.my_recycler_view);
         recycler.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         resolver = getActivity().getContentResolver();
         recycler.setAdapter(new PresentationViewAdapter(new ArrayList<Presentation>(1), getActivity(), this));
@@ -66,7 +72,7 @@ public class PreviousConferencesFragment extends Fragment implements LoaderManag
     }
 
     private void loadSpinnerNav(final Spinner spinner) {
-        spinner.setAdapter(new ArrayAdapter<Events>(getActivity(), R.layout.textview){
+        spinner.setAdapter(new ArrayAdapter<Events>(getActivity(), R.layout.textview) {
             @Override
             public Events getItem(int position) {
                 return Events.values()[position];
@@ -84,7 +90,7 @@ public class PreviousConferencesFragment extends Fragment implements LoaderManag
                     convertView = inflater.inflate(R.layout.textview_dropdown, null);
                 }
 
-                ((TextView)convertView.findViewById(R.id.header_label)).setText(getItem(position).getLabel());
+                ((TextView) convertView.findViewById(R.id.header_label)).setText(getItem(position).getLabel());
 
                 return convertView;
             }
@@ -95,9 +101,9 @@ public class PreviousConferencesFragment extends Fragment implements LoaderManag
                     LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     convertView = inflater.inflate(R.layout.textview, null);
                 }
-                
-                ((TextView)convertView.findViewById(R.id.header_label)).setText(getItem(position).getLabel());
-                
+
+                ((TextView) convertView.findViewById(R.id.header_label)).setText(getItem(position).getLabel());
+
                 return convertView;
             }
         });
@@ -109,7 +115,7 @@ public class PreviousConferencesFragment extends Fragment implements LoaderManag
                 event = item;
                 args.putString(PreviousYearPresentationContract.EVENT_LABEL, item.getLabel());
                 getLoaderManager().restartLoader(SCHEDULE_LOADER, args, PreviousConferencesFragment.this);
-        
+
             }
 
             @Override
@@ -164,7 +170,9 @@ public class PreviousConferencesFragment extends Fragment implements LoaderManag
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        recycler.setAdapter(new PresentationViewAdapter(new ArrayList<Presentation>(1), getActivity(), this));
+        if(recycler != null) {
+            recycler.setAdapter(new PresentationViewAdapter(new ArrayList<Presentation>(1), getActivity(), this));
+        }
     }
 
     @Override
@@ -179,5 +187,10 @@ public class PreviousConferencesFragment extends Fragment implements LoaderManag
         return new PreviousConferencesFragment();
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
 
 }

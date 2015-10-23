@@ -30,6 +30,9 @@ import org.jboss.aerogear.devnexus2015.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Created by summers on 11/13/13.
  */
@@ -59,7 +62,8 @@ public class GalleriaMapFragment extends Fragment implements
     private GoogleMap mMap;
     private static View view;
     private MapFragment mapFragment;
-    private Toolbar toolbar;
+
+    @Bind(R.id.toolbar) Toolbar toolbar;
     private List<Marker> markers = new ArrayList<>();
 
 
@@ -72,12 +76,12 @@ public class GalleriaMapFragment extends Fragment implements
         }
         try {
             view = inflater.inflate(R.layout.galleria_map_fragment, container, false);
-
         } catch (InflateException e) {
         /* map is already there, just return view as it is */
         }
 
-        toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        ButterKnife.bind(this, view);
+
         toolbar.setTitle("Cobb Galleria");
         ((MainActivity) getActivity()).attachToolbar(toolbar);
 
@@ -181,6 +185,8 @@ public class GalleriaMapFragment extends Fragment implements
 
     public void onDestroyView() {
         super.onDestroyView();
+        ButterKnife.unbind(this);
+
         try {
             Fragment fragment = (getFragmentManager().findFragmentById(R.id.map));
             FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();

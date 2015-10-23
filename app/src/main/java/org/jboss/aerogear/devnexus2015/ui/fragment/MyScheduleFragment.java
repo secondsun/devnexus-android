@@ -44,6 +44,9 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 import static org.devnexus.vo.contract.UserCalendarContract.DATE;
 
 /**
@@ -54,10 +57,10 @@ public class MyScheduleFragment extends Fragment implements LoaderManager.Loader
     private static final String TAG = MyScheduleFragment.class.getSimpleName();
     private static final int SCHEDULE_LOADER = 0x0100;
     private static final String DATE_KEY = "Schedule.dateKey";
-    private RecyclerView recycler;
+    @Bind(R.id.my_recycler_view) RecyclerView recycler;
     private ContentResolver resolver;
-    private Toolbar toolbar;
-    private Spinner spinner;
+    @Bind(R.id.toolbar) Toolbar toolbar;
+    @Bind(R.id.spinner_nav) Spinner spinner;
 
     private ContentObserver userCalendarObserver = new ContentObserver(new Handler(Looper.getMainLooper())) {
         @Override
@@ -74,15 +77,15 @@ public class MyScheduleFragment extends Fragment implements LoaderManager.Loader
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.my_schedule, null);
-        toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        ButterKnife.bind(this,view);
         toolbar.setTitle("");
         ((MainActivity) getActivity()).attachToolbar(toolbar);
-        recycler = (RecyclerView) view.findViewById(R.id.my_recycler_view);
+
         recycler.setLayoutManager(new GridLayoutManager(getActivity(), 1));
         resolver = getActivity().getContentResolver();
+
         recycler.setAdapter(new MyScheduleViewAdapter(new ArrayList<UserCalendar>(1), getActivity(), this, this));
 
-        spinner = (Spinner) toolbar.findViewById(R.id.spinner_nav);
         loadSpinnerNav(spinner);
         return view;
     }
@@ -163,6 +166,11 @@ public class MyScheduleFragment extends Fragment implements LoaderManager.Loader
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
+    }
+
+    @Override public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 
     @Override

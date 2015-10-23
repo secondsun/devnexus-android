@@ -43,6 +43,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 
 /**
  * Created by summers on 1/7/15.
@@ -51,19 +54,30 @@ public class PodcastFragment extends Fragment implements LoaderManager.LoaderCal
 
     private static final int SCHEDULE_LOADER = 0x0100;
     private static final String TRACK = "PodcastFragment.trackName";
-    private RecyclerView recycler;
+
     private View contentView;
     private ContentResolver resolver;
-    private Toolbar toolbar;
-    private LinearLayout playbackLayout;
-    private ProgressBar progress;
-    private ImageButton playPauseButton;
-    private ImageButton downloadButton;
-    private SeekBar seekBar;
+
     private PodcastPlaybackService2 playbackService;
     private final Handler mHandler = new Handler();
 
     private Runnable mRunnable;
+
+    @Bind(R.id.my_recycler_view)
+    RecyclerView recycler;
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
+    @Bind(R.id.playback_controls)
+    LinearLayout playbackLayout;
+    @Bind(R.id.progress_spinner)
+    ProgressBar progress;
+    @Bind(R.id.playpause_button)
+    ImageButton playPauseButton;
+    @Bind(R.id.download_button)
+    ImageButton downloadButton;
+    @Bind(R.id.seekbar)
+    SeekBar seekBar;
+
     private ServiceConnection playbackConnection = new ServiceConnection() {
 
         @Override
@@ -71,7 +85,7 @@ public class PodcastFragment extends Fragment implements LoaderManager.LoaderCal
             playbackService = ((PodcastPlaybackService2.PlaybackBinder) service).service;
             playbackService.podcastFragment = PodcastFragment.this;
 
-            if (playbackService.isPrepared() && (playbackService.isPlaying() || playbackService.isPaused())){
+            if (playbackService.isPrepared() && (playbackService.isPlaying() || playbackService.isPaused())) {
                 beginPlayback();
             }
         }
@@ -88,24 +102,20 @@ public class PodcastFragment extends Fragment implements LoaderManager.LoaderCal
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = contentView = inflater.inflate(R.layout.podcast_layout, null);
-        toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        contentView = inflater.inflate(R.layout.podcast_layout, null);
+
+        ButterKnife.bind(this, contentView);
+
         toolbar.setTitle("");
         ((MainActivity) getActivity()).attachToolbar(toolbar);
-        recycler = (RecyclerView) view.findViewById(R.id.my_recycler_view);
+
         recycler.setLayoutManager(new GridLayoutManager(getActivity(), 1));
         resolver = getActivity().getContentResolver();
         recycler.setAdapter(new ScheduleItemViewAdapter(new ArrayList<ScheduleItem>(1), getActivity(), true));
 
-        playbackLayout = (LinearLayout) contentView.findViewById(R.id.playback_controls);
-        progress = (ProgressBar) playbackLayout.findViewById(R.id.progress_spinner);
-        playPauseButton = (ImageButton) playbackLayout.findViewById(R.id.playpause_button);
-        downloadButton = (ImageButton) playbackLayout.findViewById(R.id.download_button);
-        seekBar = (SeekBar) playbackLayout.findViewById(R.id.seekbar);
-
         Spinner spinner = (Spinner) toolbar.findViewById(R.id.spinner_nav);
         loadSpinnerNav(spinner);
-        return view;
+        return contentView;
     }
 
     private void loadSpinnerNav(final Spinner spinner) {
@@ -198,7 +208,9 @@ public class PodcastFragment extends Fragment implements LoaderManager.LoaderCal
 
     @Override
     public void onLoaderReset(Loader<PodcastList> loader) {
-        recycler.setAdapter(new PodcastViewAdapter(new ArrayList<Podcast>(1), getActivity(), this));
+        if(recycler != null) {
+            recycler.setAdapter(new PodcastViewAdapter(new ArrayList<Podcast>(1), getActivity(), this));
+        }
     }
 
     @Override
@@ -316,5 +328,10 @@ public class PodcastFragment extends Fragment implements LoaderManager.LoaderCal
         playbackLayout.setVisibility(View.GONE);
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
 
 }

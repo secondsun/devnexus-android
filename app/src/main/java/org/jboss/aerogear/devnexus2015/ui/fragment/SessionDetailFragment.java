@@ -44,6 +44,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Created by summers on 1/5/15.
  */
@@ -55,16 +58,18 @@ public class SessionDetailFragment extends Fragment implements LoaderManager.Loa
     private static final int CALENDAR_LOADER = 0x0200;
     private static final String CONTENT_URI = "SessionDetailFragment.content_uri";
     private static final String EVENT_LABEL = "SessionDetailFragment.event_label";
-    private Toolbar toolbar;
-    private LinearLayout speakersView;
     private ContentResolver resolver;
-    private TextView description;
-    private TextView skill;
-    private TextView track;
-    private TextView slot;
+
+    @Bind(R.id.toolbar) Toolbar toolbar;
+    @Bind(R.id.speakers) LinearLayout speakersView;
+    @Bind(R.id.description) TextView description;
+    @Bind(R.id.skill_level) TextView skill;
+    @Bind(R.id.track) TextView track;
+    @Bind(R.id.slot) TextView slot;
+    @Bind(R.id.tags) HorizontalListView tags;
+
     private Uri contentUri;
-    private String eventLabel;
-    private HorizontalListView tags;
+
     private View view;
     private SpeakerSessionAdapter adapter;
 
@@ -73,22 +78,19 @@ public class SessionDetailFragment extends Fragment implements LoaderManager.Loa
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.session_detail_layout, null);
         view.setVisibility(View.INVISIBLE);
-        toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        ButterKnife.bind(this, view);
+
+
         toolbar.setTitle(getArguments().getString(TOOLBAR_TITLE));
         contentUri = getArguments().getParcelable(CONTENT_URI);
-        eventLabel = getArguments().getString(EVENT_LABEL);
+
         ((MainActivity) getActivity()).attachToolbar(toolbar);
-        speakersView = (LinearLayout) view.findViewById(R.id.speakers);
+
 
         resolver = getActivity().getContentResolver();
         adapter = (new SpeakerSessionAdapter(new ArrayList<Speaker>(1), getActivity()));
-        description = (TextView) view.findViewById(R.id.description);
-        track = (TextView) view.findViewById(R.id.track);
-        skill = (TextView) view.findViewById(R.id.skill_level);
-        slot = (TextView) view.findViewById(R.id.slot);
-        tags = (HorizontalListView) view.findViewById(R.id.tags);
 
-        Spinner spinner = (Spinner) toolbar.findViewById(R.id.spinner_nav);
+
         getLoaderManager().initLoader(DETAIL_LOADER, getArguments(), this);
         if (contentUri.equals(PresentationContract.URI)) {
             getLoaderManager().initLoader(CALENDAR_LOADER, getArguments(), this);
@@ -328,4 +330,10 @@ public class SessionDetailFragment extends Fragment implements LoaderManager.Loa
         }
 
     }
+
+    @Override public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
+
 }
