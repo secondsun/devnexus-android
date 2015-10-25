@@ -54,9 +54,6 @@ public class DevNexusDrawerFragment extends Fragment {
         list2Items.add(new DrawerItem(R.drawable.ic_action_book, "All Presentations"));
         list2Items.add(new DrawerItem(R.drawable.ic_action_calendar_day, "My Schedule"));
         list2Items.add(new DrawerItem(R.drawable.ic_action_map, "Map"));
-        list2Items.add(new DrawerItem(R.drawable.ic_action_dev, "Previous Year"));
-        list2Items.add(new DrawerItem(R.drawable.ic_action_headphones, "Podcasts"));
-        list2Items.add(new DrawerItem(R.drawable.ic_action_video, "InfoQ Videos"));
 
         ListView list2 = (ListView) view.findViewById(R.id.list2);
         list2.setAdapter(new DrawerListAdapter(getActivity(), list2Items));
@@ -74,16 +71,7 @@ public class DevNexusDrawerFragment extends Fragment {
                     case 2:
                         activity.switchFragment(new GalleriaMapFragment(), RESET, "Map");
                         break;
-                    case 3:
-                        activity.switchFragment(PreviousConferencesFragment.newInstance(), RESET, "Previous");
-                        break;
-                    case 4:
-                        activity.switchFragment(PodcastFragment.newInstance(), RESET, "Podcast");
-                        break;
-                    case 5:
-                        Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.infoq.com/devnexus/"));
-                        activity.startActivity(myIntent);
-                        break;
+
                 }
                 activity.closeDrawer();
             }

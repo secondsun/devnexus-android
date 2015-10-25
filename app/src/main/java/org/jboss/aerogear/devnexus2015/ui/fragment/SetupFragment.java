@@ -118,9 +118,6 @@ public class SetupFragment extends Fragment implements LoaderManager.LoaderCallb
                     
                     Fragment fragment;
                     switch (launch){
-                        case MainActivity.LAUNCH_PODCAST:
-                            fragment = PodcastFragment.newInstance();
-                            break;
                      default:
                          fragment = PresentationExplorerFragment.newInstance();
                             break;
