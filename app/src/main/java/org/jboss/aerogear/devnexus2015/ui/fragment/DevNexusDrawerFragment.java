@@ -1,7 +1,6 @@
 package org.jboss.aerogear.devnexus2015.ui.fragment;
 
 import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -48,7 +47,7 @@ public class DevNexusDrawerFragment extends Fragment {
                         activity.switchFragment(new MyScheduleFragment(), RESET, "Schedule");
                         break;
                     case 2:
-                        activity.switchFragment(new GalleriaMapFragment(), RESET, "Map");
+                        activity.switchFragment(new VenueMapFragment(), RESET, "Map");
                         break;
 
                 }
