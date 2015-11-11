@@ -42,7 +42,6 @@ public class LiveDataSyncAdapter extends AbstractThreadedSyncAdapter {
 
 
     private static final Pipe<Schedule> SCHEDULE_PIPE;
-    private static final Pipe<UserCalendar> USER_SCHEDULE_PIPE;
     private static final Pipe<PresentationResponse> PRESENTATION_PIPE;
 
     static {
@@ -56,10 +55,6 @@ public class LiveDataSyncAdapter extends AbstractThreadedSyncAdapter {
                     .responseParser(new GsonResponseParser(GsonUtils.GSON))
                     .forClass(PresentationResponse.class);
 
-            USER_SCHEDULE_PIPE = PipeManager.config("user_calendar", RestfulPipeConfiguration.class)
-                    .withUrl(new URL("https://devnexus.com/s/calendar.json"))
-                    .responseParser(new GsonResponseParser(GsonUtils.GSON))
-                    .forClass(UserCalendar.class);
 
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
@@ -143,28 +138,6 @@ public class LiveDataSyncAdapter extends AbstractThreadedSyncAdapter {
                 syncFinished.countDown();
             }
         });
-
-        AccountManager am = AccountManager.get(getContext());
-
-        if (am.getAccountsByType(LiveDataAuthenticator.ACCOUNT_TYPE).length > 0) {
-            final CountDownLatch userCalenarLatch = new CountDownLatch(1);
-            USER_SCHEDULE_PIPE.read(new Callback<List<UserCalendar>>() {
-                @Override
-                public void onSuccess(List<UserCalendar> userCalendars) {
-                    userCalenarLatch.countDown();
-                }
-
-                @Override
-                public void onFailure(Exception e) {
-                    userCalenarLatch.countDown();
-                }
-            });
-            try {
-                userCalenarLatch.await();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
 
         try {
             syncFinished.await();
