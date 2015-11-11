@@ -26,7 +26,6 @@ import org.jboss.aerogear.devnexus2015.R;
 public class SetupFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
 
     private ContentObserver presentationObersever;
-    private ContentObserver userCalendarObersever;
     private ContentResolver resolver;
 
     public SetupFragment(){
@@ -46,16 +45,6 @@ public class SetupFragment extends Fragment implements LoaderManager.LoaderCallb
                 }
             }
         };
-
-        userCalendarObersever = new ContentObserver(new Handler(Looper.getMainLooper())) {
-            @Override
-            public void onChange(boolean selfChange) {
-                super.onChange(selfChange);
-                if (getActivity() != null) {
-                    ((MainActivity) getActivity()).switchFragment(PresentationExplorerFragment.newInstance(), MainActivity.BackStackOperation.RESET, "SessionListFragment");
-                }
-            }
-        };
         
         resolver = getActivity().getContentResolver();
         return inflater.inflate(R.layout.setup_layout, null);
@@ -66,9 +55,6 @@ public class SetupFragment extends Fragment implements LoaderManager.LoaderCallb
         super.onStart();
 
         getLoaderManager().initLoader(0, Bundle.EMPTY, this);
-        
-        
-        
         
     }
 

@@ -49,7 +49,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".GoogleConnectActivity" />
 
         <service android:name=".sync.LiveAuthenticatorService" >
             <intent-filter>
@@ -60,6 +59,7 @@
                 android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/simple_authenticator" />
         </service>
+
         <service
             android:name=".sync.LiveSyncService"
             android:exported="true"
@@ -73,22 +73,6 @@
                 android:resource="@xml/simple_sync" />
         </service>
 
-        
-        <service android:name=".media.PodcastPlaybackService2"/>
-        
-        <service
-            android:name=".sync.LiveSyncService"
-            android:exported="true"
-            android:process=":sync" >
-            <intent-filter>
-                <action android:name="android.content.SyncAdapter" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.content.SyncAdapter"
-                android:resource="@xml/simple_sync" />
-        </service>
-        
         <provider
             android:name="org.devnexus.sync.DevNexusContentProvider"
             android:authorities="org.devnexus.sync"
