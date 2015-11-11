@@ -10,10 +10,6 @@ import android.os.Bundle;
 
 public class LiveDataAuthenticator extends AbstractAccountAuthenticator {
 
-    private static final String TAG = LiveDataAuthenticator.class.getSimpleName();
-    public static final String ACCOUNT_TYPE = "org.devnexus.Account";
-
-
     // Simple constructor
     public LiveDataAuthenticator(Context context) {
         super(context);
