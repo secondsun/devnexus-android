@@ -25,5 +25,26 @@
     <string name="topic_functional_programming">Functional Programming</string>
     <string name="topic_user_experience_plus_tools">User Experience + Tools</string>
     <string name="all_tracks">All Topics</string>
+    <string name="exhibit_area">Exhibit Area</string>
+    <string name="a301">A301</string>
+    <string name="a302">A302</string>
+    <string name="a305">A305</string>
+    <string name="a307">A307</string>
+    <string name="a311">A311</string>
+    <string name="a312">A312</string>
+    <string name="a313">A313</string>
+    <string name="a314">A314</string>
+    <string name="a315">A315</string>
+    <string name="a316">A316</string>
+    <string name="sidney_marcus_auditorium">Sidney Marcus Auditorium</string>
+    <string name="a402">A402</string>
+    <string name="a403">A403</string>
+    <string name="a404">A404</string>
+    <string name="a405">A405</string>
+    <string name="a406">A406</string>
+    <string name="a407">A407</string>
+    <string name="a411">A411</string>
+    <string name="a412">A412</string>
+    <string name="venue_name">Georgia World Congress Center</string>
 
 </resources>
