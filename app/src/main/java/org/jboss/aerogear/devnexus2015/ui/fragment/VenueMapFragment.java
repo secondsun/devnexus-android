@@ -1,12 +1,34 @@
+/*
+ * Copyright 2015 Dev Nexus. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * This class includes code from https://github.com/google/iosched/blob/master/android/src/main/java/com/google/samples/apps/iosched/map/MapFragment.java
+ *
+ */
 package org.jboss.aerogear.devnexus2015.ui.fragment;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.app.LoaderManager;
+import android.content.Loader;
+import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +44,11 @@ import com.google.android.gms.maps.model.IndoorBuilding;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.TileOverlay;
+import com.google.android.gms.maps.model.TileOverlayOptions;
+import com.google.samples.apps.iosched.map.util.CachedTileProvider;
+import com.google.samples.apps.iosched.map.util.TileLoadingTask;
+import com.squareup.okhttp.internal.DiskLruCache;
 
 import org.devnexus.util.ResourceUtils;
 import org.devnexus.util.TrackRoomUtil;
@@ -30,8 +57,11 @@ import org.jboss.aerogear.devnexus2015.R;
 import org.jboss.aerogear.devnexus2015.model.GWCCLocations;
 import org.jboss.aerogear.devnexus2015.model.RoomMetaData;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -43,16 +73,45 @@ public class VenueMapFragment extends Fragment implements
         GoogleMap.OnInfoWindowClickListener, GoogleMap.OnMarkerClickListener,
         GoogleMap.OnCameraChangeListener, OnMapReadyCallback, GoogleMap.OnIndoorStateChangeListener {
 
+    private static final Map<Integer, String> tileMap;
+    static {
+        tileMap = new HashMap<>(6);
+        tileMap.put(3, "gwcc_floor_3.svg");
+    }
+
+    // Tile Providers
+    private SparseArray<CachedTileProvider> mTileProviders =
+            new SparseArray<>(6);
+    private SparseArray<TileOverlay> mTileOverlays =
+            new SparseArray<>(6);
+
+
+
+    // Screen DPI
+    private float mDPI = 0;
+    private static final int TOKEN_LOADER_TILES = 0x2;
+
+
     // Initial camera position
     private static final LatLng CAMERA_START_POSITION = new LatLng(33.759141, -84.396108);
     private static final float CAMERA_ZOOM = 17.75f;
     private static final String TAG = VenueMapFragment.class.getSimpleName();
-    private static final int START_FLOOR = GWCCLocations.EXHIBIT_AREA.floor.getFloorIndex();
+
     private GoogleMap mMap;
     private static View view;
     private MapFragment mapFragment;
 
     @Bind(R.id.toolbar) Toolbar toolbar;
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // get DPI
+        mDPI = getActivity().getResources().getDisplayMetrics().densityDpi / 160f;
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -139,6 +198,28 @@ public class VenueMapFragment extends Fragment implements
 
     }
 
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        closeTileCache();
+    }
+
+    /**
+     * Closes the caches of all allocated tile providers.
+     *
+     * @see CachedTileProvider#closeCache()
+     */
+    private void closeTileCache() {
+        for (int i = 0; i < mTileProviders.size(); i++) {
+            try {
+                mTileProviders.valueAt(i).closeCache();
+            } catch (IOException e) {
+            }
+        }
+    }
+
     @Override
     public void onInfoWindowClick(Marker marker) {
         RoomViewFragment.newInstance(marker.getTitle()).show(getFragmentManager(), TAG);
@@ -164,6 +245,13 @@ public class VenueMapFragment extends Fragment implements
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
+        // load all markers
+        LoaderManager lm = getLoaderManager();
+
+        // load the tile overlays
+        lm.initLoader(TOKEN_LOADER_TILES, null, mTileLoader).forceLoad();
+
         setupMap(true);
     }
 
@@ -176,7 +264,7 @@ public class VenueMapFragment extends Fragment implements
 
         LatLng camera = mMap.getCameraPosition().target;
         IndoorBuilding building = mMap.getFocusedBuilding();
-        mMap.clear();
+        clearMap();
 
 
         if (building == null || !nearVenue(camera)) {
@@ -187,6 +275,14 @@ public class VenueMapFragment extends Fragment implements
         for (MarkerOptions marker : GWCCLocations.asOptions(getActivity(), building.getActiveLevelIndex())) {
             mMap.addMarker(marker);
         }
+    }
+
+    private void clearMap() {
+        if (mMap != null) {
+            //mMap.clear();
+        }
+
+
     }
 
     private boolean nearVenue(LatLng camera) {
@@ -210,11 +306,59 @@ public class VenueMapFragment extends Fragment implements
         if (!nearVenue(camera)) {
             return;
         }
-        mMap.clear();
+        int floor = indoorBuilding.getActiveLevelIndex();
+        clearMap();
 
-        for (MarkerOptions marker : GWCCLocations.asOptions(getActivity(), indoorBuilding.getActiveLevelIndex())) {
+
+        for (MarkerOptions marker : GWCCLocations.asOptions(getActivity(), floor)) {
             mMap.addMarker(marker);
         }
+
+        // Overlays
+        final TileOverlay overlay = mTileOverlays.get(floor);
+        if (overlay != null) {
+            overlay.setVisible(true);
+        }
     }
+
+
+    private void onTilesLoaded(List<TileLoadingTask.TileEntry> list) {
+        if (list != null) {
+            // Display tiles if they have been loaded, skip them otherwise but display the rest of
+            // the map.
+            for (TileLoadingTask.TileEntry entry : list) {
+                TileOverlayOptions tileOverlay = new TileOverlayOptions()
+                        .tileProvider(entry.provider).visible(false);
+
+                // Store the tile overlay and provider
+                mTileProviders.put(entry.floor, entry.provider);
+                mTileOverlays.put(entry.floor, mMap.addTileOverlay(tileOverlay));
+            }
+        }
+
+    }
+
+
+    /**
+     * LoaderCallbacks for the {@link TileLoadingTask} that loads all tile overlays for the map.
+     */
+    private LoaderManager.LoaderCallbacks<List<TileLoadingTask.TileEntry>> mTileLoader
+            = new LoaderManager.LoaderCallbacks<List<TileLoadingTask.TileEntry>>() {
+        @Override
+        public Loader<List<TileLoadingTask.TileEntry>> onCreateLoader(int id, Bundle args) {
+            return new TileLoadingTask(getActivity(), mDPI, tileMap);
+        }
+
+        @Override
+        public void onLoadFinished(Loader<List<TileLoadingTask.TileEntry>> loader,
+                                   List<TileLoadingTask.TileEntry> data) {
+            onTilesLoaded(data);
+        }
+
+        @Override
+        public void onLoaderReset(Loader<List<TileLoadingTask.TileEntry>> loader) {
+        }
+    };
+
 }
 

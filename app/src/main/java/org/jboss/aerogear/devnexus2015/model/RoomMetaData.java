@@ -8,7 +8,7 @@ import com.google.android.gms.maps.model.LatLng;
  * This class defines a location, floor, and color of a room in the GWCC.
  */
 public class RoomMetaData {
-    public enum GalleriaFloor {ONE(5), TWO(4), THREE(3), THREE_M(2), FOUR(1), FIVE(0);
+    public enum GalleriaFloor {ONE(5), TWO(4), THREE(3), THREE_M(2), FOUR(1), FIVE(0), NULL(-1);
 
         private final int floorIndex;
 
@@ -24,8 +24,8 @@ public class RoomMetaData {
          * Turns a Google Maps Floor Index into a Galleria Floor
          *
          * @param floorIndex the google maps index of the floor
-         * @return the GalleriaFloor of the floor
-         * @throws IllegalArgumentException if floorIndex is not a valid floor Index
+         * @return the GalleriaFloor of the floor or GalleriaFloor.NULL
+
          */
         public static GalleriaFloor forIndex(int floorIndex) {
             for (GalleriaFloor floor : values()) {
@@ -33,7 +33,7 @@ public class RoomMetaData {
                     return floor;
                 }
             }
-            throw new IllegalArgumentException("No such floor " + floorIndex);
+            return NULL;
         }
 
     }
