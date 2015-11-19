@@ -63,14 +63,16 @@ public class SVGTileProvider implements TileProvider {
                 new float[]{
                         0, 0,
                         limits.width(), 0,
-                        limits.width(), limits.height()
+                        limits.width(), limits.height(),
+                        0, limits.height()
                 }, 0,
                 new float[]{
-                        lon2x(-84.39814268352393),lat2y( 33.76139564093918),
-                        lon2x(-84.39533709289435),lat2y( 33.76140456045418),
-                        lon2x(-84.39533441068534),lat2y( 33.758075286998040)
+                        lon2x(-84.3965270742774),lat2y(33.75959840954392),
+                        lon2x(-84.3958156183362),lat2y(33.759593113470416),
+                        lon2x(-84.39581125974655),lat2y( 33.7582431615339),
+                        lon2x(-84.39653344452381),lat2y( 33.7582526388671)
 
-                }, 0, 3
+                }, 0, 4
         );
     }
 

@@ -22,12 +22,10 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.LoaderManager;
 import android.content.Loader;
-import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.InflateException;
 import android.view.LayoutInflater;
@@ -48,10 +46,7 @@ import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.samples.apps.iosched.map.util.CachedTileProvider;
 import com.google.samples.apps.iosched.map.util.TileLoadingTask;
-import com.squareup.okhttp.internal.DiskLruCache;
 
-import org.devnexus.util.ResourceUtils;
-import org.devnexus.util.TrackRoomUtil;
 import org.jboss.aerogear.devnexus2015.MainActivity;
 import org.jboss.aerogear.devnexus2015.R;
 import org.jboss.aerogear.devnexus2015.model.GWCCLocations;
@@ -60,6 +55,7 @@ import org.jboss.aerogear.devnexus2015.model.RoomMetaData;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -84,6 +80,10 @@ public class VenueMapFragment extends Fragment implements
             new SparseArray<>(6);
     private SparseArray<TileOverlay> mTileOverlays =
             new SparseArray<>(6);
+
+    // Markers stored by floor
+    private SparseArray<ArrayList<Marker>> mMarkersFloor =
+            new SparseArray<>(3);
 
 
 
@@ -271,15 +271,42 @@ public class VenueMapFragment extends Fragment implements
             return;
         }
 
+        int floor = building.getActiveLevelIndex();
 
-        for (MarkerOptions marker : GWCCLocations.asOptions(getActivity(), building.getActiveLevelIndex())) {
-            mMap.addMarker(marker);
+        if (mMarkersFloor.get(floor) == null) {
+            mMarkersFloor.put(floor, new ArrayList<Marker>(12));//12 is the most markers on any floor
+            ArrayList<Marker> list = mMarkersFloor.get(floor);
+            for (MarkerOptions marker : GWCCLocations.asOptions(getActivity(), floor)) {
+                list.add(mMap.addMarker(marker));
+            }
         }
+
+        ArrayList<Marker> markers = mMarkersFloor.get(floor);
+        for (Marker marker : markers) {
+            marker.setVisible(true);
+        }
+
+
     }
 
     private void clearMap() {
         if (mMap != null) {
-            //mMap.clear();
+            for (int floor =0; floor < mMarkersFloor.size();floor++) {
+                ArrayList<Marker> markers = mMarkersFloor.valueAt(floor);
+                if (markers != null) {
+                    for (Marker marker : markers) {
+                        marker.setVisible(false);
+                    }
+                }
+            }
+
+            for (int floor =0; floor < mTileOverlays.size();floor++) {
+                TileOverlay overlay = mTileOverlays.valueAt(floor);
+                if(overlay!=null) {
+                    overlay.setVisible(false);
+                }
+            }
+
         }
 
 
@@ -310,8 +337,17 @@ public class VenueMapFragment extends Fragment implements
         clearMap();
 
 
-        for (MarkerOptions marker : GWCCLocations.asOptions(getActivity(), floor)) {
-            mMap.addMarker(marker);
+        if (mMarkersFloor.get(floor) == null) {
+            mMarkersFloor.put(floor, new ArrayList<Marker>(12));//12 is the most markers on any floor
+            ArrayList<Marker> list = mMarkersFloor.get(floor);
+            for (MarkerOptions marker : GWCCLocations.asOptions(getActivity(), floor)) {
+                list.add(mMap.addMarker(marker));
+            }
+        }
+
+        ArrayList<Marker> markers = mMarkersFloor.get(floor);
+        for (Marker marker : markers) {
+            marker.setVisible(true);
         }
 
         // Overlays
