@@ -291,6 +291,11 @@ public class VenueMapFragment extends Fragment implements
             marker.setVisible(true);
         }
 
+        // Overlays
+        final TileOverlay overlay = mTileOverlays.get(floor);
+        if (overlay != null) {
+            overlay.setVisible(true);
+        }
 
     }
 
