@@ -8,10 +8,13 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.jboss.aerogear.devnexus2015.R;
+import org.jboss.aerogear.devnexus2015.util.GWCCMapIconGenerator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,12 +30,12 @@ public final class GWCCLocations {
     public static final RoomMetaData A301 = new RoomMetaData(GalleriaFloor.THREE, 33.758336, -84.396093, Color.rgb(231, 126, 165));
     public static final RoomMetaData A302 = new RoomMetaData(GalleriaFloor.THREE, 33.758524, -84.395996, Color.rgb(110, 199, 232));
     public static final RoomMetaData A305 = new RoomMetaData(GalleriaFloor.THREE, 33.758520, -84.396205, Color.rgb(166, 196, 231));
-    public static final RoomMetaData A307 = new RoomMetaData(GalleriaFloor.THREE, 33.759381, -84.396462, Color.rgb(1, 83, 81));
+    public static final RoomMetaData A307 = new RoomMetaData(GalleriaFloor.THREE, 33.759381, -84.396442, Color.rgb(1, 83, 81));
     public static final RoomMetaData A311 = new RoomMetaData(GalleriaFloor.THREE, 33.759530, -84.395973, Color.rgb(131, 108, 176));
     public static final RoomMetaData A312 = new RoomMetaData(GalleriaFloor.THREE, 33.759422, -84.395979, Color.rgb(142, 199, 65));
     public static final RoomMetaData A313 = new RoomMetaData(GalleriaFloor.THREE, 33.759251, -84.395974, Color.rgb(250, 162, 27));
     public static final RoomMetaData A314 = new RoomMetaData(GalleriaFloor.THREE, 33.759120, -84.395984, Color.rgb(42, 45, 124));
-    public static final RoomMetaData A315 = new RoomMetaData(GalleriaFloor.THREE, 33.758997, -84.396017, Color.rgb(139, 34, 70));
+    public static final RoomMetaData A315 = new RoomMetaData(GalleriaFloor.THREE, 33.758997, -84.395937, Color.rgb(139, 34, 70));
     public static final RoomMetaData A316 = new RoomMetaData(GalleriaFloor.THREE, 33.758993, -84.395888, Color.rgb(139, 34, 70));
 
     public static final RoomMetaData EXHIBIT_AREA = new RoomMetaData(GalleriaFloor.ONE, 33.759765, -84.396876, 0xe5e5e5);
@@ -87,34 +90,72 @@ public final class GWCCLocations {
         List<MarkerOptions> optionsList = new ArrayList<>(21);
         GalleriaFloor floor = RoomMetaData.GalleriaFloor.forIndex(floorIndex);
         Resources resources = appContext.getResources();
+        MarkerOptions marker;
+        BitmapDescriptor icon;
         switch (floor) {
 
             case ONE:
-                optionsList.add(new MarkerOptions().position(EXHIBIT_AREA.location).title(resources.getString(R.string.exhibit_area)));
+                marker = new MarkerOptions().position(EXHIBIT_AREA.location).anchor(0.5f, 0.5f);
+                marker.icon(BitmapDescriptorFactory.fromBitmap(new GWCCMapIconGenerator(appContext).getIcon(EXHIBIT_AREA, resources.getString(R.string.exhibit_area))));
+
+                optionsList.add(marker);
                 break;
             case THREE:
-                optionsList.add(new MarkerOptions().position(A301.location).title(resources.getString(R.string.a301)));
-                optionsList.add(new MarkerOptions().position(A302.location).title(resources.getString(R.string.a302)));
-                optionsList.add(new MarkerOptions().position(A305.location).title(resources.getString(R.string.a305)));
-                optionsList.add(new MarkerOptions().position(A307.location).title(resources.getString(R.string.a307)));
-                optionsList.add(new MarkerOptions().position(A311.location).title(resources.getString(R.string.a311)));
-                optionsList.add(new MarkerOptions().position(A312.location).title(resources.getString(R.string.a312)));
-                optionsList.add(new MarkerOptions().position(A313.location).title(resources.getString(R.string.a313)));
-                optionsList.add(new MarkerOptions().position(A314.location).title(resources.getString(R.string.a314)));
-                optionsList.add(new MarkerOptions().position(A315.location).title(resources.getString(R.string.a315)));
-                optionsList.add(new MarkerOptions().position(A316.location).title(resources.getString(R.string.a316)));
+                icon = BitmapDescriptorFactory.fromBitmap(new GWCCMapIconGenerator(appContext).getIcon(A301, resources.getString(R.string.a301)));
+                optionsList.add(new MarkerOptions().position(A301.location).title(resources.getString(R.string.a301)).anchor(0.5f, 0.5f).icon(icon));
+
+                icon = BitmapDescriptorFactory.fromBitmap(new GWCCMapIconGenerator(appContext).getIcon(A302, resources.getString(R.string.a302)));
+                optionsList.add(new MarkerOptions().position(A302.location).title(resources.getString(R.string.a302)).anchor(0.5f, 0.5f).icon(icon));
+
+                icon = BitmapDescriptorFactory.fromBitmap(new GWCCMapIconGenerator(appContext).getIcon(A305, resources.getString(R.string.a305)));
+                optionsList.add(new MarkerOptions().position(A305.location).title(resources.getString(R.string.a305)).anchor(0.5f, 0.5f).icon(icon));
+
+                icon = BitmapDescriptorFactory.fromBitmap(new GWCCMapIconGenerator(appContext).getIcon(A307, resources.getString(R.string.a307)));
+                optionsList.add(new MarkerOptions().position(A307.location).title(resources.getString(R.string.a307)).anchor(0.5f, 0.5f).icon(icon));
+
+                icon = BitmapDescriptorFactory.fromBitmap(new GWCCMapIconGenerator(appContext).getIcon(A311, resources.getString(R.string.a311)));
+                optionsList.add(new MarkerOptions().position(A311.location).title(resources.getString(R.string.a311)).anchor(0.5f, 0.5f).icon(icon));
+
+                icon = BitmapDescriptorFactory.fromBitmap(new GWCCMapIconGenerator(appContext).getIcon(A312, resources.getString(R.string.a312)));
+                optionsList.add(new MarkerOptions().position(A312.location).title(resources.getString(R.string.a312)).anchor(0.5f, 0.5f).icon(icon));
+
+                icon = BitmapDescriptorFactory.fromBitmap(new GWCCMapIconGenerator(appContext).getIcon(A313, resources.getString(R.string.a313)));
+                optionsList.add(new MarkerOptions().position(A313.location).title(resources.getString(R.string.a313)).anchor(0.5f, 0.5f).icon(icon));
+
+                icon = BitmapDescriptorFactory.fromBitmap(new GWCCMapIconGenerator(appContext).getIcon(A314, resources.getString(R.string.a314)));
+                optionsList.add(new MarkerOptions().position(A314.location).title(resources.getString(R.string.a314)).anchor(0.5f, 0.5f).icon(icon));
+
+                icon = BitmapDescriptorFactory.fromBitmap(new GWCCMapIconGenerator(appContext).getIcon(A315, resources.getString(R.string.a315)));
+                optionsList.add(new MarkerOptions().position(A315.location).title(resources.getString(R.string.a315)).anchor(0.5f, 0.5f).icon(icon));
+
                 break;
             case FOUR:
-                optionsList.add(new MarkerOptions().position(SIDNEY_MARCUS_AUDITORIUM.location).title(resources.getString(R.string.sidney_marcus_auditorium)));
+                icon = BitmapDescriptorFactory.fromBitmap(new GWCCMapIconGenerator(appContext).getIcon(SIDNEY_MARCUS_AUDITORIUM, resources.getString(R.string.sidney_marcus_auditorium)));
+                optionsList.add(new MarkerOptions().position(SIDNEY_MARCUS_AUDITORIUM.location).title(resources.getString(R.string.sidney_marcus_auditorium)).icon(icon));
 
-                optionsList.add(new MarkerOptions().position(A402.location).title(resources.getString(R.string.a402)));
-                optionsList.add(new MarkerOptions().position(A403.location).title(resources.getString(R.string.a403)));
-                optionsList.add(new MarkerOptions().position(A404.location).title(resources.getString(R.string.a404)));
-                optionsList.add(new MarkerOptions().position(A405.location).title(resources.getString(R.string.a405)));
-                optionsList.add(new MarkerOptions().position(A406.location).title(resources.getString(R.string.a406)));
-                optionsList.add(new MarkerOptions().position(A407.location).title(resources.getString(R.string.a407)));
-                optionsList.add(new MarkerOptions().position(A411.location).title(resources.getString(R.string.a411)));
-                optionsList.add(new MarkerOptions().position(A412.location).title(resources.getString(R.string.a412)));
+                icon = BitmapDescriptorFactory.fromBitmap(new GWCCMapIconGenerator(appContext).getIcon(A402, resources.getString(R.string.a402)));
+                optionsList.add(new MarkerOptions().position(A402.location).title(resources.getString(R.string.a402)).anchor(0.5f, 0.5f).icon(icon));
+
+                icon = BitmapDescriptorFactory.fromBitmap(new GWCCMapIconGenerator(appContext).getIcon(A403, resources.getString(R.string.a403)));
+                optionsList.add(new MarkerOptions().position(A403.location).title(resources.getString(R.string.a403)).anchor(0.5f, 0.5f).icon(icon));
+
+                icon = BitmapDescriptorFactory.fromBitmap(new GWCCMapIconGenerator(appContext).getIcon(A404, resources.getString(R.string.a404)));
+                optionsList.add(new MarkerOptions().position(A404.location).title(resources.getString(R.string.a404)).anchor(0.5f, 0.5f).icon(icon));
+
+                icon = BitmapDescriptorFactory.fromBitmap(new GWCCMapIconGenerator(appContext).getIcon(A405, resources.getString(R.string.a405)));
+                optionsList.add(new MarkerOptions().position(A405.location).title(resources.getString(R.string.a405)).anchor(0.5f, 0.5f).icon(icon));
+
+                icon = BitmapDescriptorFactory.fromBitmap(new GWCCMapIconGenerator(appContext).getIcon(A406, resources.getString(R.string.a406)));
+                optionsList.add(new MarkerOptions().position(A406.location).title(resources.getString(R.string.a406)).anchor(0.5f, 0.5f).icon(icon));
+
+                icon = BitmapDescriptorFactory.fromBitmap(new GWCCMapIconGenerator(appContext).getIcon(A407, resources.getString(R.string.a407)));
+                optionsList.add(new MarkerOptions().position(A407.location).title(resources.getString(R.string.a407)).anchor(0.5f, 0.5f).icon(icon));
+
+                icon = BitmapDescriptorFactory.fromBitmap(new GWCCMapIconGenerator(appContext).getIcon(A411, resources.getString(R.string.a411)));
+                optionsList.add(new MarkerOptions().position(A411.location).title(resources.getString(R.string.a411)).anchor(0.5f, 0.5f).icon(icon));
+
+                icon = BitmapDescriptorFactory.fromBitmap(new GWCCMapIconGenerator(appContext).getIcon(A412, resources.getString(R.string.a412)));
+                optionsList.add(new MarkerOptions().position(A412.location).title(resources.getString(R.string.a412)).anchor(0.5f, 0.5f).icon(icon));
                 break;
             case TWO:
             case THREE_M:

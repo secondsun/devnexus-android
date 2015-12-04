@@ -37,6 +37,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.IndoorBuilding;
 import com.google.android.gms.maps.model.LatLng;
@@ -52,6 +54,7 @@ import org.jboss.aerogear.devnexus2015.MainActivity;
 import org.jboss.aerogear.devnexus2015.R;
 import org.jboss.aerogear.devnexus2015.model.GWCCLocations;
 import org.jboss.aerogear.devnexus2015.model.RoomMetaData;
+import org.jboss.aerogear.devnexus2015.util.GWCCMapIconGenerator;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -106,13 +109,13 @@ public class VenueMapFragment extends Fragment implements
     @Bind(R.id.toolbar) Toolbar toolbar;
 
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         // get DPI
         mDPI = getActivity().getResources().getDisplayMetrics().densityDpi / 160f;
-
+        
     }
 
     @Override
@@ -140,6 +143,8 @@ public class VenueMapFragment extends Fragment implements
 
         mMap = mapFragment.getMap();
 
+
+
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
             @Override
             public View getInfoWindow(Marker marker) {
@@ -165,6 +170,7 @@ public class VenueMapFragment extends Fragment implements
         });
 
         mMap.setOnMarkerClickListener(this);
+
         mMap.setOnInfoWindowClickListener(this);
         mMap.setOnCameraChangeListener(this);
         mMap.setOnIndoorStateChangeListener(this);
@@ -232,7 +238,7 @@ public class VenueMapFragment extends Fragment implements
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        return false;
+        return true;
     }
 
     public void onDestroyView() {
@@ -331,7 +337,7 @@ public class VenueMapFragment extends Fragment implements
         building.setLatitude(camera.latitude);
         building.setLongitude(camera.longitude);
 
-        return galleria.distanceTo(building) < 1000;
+        return galleria.distanceTo(building) < 2000;
     }
 
     @Override
@@ -374,7 +380,7 @@ public class VenueMapFragment extends Fragment implements
             // the map.
             for (TileLoadingTask.TileEntry entry : list) {
                 TileOverlayOptions tileOverlay = new TileOverlayOptions()
-                        .tileProvider(entry.provider).visible(false);
+                        .tileProvider(entry.provider).visible(false).zIndex(500);
 
                 // Store the tile overlay and provider
                 mTileProviders.put(entry.floor, entry.provider);

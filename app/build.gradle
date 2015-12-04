@@ -44,5 +44,10 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.1.+'
     compile 'com.android.support:support-v13:23.1.+'
     compile 'com.jakewharton:butterknife:7.0.1'
+
+    // Google Maps Android API utility library
+    compile('com.google.maps.android:android-maps-utils:0.3.4') {
+        exclude group: "com.google.android.gms"
+    }
     compile project(':google-io-utils')
 }

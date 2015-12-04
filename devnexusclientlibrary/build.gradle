@@ -24,7 +24,9 @@ dependencies {
     compile 'org.jboss.aerogear:aerogear-android-core:2.0.0'
     compile 'org.jboss.aerogear:aerogear-android-pipe:2.0.0'
     compile 'org.jboss.aerogear:aerogear-android-auth:2.0.0'
-    compile 'org.jboss.aerogear:aerogear-android-store:2.0.0'
+    compile('org.jboss.aerogear:aerogear-android-store:2.0.0'){
+        exclude group: "com.madgag"
+    }
     compile 'commons-io:commons-io:2.4'
     compile 'com.google.code.gson:gson:2.3.1'
 

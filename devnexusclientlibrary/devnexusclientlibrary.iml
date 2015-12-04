@@ -86,8 +86,6 @@
     <orderEntry type="library" exported="" name="gson-2.3.1" level="project" />
     <orderEntry type="library" exported="" name="commons-io-2.4" level="project" />
     <orderEntry type="library" exported="" name="aerogear-crypto-0.1.5-android" level="project" />
-    <orderEntry type="library" exported="" name="scprov-jdk15on-1.47.0.3" level="project" />
-    <orderEntry type="library" exported="" name="sc-light-jdk15on-1.47.0.3" level="project" />
     <orderEntry type="library" exported="" name="aerogear-android-pipe-2.0.0" level="project" />
     <orderEntry type="library" exported="" name="aerogear-android-auth-2.0.0" level="project" />
     <orderEntry type="library" exported="" name="aerogear-android-security-2.0.0" level="project" />
