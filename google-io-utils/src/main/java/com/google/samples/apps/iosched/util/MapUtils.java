@@ -24,10 +24,8 @@ import com.jakewharton.disklrucache.DiskLruCache;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 
 import static com.google.samples.apps.iosched.util.LogUtils.LOGD;
 import static com.google.samples.apps.iosched.util.LogUtils.LOGE;

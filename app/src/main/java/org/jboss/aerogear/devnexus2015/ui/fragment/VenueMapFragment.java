@@ -46,6 +46,7 @@ import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.samples.apps.iosched.map.util.CachedTileProvider;
 import com.google.samples.apps.iosched.map.util.TileLoadingTask;
+import com.google.samples.apps.iosched.util.MapUtils;
 
 import org.jboss.aerogear.devnexus2015.MainActivity;
 import org.jboss.aerogear.devnexus2015.R;
@@ -73,6 +74,7 @@ public class VenueMapFragment extends Fragment implements
     static {
         tileMap = new HashMap<>(6);
         tileMap.put(3, "gwcc_floor_3.svg");
+        tileMap.put(1, "gwcc_floor_4.svg");
     }
 
     // Tile Providers
@@ -185,6 +187,7 @@ public class VenueMapFragment extends Fragment implements
     @Override
     public void onStart() {
         super.onStart();
+        MapUtils.clearDiskCache(getActivity());
         mapFragment = (MapFragment) getFragmentManager().findFragmentByTag(TAG);
         if (mapFragment == null) {
             mapFragment = MapFragment.newInstance();
@@ -204,6 +207,8 @@ public class VenueMapFragment extends Fragment implements
         super.onStop();
 
         closeTileCache();
+        MapUtils.clearDiskCache(getActivity());
+
     }
 
     /**
