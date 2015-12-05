@@ -42,7 +42,7 @@ public class SimpleDataSyncAdapter  extends AbstractThreadedSyncAdapter {
                 .withUrl(new URL("https://devnexus.com/s/schedule.json"))
                 .responseParser(new GsonResponseParser(GsonUtils.GSON))
                 .forClass(Schedule.class);
-            PRESENTATION_PIPE =PipeManager.config("presentation", RestfulPipeConfiguration.class)
+            PRESENTATION_PIPE =PipeManager.config("presentations", RestfulPipeConfiguration.class)
                     .withUrl(new URL("https://devnexus.com/s/presentations.json"))
                     .responseParser(new GsonResponseParser(GsonUtils.GSON))
                     .forClass(PresentationResponse.class);
@@ -103,7 +103,7 @@ public class SimpleDataSyncAdapter  extends AbstractThreadedSyncAdapter {
             @Override
             public void onSuccess(List<PresentationResponse> presentationResponses) {
                 mContentResolver.delete(PresentationContract.URI, "", null);
-                ContentValues[] scheduleValues = PresentationContract.valueize(presentationResponses.get(0).presentationList.presentation);
+                ContentValues[] scheduleValues = PresentationContract.valueize(presentationResponses.get(0).presentations);
 
                 mContentResolver.bulkInsert(PresentationContract.URI, scheduleValues);
                 Log.d("DevNexus", "Schedules Saved");

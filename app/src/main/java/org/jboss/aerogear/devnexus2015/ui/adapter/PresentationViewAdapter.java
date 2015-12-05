@@ -25,6 +25,7 @@ import java.util.List;
  */
 public class PresentationViewAdapter extends RecyclerView.Adapter<PresentationViewAdapter.ViewHolder>  {
 
+    private static final String TAG = PresentationViewAdapter.class.getSimpleName();
     private final List<Presentation> items;
     private final Context mContext;
     private final SessionClickListener clickListener;
@@ -48,6 +49,9 @@ public class PresentationViewAdapter extends RecyclerView.Adapter<PresentationVi
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         final Presentation item = items.get(i);
+        if (item == null) {
+            Log.e(TAG, " No presentation at index i " + i);
+        }
         ImageView photo = (ImageView) viewHolder.presentationView.findViewById(R.id.photo);
         int trackColor = mContext.getResources().getColor(R.color.dn_default);
         

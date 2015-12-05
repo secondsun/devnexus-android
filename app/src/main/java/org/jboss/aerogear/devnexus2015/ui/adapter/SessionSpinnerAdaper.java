@@ -160,17 +160,23 @@ public class SessionSpinnerAdaper extends BaseAdapter implements SpinnerAdapter 
         ALL_EVENTS(R.string.all_events, true, false, false, R.color.dn_white),
         SPACER_0(0, false, false, true, R.color.dn_white),
         SESSION_TOPIC(R.string.topics, false, true, false, R.color.dn_white),
-        AGILE(R.string.topic_agile, true, false, false, R.color.Agile),
-        CLOUD_DEVOPTS(R.string.topic_cloud_and_devopts, true, false, false, R.color.Cloud_DevOps),
-        DATA_INTEGRATION_IOT(R.string.topic_data_integration_iot, true, false, false, R.color.Data_Integration_IoT),
-        FUNCTIONAL_PROGRAMMING(R.string.topic_functional_programming, true, false, false, R.color.Functional_Programming),
-        JAVA(R.string.topic_java, true, false, false, R.color.Java),
-        JAVASCRIPT(R.string.topic_javascript, true, false, false, R.color.JavaScript),
-        JVM_LANGUAGES(R.string.topic_jvm_languages, true, false, false, R.color.JVM_Languages_Debugging),
-        MICROSERVICES_SECURITY(R.string.topic_microservices_and_security, true, false, false, R.color.Microservices_Security),
-        MOBILE(R.string.topic_mobile, true, false, false, R.color.Mobile),
-        USER_EXPERIENCE_AND_TOOLS(R.string.topic_user_experience_plus_tools, true, false, false, R.color.User_Experience_Tools),
-        WEB(R.string.topic_web, true, false, false, R.color.Web);
+        WORKSHOP (R.string.workshops, true, false, false, R.color.WORKSHOP),
+        KEYNOTE (R.string.keynote, true, false, false, R.color.KEYNOTES),
+        JAVA(R.string.topic_java, true, false, false, R.color.JAVA),
+        JVM_LANGUAGES(R.string.topic_jvm_languages, true, false, false, R.color.JVM_LANGUAGES),
+        DATA_INTEGRATION_IOT(R.string.topic_data_integration_iot, true, false, false, R.color.DATA_INTEGRATION_IOT),
+        WEB(R.string.topic_web, true, false, false, R.color.WEB),
+        CLOUD_DEVOPTS(R.string.topic_cloud_and_devopts, true, false, false, R.color.CLOUD_DEVOPS),
+        MICROSERVICES(R.string.topic_microservices, true, false, false, R.color.MICROSERVICES),
+        SECURITY (R.string.topic_security, true, false, false, R.color.SECURITY),
+        ARCHITECTURE(R.string.topic_architecture, true, false, false, R.color.ARCHITECTURE),
+        HTML5(R.string.topic_html5, true, false, false, R.color.HTML5),
+        JAVASCRIPT(R.string.topic_javascript, true, false, false, R.color.JAVASCRIPT),
+        MOBILE(R.string.topic_mobile, true, false, false, R.color.MOBILE),
+        AGILE(R.string.topic_agile, true, false, false, R.color.AGILE),
+        USER_EXPERIENCE_AND_TOOLS(R.string.topic_user_experience_plus_tools, true, false, false, R.color.USER_EXPERIENCE_TOOLS);
+
+
 
         private final int titleStringResource;
         private final boolean isClickable;

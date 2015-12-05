@@ -97,7 +97,7 @@ public class PreviousYearPresentationContract {
      * This method will make a query out of the selection arguments.
      *
      * @param selection the selections you wish to to query
-     * @return a string formatted $selection && $selection1 (ex presentation.speaker.firstName && presentation.speaker.lastName)
+     * @return a string formatted $selection && $selection1 (ex presentations.speaker.firstName && presentations.speaker.lastName)
      */
     public static String toQuery(String... selection) {
         StringBuilder builder = new StringBuilder();

@@ -80,16 +80,24 @@ public class PresentationExplorerFragment extends Fragment implements LoaderMana
                     case ALL_EVENTS:
                         getLoaderManager().restartLoader(SCHEDULE_LOADER, Bundle.EMPTY, PresentationExplorerFragment.this);
                         break;
+
+                    case SPACER_0:
+                        break;
+                    case SESSION_TOPIC:
                     case AGILE:
                     case CLOUD_DEVOPTS:
                     case DATA_INTEGRATION_IOT:
-                    case FUNCTIONAL_PROGRAMMING:
+                    case ARCHITECTURE:
                     case JAVA:
+                    case HTML5:
                     case JAVASCRIPT:
                     case JVM_LANGUAGES:
-                    case MICROSERVICES_SECURITY:
+                    case MICROSERVICES:
+                    case SECURITY:
                     case MOBILE:
                     case USER_EXPERIENCE_AND_TOOLS:
+                    case WORKSHOP:
+                    case KEYNOTE:
                     case WEB:
                         args.putString(ScheduleItemContract.TRACK, getResources().getString(item.getTitleStringResource()));
                         getLoaderManager().restartLoader(SCHEDULE_LOADER, args, PresentationExplorerFragment.this);
@@ -164,7 +172,7 @@ public class PresentationExplorerFragment extends Fragment implements LoaderMana
         
         List<ScheduleItem> nonPresentationItems = new ArrayList<>(scheduleItems.size());
         for (ScheduleItem item : scheduleItems) {
-            if (item.presentation == null || item.presentation.track.name.contains("Workshop")) {
+            if (item.presentation == null) {
                 nonPresentationItems.add(item);
             }
         }

@@ -47,11 +47,11 @@ public class LiveDataSyncAdapter extends AbstractThreadedSyncAdapter {
     static {
         try {
             SCHEDULE_PIPE = PipeManager.config("schedule", RestfulPipeConfiguration.class)
-                    .withUrl(new URL("https://devnexus.com/s/schedule.json"))
+                    .withUrl(new URL("http://10.0.2.2:8080/api/schedule.json"))
                     .responseParser(new GsonResponseParser(GsonUtils.GSON))
                     .forClass(Schedule.class);
-            PRESENTATION_PIPE = PipeManager.config("presentation", RestfulPipeConfiguration.class)
-                    .withUrl(new URL("https://devnexus.com/s/presentations.json"))
+            PRESENTATION_PIPE = PipeManager.config("presentations", RestfulPipeConfiguration.class)
+                    .withUrl(new URL("http://10.0.2.2:8080/api/presentations.json"))
                     .responseParser(new GsonResponseParser(GsonUtils.GSON))
                     .forClass(PresentationResponse.class);
 
@@ -125,7 +125,7 @@ public class LiveDataSyncAdapter extends AbstractThreadedSyncAdapter {
             @Override
             public void onSuccess(List<PresentationResponse> presentationResponses) {
                 mContentResolver.delete(PresentationContract.URI, "", null);
-                ContentValues[] scheduleValues = PresentationContract.valueize(presentationResponses.get(0).presentationList.presentation);
+                ContentValues[] scheduleValues = PresentationContract.valueize(presentationResponses.get(0).presentations);
 
                 mContentResolver.bulkInsert(PresentationContract.URI, scheduleValues);
                 Log.d("DevNexus", "Presentations Saved");
@@ -174,7 +174,7 @@ public class LiveDataSyncAdapter extends AbstractThreadedSyncAdapter {
         PresentationResponse presentationResponses = GsonUtils.GSON.fromJson(presentationTemplateJson, PresentationResponse.class);
 
         mContentResolver.insert(ScheduleContract.URI, scheduleValues);
-        ContentValues[] presentationValues = PresentationContract.valueize(presentationResponses.presentationList.presentation);
+        ContentValues[] presentationValues = PresentationContract.valueize(presentationResponses.presentations);
 
         mContentResolver.bulkInsert(PresentationContract.URI, presentationValues);
 

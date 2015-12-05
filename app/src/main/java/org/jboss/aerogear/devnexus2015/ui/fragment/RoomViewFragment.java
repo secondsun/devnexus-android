@@ -74,7 +74,7 @@ public class RoomViewFragment extends DialogFragment {
 
                         if (cursor != null && cursor.moveToNext()) {
                             Schedule scheduleFromDb = GSON.fromJson(cursor.getString(0), Schedule.class);
-                            for (ScheduleItem scheduleItem : scheduleFromDb.scheduleItemList.scheduleItems) {
+                            for (ScheduleItem scheduleItem : scheduleFromDb.scheduleItems) {
                                 Log.d("Room", scheduleItem.room.name);
                                 if (scheduleItem.room.name.equals(trackName)) {
                                     schedule.add(scheduleItem);

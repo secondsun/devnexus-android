@@ -40,7 +40,7 @@ public class PresentationContentResolverTests  extends InstrumentationTestCase {
         InputStream presentationStream = context.getResources().openRawResource(R.raw.presentations);
         String presentationRawJson = IOUtils.toString(presentationStream);
         PresentationResponse presentations = gson.fromJson(presentationRawJson, PresentationResponse.class);
-        contentResolver.bulkInsert(PresentationContract.URI, PresentationContract.valueize(presentations.presentationList.presentation));
+        contentResolver.bulkInsert(PresentationContract.URI, PresentationContract.valueize(presentations.presentations));
     }
 
     @Override

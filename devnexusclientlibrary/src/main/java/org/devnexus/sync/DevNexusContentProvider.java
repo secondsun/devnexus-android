@@ -310,7 +310,7 @@ public class DevNexusContentProvider extends ContentProvider {
         public SingleColumnJsonArrayList exec(Gson gson, SQLStore calendarStore, Uri uri, ContentValues[] values, String selection, String[] selectionArgs) {
 
             List<UserCalendar> results = new ArrayList<UserCalendar>(calendarStore.readAll());
-            if (results.isEmpty()) {
+            if (results.isEmpty() || results.get(0).fromTime.getYear() < 116) {
                 results = loadTemplate(calendarStore);
             }
 
@@ -369,6 +369,7 @@ public class DevNexusContentProvider extends ContentProvider {
             }
             List<UserCalendar> userCalendarItems = GsonUtils.gson(new SimpleDateFormat("M/dd/yy hh:mm a"), resolver).fromJson(calendarTemplateJson, new TypeToken<List<UserCalendar>>() {
             }.getType());
+            resolver.delete(UserCalendarContract.URI, "", null);
             resolver.bulkInsert(UserCalendarContract.URI, UserCalendarContract.valueize(userCalendarItems, true));
             return userCalendarItems;
         }
@@ -396,10 +397,10 @@ public class DevNexusContentProvider extends ContentProvider {
             }
 
             if (selection == null || selection.isEmpty()) {
-                return new SingleColumnJsonArrayList(new ArrayList<ScheduleItem>(DevNexusContentProvider.schedule.get(0).scheduleItemList.scheduleItems));
+                return new SingleColumnJsonArrayList(new ArrayList<ScheduleItem>(DevNexusContentProvider.schedule.get(0).scheduleItems));
             } else {
 
-                ArrayList<ScheduleItem> items = new ArrayList<>(schedule.get(0).scheduleItemList.scheduleItems);
+                ArrayList<ScheduleItem> items = new ArrayList<>(schedule.get(0).scheduleItems);
                 ArrayList<ScheduleItem> filteredItems = new ArrayList<>(items.size());//max number
 
                 String[] selections = selection.split(" && ");
@@ -608,7 +609,7 @@ public class DevNexusContentProvider extends ContentProvider {
                     PreviousYearPresentationContract.Events event = PreviousYearPresentationContract.Events.fromLabel(eventId);
 
                     PresentationResponse presentationsObject = gson.fromJson(IOUtils.toString(context.getResources().openRawResource(event.getRawResourceId())), PresentationResponse.class);
-                    List<Presentation> presentations = presentationsObject.presentationList.presentation;
+                    List<Presentation> presentations = presentationsObject.presentations;
                     Iterator<String> keys = where.keys();
 
                     while (keys.hasNext()) {

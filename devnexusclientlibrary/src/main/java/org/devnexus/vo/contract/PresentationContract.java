@@ -23,8 +23,8 @@ public class PresentationContract {
 
     public static final String PRESENTATION_ID = "id";
     public static final String TITLE = "title";
-    public static final String SPEAKER_FNAME = "presentation.speaker.firstName";
-    public static final String SPEAKER_NAME = "presentation.speaker.lastName";
+    public static final String SPEAKER_FNAME = "presentations.speaker.firstName";
+    public static final String SPEAKER_NAME = "presentations.speaker.lastName";
     public static final String TRACK = "track.name";
 
     public static final String[] COLUMNS = {DATA, NOTIFY};
@@ -67,7 +67,7 @@ public class PresentationContract {
      * This method will make a query out of the selection arguments.
      *
      * @param selection the selections you wish to to query
-     * @return a string formatted $selection && $selection1 (ex presentation.speaker.firstName && presentation.speaker.lastName)
+     * @return a string formatted $selection && $selection1 (ex presentations.speaker.firstName && presentations.speaker.lastName)
      */
     public static String toQuery(String... selection) {
         StringBuilder builder = new StringBuilder();

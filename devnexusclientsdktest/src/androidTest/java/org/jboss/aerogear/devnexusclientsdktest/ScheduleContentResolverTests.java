@@ -47,7 +47,7 @@ public class ScheduleContentResolverTests extends InstrumentationTestCase{
         while(cursor.moveToNext()) {
             String scheduleRawJson = cursor.getString(0);
             Schedule schedule = gson.fromJson(scheduleRawJson, Schedule.class);
-            Assert.assertEquals(127, schedule.scheduleItemList.scheduleItems.size());
+            Assert.assertEquals(127, schedule.scheduleItems.size());
         }
         cursor.close();
     }

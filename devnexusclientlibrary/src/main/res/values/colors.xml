@@ -35,20 +35,21 @@
     <color name="track_10">#6A237E</color>
     <color name="track_11">#617784</color>
 
-    <color name="HTML5">#3a7dda</color>
-    <color name="Web">#512698</color>
-    <color name="JavaScript">#5a8e22</color>
-    <color name="Workshop">#6c6f70</color>
-    <color name="Agile">#6dc6e7</color>
-    <color name="JVM_Languages_Debugging">#8b2346</color>
-    <color name="Cloud_DevOps">#8d6cd1</color>
-    <color name="Mobile">#8dc740</color>
-    <color name="Data_Integration_IoT">#a2c6f8</color>
-    <color name="Microservices_Security">#e87ea6</color>
-    <color name="Keynotes">#edcd1c</color>
-    <color name="Java">#ffa200</color>
-    <color name="Functional_Programming">#ffa200</color>
-    <color name="User_Experience_Tools">#ffa200</color>
+    <color name="WORKSHOP">#6c7070</color>
+    <color name="KEYNOTES">#edce1e</color>
+    <color name="JAVA">#faa21b</color>
+    <color name="JVM_LANGUAGES">#8b2246</color>
+    <color name="DATA_INTEGRATION_IOT">#a6c4e7</color>
+    <color name="WEB">#522f92</color>
+    <color name="CLOUD_DEVOPS">#836cb0</color>
+    <color name="MICROSERVICES">#2a2d7c</color>
+    <color name="SECURITY">#015351</color>
+    <color name="ARCHITECTURE">#015351</color>
+    <color name="HTML5">#4879bc</color>
+    <color name="JAVASCRIPT">#5b903f</color>
+    <color name="MOBILE">#8ec741</color>
+    <color name="AGILE">#6ec7e8</color>
+    <color name="USER_EXPERIENCE_TOOLS">#e77ea5</color>
     <color name="dn_default" >#0E27eB</color>
 
 </resources>
