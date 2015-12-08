@@ -66,7 +66,7 @@ public class PresentationExplorerFragment extends Fragment implements LoaderMana
         recycler.setAdapter(new ScheduleItemWithHeaderViewAdapter(sechduleItemList, getActivity(), columnCount));
         ((GridLayoutManager)recycler.getLayoutManager()).setSpanSizeLookup(((ScheduleItemWithHeaderViewAdapter)recycler.getAdapter()).getSpanSizeLookup());
 
-        recycler.addItemDecoration(new CenteringDecoration(columnCount, 210, getActivity()));
+        recycler.addItemDecoration(new CenteringDecoration(columnCount, 220, getActivity()));
 
         loadSpinnerNav(spinner);
         return view;

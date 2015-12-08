@@ -63,6 +63,7 @@ public class DevNexusContentProvider extends ContentProvider {
     private SQLStore<Presentation> presentationSQLStore;
     private final CountDownLatch createdLatch = new CountDownLatch(3);
 
+    private static final long UTCOffsetMillis = 5 * 60 * 60 * 1000;
     private static ArrayList<Schedule> schedule = null;
 
     @Override
@@ -415,7 +416,7 @@ public class DevNexusContentProvider extends ContentProvider {
                                 }
                                 break;
                             case ScheduleItemContract.FROM_TIME:
-                                if ((item.fromTime == null) || !item.fromTime.equals(new Date(Long.parseLong(value)))) {
+                                if ((item.fromTime == null) || !(item.fromTime.equals(new Date(Long.parseLong(value))) || item.fromTime.equals(new Date(Long.parseLong(value) - UTCOffsetMillis))) ) {//Some UTC offsets because of JSON <-> Date
                                     filteredItems.add(item);
                                 }
                                 break;

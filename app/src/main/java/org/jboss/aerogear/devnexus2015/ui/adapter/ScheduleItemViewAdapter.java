@@ -66,28 +66,40 @@ public class ScheduleItemViewAdapter  extends RecyclerView.Adapter<ScheduleItemV
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         final ScheduleItem item = items.get(i);
-
         ImageView photo = (ImageView) viewHolder.sessionView.findViewById(R.id.photo);
-        
+        ImageView photo2 = (ImageView) viewHolder.sessionView.findViewById(R.id.photo_2);
+        ImageView photo3 = (ImageView) viewHolder.sessionView.findViewById(R.id.photo_3);
+        ImageView icon = (ImageView) viewHolder.sessionView.findViewById(R.id.icon);
+
+        photo2.setVisibility(View.GONE);
+        photo3.setVisibility(View.GONE);
+
         if (hideImages) {
             photo.setVisibility(View.GONE);
         }
 
         if (item.presentation != null) {
             final int trackColor = mContext.getResources().getColor(TrackRoomUtil.colorForTrack(item.presentation.track.name));
-            final int iconResource = TrackRoomUtil.iconForTrack(item.presentation.track.name);
+            final int iconResource= TrackRoomUtil.iconForTrack(item.presentation.track.name);
             if (!hideImages) {
-                photo.setBackgroundColor(trackColor);
-                Log.d("Presentation Image", "https://devnexus.com/s/speakers/" + item.presentation.speakers.get(0).id + ".jpg");
                 Picasso.with(mContext).load("https://devnexus.com/s/speakers/" + item.presentation.speakers.get(0).id + ".jpg").placeholder(new ColorDrawable(trackColor)).fit().centerCrop().noFade().into(photo);
+                if (item.presentation.speakers.size() == 2 ) {
+                    photo2.setVisibility(View.VISIBLE);
+                    photo3.setVisibility(View.GONE);
+                    Picasso.with(mContext).load("https://devnexus.com/s/speakers/" + item.presentation.speakers.get(1).id + ".jpg").placeholder(new ColorDrawable(trackColor)).fit().centerCrop().noFade().into(photo2);
+                } else if (item.presentation.speakers.size() == 3 ) {
+                    photo2.setVisibility(View.VISIBLE);
+                    photo3.setVisibility(View.VISIBLE);
+                    Picasso.with(mContext).load("https://devnexus.com/s/speakers/" + item.presentation.speakers.get(1).id + ".jpg").placeholder(new ColorDrawable(trackColor)).fit().centerCrop().noFade().into(photo2);
+                    Picasso.with(mContext).load("https://devnexus.com/s/speakers/" + item.presentation.speakers.get(2).id + ".jpg").placeholder(new ColorDrawable(trackColor)).fit().centerCrop().noFade().into(photo3);
+                }
             }
             TextView infoText = ((TextView) viewHolder.sessionView.findViewById(R.id.info_text));
-            ImageView icon = (ImageView) viewHolder.sessionView.findViewById(R.id.icon);
             infoText.setText(item.presentation.title);
             icon.setBackgroundColor(trackColor);
             icon.setImageResource(iconResource);
-            
-            viewHolder.sessionView.setOnClickListener(new View.OnClickListener() {
+
+            viewHolder.sessionView.findViewById(R.id.card_view).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (clickListener != null) {
@@ -98,7 +110,6 @@ public class ScheduleItemViewAdapter  extends RecyclerView.Adapter<ScheduleItemV
         } else {
             ((TextView) viewHolder.sessionView.findViewById(R.id.info_text)).setText(item.title);
         }
-
     }
 
     @Override

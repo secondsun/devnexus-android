@@ -7,6 +7,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.View;
+import android.widget.LinearLayout;
 
 /**
  * Created by summers on 12/8/15.
@@ -36,7 +37,7 @@ public class CenteringDecoration extends RecyclerView.ItemDecoration {
         int adapterPosition = parent.getChildAdapterPosition(view);
         int spanSize = lookup.getSpanSize(adapterPosition);
 
-        if (spanSize == this.spanCount) {//short circuit if header
+        if (((LinearLayout)view).getChildCount() != 1) {//short circuit if header
             return;
         }
 
@@ -51,7 +52,7 @@ public class CenteringDecoration extends RecyclerView.ItemDecoration {
             }
         }
 
-        spanPosition = spanPosition % 3;
+        spanPosition = spanPosition % spanCount;
 
         //calculate how many items are on this row
         if (spanPosition != rowSpanCount - 1) {//we are not at the end of a row, peek
@@ -62,26 +63,33 @@ public class CenteringDecoration extends RecyclerView.ItemDecoration {
                     break;
                 }  else {
                     rowSpanCount++;
-                    if (rowSpanCount== this.spanCount) {//short circuit if header
+                    if (rowSpanCount== this.spanCount) {//short circuit if full
                         break;
                     }
                 }
             }
         }
 
-        final int[] originalLefts;
+        final int[] originalLefts, originalRights;
         originalLefts = new int[rowSpanCount];
+        originalRights = new int[rowSpanCount];
 
         int runningLeft = 0;
         for (int counter = 0; counter < rowSpanCount; counter++) {
             originalLefts[counter] = runningLeft;
+            originalRights[counter] = runningLeft + viewWidth;
             runningLeft += parent.getWidth() / rowSpanCount;
         }
 
         int newFarLeft = (parent.getWidth()  - viewWidth * rowSpanCount) / 2;
 
-        outRect.left = newFarLeft + viewWidth * spanPosition - originalLefts[spanPosition];
-        outRect.right = newFarLeft + viewWidth * spanPosition - originalLefts[spanPosition] + viewWidth;
+        if (rowSpanCount != 1) {
+            outRect.left = newFarLeft + viewWidth * spanPosition - originalLefts[spanPosition];
+            outRect.right = newFarLeft + viewWidth * spanPosition - originalRights[spanPosition];
+        } else {
+            outRect.left = newFarLeft + viewWidth * spanPosition - originalLefts[spanPosition];
+            outRect.right = parent.getWidth();
+        }
 
 
     }

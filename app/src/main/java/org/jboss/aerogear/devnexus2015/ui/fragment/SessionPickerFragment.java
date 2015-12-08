@@ -9,6 +9,7 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ import org.devnexus.vo.UserCalendar;
 import org.devnexus.vo.contract.ScheduleItemContract;
 import org.jboss.aerogear.devnexus2015.R;
 import org.jboss.aerogear.devnexus2015.ui.adapter.PresentationViewAdapter;
+import org.jboss.aerogear.devnexus2015.util.CenteringDecoration;
 import org.jboss.aerogear.devnexus2015.util.SessionClickListener;
 import org.jboss.aerogear.devnexus2015.util.SessionPickerReceiver;
 
@@ -107,7 +109,7 @@ public class SessionPickerFragment extends DialogFragment implements LoaderManag
         View view = inflater.inflate(R.layout.session_picker, null);
         
         listView = (RecyclerView) view.findViewById(R.id.listView);
-        listView.setLayoutManager(new GridLayoutManager(getActivity(), 1));
+        listView.setLayoutManager(new LinearLayoutManager(getActivity()));
         if (adapter == null) {
             adapter = new PresentationViewAdapter(new ArrayList<Presentation>(0), getActivity(), new SessionClickListener() {
                 @Override
@@ -121,7 +123,6 @@ public class SessionPickerFragment extends DialogFragment implements LoaderManag
         }
 
         listView.setAdapter(adapter);
-
 
         return view;
     }
