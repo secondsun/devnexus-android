@@ -74,16 +74,18 @@ public class ScheduleItemViewAdapter  extends RecyclerView.Adapter<ScheduleItemV
         }
 
         if (item.presentation != null) {
-            final int trackColor = mContext.getResources().getColor(TrackRoomUtil.forTrack(item.presentation.track.name));
+            final int trackColor = mContext.getResources().getColor(TrackRoomUtil.colorForTrack(item.presentation.track.name));
+            final int iconResource = TrackRoomUtil.iconForTrack(item.presentation.track.name);
             if (!hideImages) {
                 photo.setBackgroundColor(trackColor);
                 Log.d("Presentation Image", "https://devnexus.com/s/speakers/" + item.presentation.speakers.get(0).id + ".jpg");
-                Picasso.with(mContext).load("https://devnexus.com/s/speakers/" + item.presentation.speakers.get(0).id + ".jpg").placeholder(new ColorDrawable(trackColor)).fit().centerCrop().into(photo);
+                Picasso.with(mContext).load("https://devnexus.com/s/speakers/" + item.presentation.speakers.get(0).id + ".jpg").placeholder(new ColorDrawable(trackColor)).fit().centerCrop().noFade().into(photo);
             }
             TextView infoText = ((TextView) viewHolder.sessionView.findViewById(R.id.info_text));
+            ImageView icon = (ImageView) viewHolder.sessionView.findViewById(R.id.icon);
             infoText.setText(item.presentation.title);
-            infoText.setBackgroundColor(trackColor);
-            infoText.setTextColor( mContext.getResources().getColor(R.color.dn_white));
+            icon.setBackgroundColor(trackColor);
+            icon.setImageResource(iconResource);
             
             viewHolder.sessionView.setOnClickListener(new View.OnClickListener() {
                 @Override

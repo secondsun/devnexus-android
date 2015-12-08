@@ -1,0 +1,44 @@
+<!-- The important thing to note here is the added fitSystemWindows -->
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/my_drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    style="@style/WindowTheme"
+    android:fitsSystemWindows="true">
+    <View android:id="@+id/three_column" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone"></View>
+
+    <!-- Your normal content view -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/display_fragment"/>
+
+    </LinearLayout>
+
+    <!-- Your drawer view. This can be any view, LinearLayout
+         is just an example. As we have set fitSystemWindows=true
+         this will be displayed under the status bar. -->
+    <LinearLayout
+        android:layout_width="304dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="left|start"
+        android:fitsSystemWindows="true">
+
+        <fragment
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/drawer_fragment"
+
+            android:tag="sidebar"
+            android:name="org.jboss.aerogear.devnexus2015.ui.fragment.DevNexusDrawerFragment"
+            />
+    </LinearLayout>
+
+</android.support.v4.widget.DrawerLayout>

@@ -77,7 +77,7 @@ public class MyScheduleViewAdapter extends RecyclerView.Adapter<MyScheduleViewAd
         } else {
             final ScheduleItem item = userCalendarItem.item;
             if (item!= null) {
-                int color = context.getResources().getColor(TrackRoomUtil.forTrack(item.presentation.track.name));
+                int color = context.getResources().getColor(TrackRoomUtil.colorForTrack(item.presentation.track.name));
                 holder.title.setText(item.presentation.title);
                 holder.title.setTextColor(context.getResources().getColor(R.color.dn_black));
                 Picasso.with(context).load("https://devnexus.com/s/speakers/"+item.presentation.speakers.get(0).id+".jpg").into(holder.image);

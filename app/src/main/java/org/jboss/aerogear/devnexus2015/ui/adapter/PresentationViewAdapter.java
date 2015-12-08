@@ -53,22 +53,24 @@ public class PresentationViewAdapter extends RecyclerView.Adapter<PresentationVi
             Log.e(TAG, " No presentation at index i " + i);
         }
         ImageView photo = (ImageView) viewHolder.presentationView.findViewById(R.id.photo);
-        int trackColor = mContext.getResources().getColor(R.color.dn_default);
+        ImageView icon = (ImageView) viewHolder.presentationView.findViewById(R.id.icon);
+        int trackColor = mContext.getResources().getColor(R.color.WORKSHOP);
         
         if (item.track != null) {
-            trackColor = mContext.getResources().getColor(TrackRoomUtil.forTrack(item.track.name));
+            trackColor = mContext.getResources().getColor(TrackRoomUtil.colorForTrack(item.track.name));
+            icon.setImageResource(TrackRoomUtil.iconForTrack(item.track.name));
         }
         photo.setBackgroundColor(trackColor);
+        icon.setBackgroundColor(trackColor);
 
         TextView infoText = ((TextView) viewHolder.presentationView.findViewById(R.id.info_text));
         infoText.setText(item.title);
-        infoText.setBackgroundColor(trackColor);
-        infoText.setTextColor( mContext.getResources().getColor(R.color.dn_white));
+
 
         Log.d("Presentation Image", "https://devnexus.com/s/speakers/"+item.speakers.get(0).id+".jpg");
         Picasso picasso = Picasso.with(mContext);
         
-        picasso.load("https://devnexus.com/s/speakers/"+item.speakers.get(0).id+".jpg").placeholder(new ColorDrawable(trackColor)).fit().centerCrop().into(photo);
+        picasso.load("https://devnexus.com/s/speakers/"+item.speakers.get(0).id+".jpg").placeholder(new ColorDrawable(trackColor)).fit().centerCrop().noFade().into(photo);
         ((TextView) viewHolder.presentationView.findViewById(R.id.info_text)).setText(item.title);
 
         viewHolder.presentationView.setOnClickListener(new View.OnClickListener() {

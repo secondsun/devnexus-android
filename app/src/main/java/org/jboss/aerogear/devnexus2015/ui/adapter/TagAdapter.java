@@ -79,7 +79,7 @@ public class TagAdapter implements ListAdapter {
 
         }
         PresentationTag tag = (PresentationTag) getItem(position);
-        int color = TrackRoomUtil.forTrack(tag.getName());
+        int color = TrackRoomUtil.colorForTrack(tag.getName());
         View colorView = convertView.findViewById(R.id.color);
         TextView tagName = (TextView) convertView.findViewById(R.id.tag_name);
         if (color == R.color.dn_default) {

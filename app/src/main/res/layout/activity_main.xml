@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     style="@style/WindowTheme"
     android:fitsSystemWindows="true">
+    <View android:id="@+id/one_column" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone"></View>
 
     <!-- Your normal content view -->
     <LinearLayout

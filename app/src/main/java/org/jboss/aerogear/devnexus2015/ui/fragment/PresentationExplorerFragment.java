@@ -24,6 +24,7 @@ import org.jboss.aerogear.devnexus2015.MainActivity;
 import org.jboss.aerogear.devnexus2015.R;
 import org.jboss.aerogear.devnexus2015.ui.adapter.ScheduleItemWithHeaderViewAdapter;
 import org.jboss.aerogear.devnexus2015.ui.adapter.SessionSpinnerAdaper;
+import org.jboss.aerogear.devnexus2015.util.CenteringDecoration;
 import org.jboss.aerogear.devnexus2015.util.SessionClickListener;
 
 import java.util.ArrayList;
@@ -45,7 +46,9 @@ public class PresentationExplorerFragment extends Fragment implements LoaderMana
     @Bind(R.id.toolbar) Toolbar toolbar;
     @Bind(R.id.spinner_nav) Spinner spinner;
 
+
     private ArrayList<ScheduleItem> sechduleItemList = new ArrayList<>(1);
+    private int columnCount = 3;
     private int scrollPosition = 0;
 
     @Nullable
@@ -54,14 +57,16 @@ public class PresentationExplorerFragment extends Fragment implements LoaderMana
         View view = inflater.inflate(R.layout.schedule_layout, null);
         ButterKnife.bind(this, view);
 
+
         toolbar.setTitle("");
         ((MainActivity) getActivity()).attachToolbar(toolbar);
+        columnCount = ((MainActivity) getActivity()).getColumnCount();
 
-
-        recycler.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-        recycler.setAdapter(new ScheduleItemWithHeaderViewAdapter(sechduleItemList, getActivity()));
+        recycler.setLayoutManager(new GridLayoutManager(getActivity(), columnCount));
+        recycler.setAdapter(new ScheduleItemWithHeaderViewAdapter(sechduleItemList, getActivity(), columnCount));
         ((GridLayoutManager)recycler.getLayoutManager()).setSpanSizeLookup(((ScheduleItemWithHeaderViewAdapter)recycler.getAdapter()).getSpanSizeLookup());
-        
+
+        recycler.addItemDecoration(new CenteringDecoration(columnCount, 210, getActivity()));
 
         loadSpinnerNav(spinner);
         return view;
@@ -191,7 +196,8 @@ public class PresentationExplorerFragment extends Fragment implements LoaderMana
         }
         scrollPosition = 0;
         this.sechduleItemList = new ArrayList<>(presentationList);
-        recycler.setAdapter(new ScheduleItemWithHeaderViewAdapter(presentationList, getActivity(), false, this));
+
+        recycler.setAdapter(new ScheduleItemWithHeaderViewAdapter(presentationList, getActivity(), columnCount, false, this));
         ((GridLayoutManager)recycler.getLayoutManager()).setSpanSizeLookup(((ScheduleItemWithHeaderViewAdapter)recycler.getAdapter()).getSpanSizeLookup());
     }
 
@@ -199,7 +205,7 @@ public class PresentationExplorerFragment extends Fragment implements LoaderMana
     public void onLoaderReset(Loader<Cursor> loader) {
         this.sechduleItemList = new ArrayList<>(1);
         if (recycler != null) {
-            recycler.setAdapter(new ScheduleItemWithHeaderViewAdapter(this.sechduleItemList, getActivity(), false, this));
+            recycler.setAdapter(new ScheduleItemWithHeaderViewAdapter(this.sechduleItemList, getActivity(),columnCount,  false, this));
             ((GridLayoutManager)recycler.getLayoutManager()).setSpanSizeLookup(((ScheduleItemWithHeaderViewAdapter) recycler.getAdapter()).getSpanSizeLookup());
         }
 

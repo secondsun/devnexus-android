@@ -4,6 +4,7 @@ import android.accounts.AccountManager;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -31,6 +32,11 @@ public class MainActivity extends AppCompatActivity {
 
     private int launch = LAUNCH_EXPLORE;
     @Bind(R.id.my_drawer_layout) DrawerLayout drawerLayout;
+    @Nullable @Bind(R.id.one_column) View oneColumn;
+    @Nullable @Bind(R.id.two_column) View twoColumn;
+    @Nullable @Bind(R.id.three_column) View threeColumn;
+
+    private int columnCount = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +49,12 @@ public class MainActivity extends AppCompatActivity {
         AccountManager accountManager =
                 (AccountManager) getSystemService(
                         ACCOUNT_SERVICE);
+
+        if (twoColumn != null) {
+            columnCount = 2;
+        } else if (threeColumn != null) {
+            columnCount = 3;
+        }
 
         accountManager.addAccountExplicitly(SimpleDataAuthenticator.SIMPLE_ACCOUNT, null, null);
 
@@ -118,6 +130,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public int getColumnCount() {
+        return columnCount;
+    }
 
     public void closeDrawer() {
         drawerLayout.closeDrawers();

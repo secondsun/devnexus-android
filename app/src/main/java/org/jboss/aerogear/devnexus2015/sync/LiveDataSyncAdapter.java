@@ -47,11 +47,11 @@ public class LiveDataSyncAdapter extends AbstractThreadedSyncAdapter {
     static {
         try {
             SCHEDULE_PIPE = PipeManager.config("schedule", RestfulPipeConfiguration.class)
-                    .withUrl(new URL("http://10.0.2.2:8080/api/schedule.json"))
+                    .withUrl(new URL("https://devnexus.com/api/schedule.json"))
                     .responseParser(new GsonResponseParser(GsonUtils.GSON))
                     .forClass(Schedule.class);
             PRESENTATION_PIPE = PipeManager.config("presentations", RestfulPipeConfiguration.class)
-                    .withUrl(new URL("http://10.0.2.2:8080/api/presentations.json"))
+                    .withUrl(new URL("https://devnexus.com/api/presentations.json"))
                     .responseParser(new GsonResponseParser(GsonUtils.GSON))
                     .forClass(PresentationResponse.class);
 

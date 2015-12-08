@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -31,7 +30,6 @@ import org.devnexus.vo.Speaker;
 import org.devnexus.vo.UserCalendar;
 import org.devnexus.vo.contract.PresentationContract;
 import org.devnexus.vo.contract.PreviousYearPresentationContract;
-import org.devnexus.vo.contract.ScheduleContract;
 import org.devnexus.vo.contract.ScheduleItemContract;
 import org.devnexus.vo.contract.UserCalendarContract;
 import org.jboss.aerogear.devnexus2015.MainActivity;
@@ -219,7 +217,7 @@ public class SessionDetailFragment extends Fragment implements LoaderManager.Loa
                 int color = getResources().getColor(R.color.dn_default);
 
                 if (presentation.track != null) {
-                    color = getResources().getColor(TrackRoomUtil.forTrack(presentation.track.name));
+                    color = getResources().getColor(TrackRoomUtil.colorForTrack(presentation.track.name));
                 }
 
                 int textColor = ColorUtils.getTextColor(getActivity(), color);
@@ -324,7 +322,7 @@ public class SessionDetailFragment extends Fragment implements LoaderManager.Loa
             public ViewHolder(View itemView) {
                 super(itemView);
                 speakerView = itemView;
-                photo = (ImageView) itemView.findViewById(R.id.photo);
+                photo = (ImageView) itemView.findViewById(R.id.icon);
                 bio = (TextView) itemView.findViewById(R.id.bio);
             }
         }
