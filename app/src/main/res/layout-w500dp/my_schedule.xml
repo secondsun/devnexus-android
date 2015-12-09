@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_height="wrap_content">
+
+
+        <Spinner
+            android:id="@+id/spinner_nav"
+            android:layout_width="wrap_content"
+            android:background="@android:color/white"
+            android:layout_height="wrap_content" />
+
+    </android.support.v7.widget.Toolbar>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:id="@+id/page_break"
+        android:layout_below="@id/toolbar"
+        android:layout_alignParentLeft="true"
+        android:background="@color/dn_spacer"/>
+
+    <!-- A RecyclerView with some commonly used attributes -->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/my_recycler_view"
+        android:layout_below="@id/page_break"
+        android:padding="12dp"
+        android:scrollbars="vertical"
+        android:layout_width="280dp"
+        android:layout_alignParentLeft="true"
+        android:layout_height="match_parent"/>
+
+    <View
+        android:id="@+id/picker_holder"
+        android:layout_below="@id/page_break"
+        android:layout_toRightOf="@id/my_recycler_view"
+        android:padding="12dp"
+        android:layout_width="220dp"
+        android:layout_height="match_parent"/>
+
+
+</RelativeLayout>

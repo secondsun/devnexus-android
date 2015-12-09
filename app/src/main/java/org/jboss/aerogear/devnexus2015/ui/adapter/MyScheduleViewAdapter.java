@@ -150,8 +150,7 @@ public class MyScheduleViewAdapter extends RecyclerView.Adapter<MyScheduleViewAd
         final TextView title;
         final View titleBar;
         final ImageButton removeButton;
-        final LinearLayout layout;
-        
+
         final View itemView;
         
         public ViewHolder(View itemView) {
@@ -161,7 +160,7 @@ public class MyScheduleViewAdapter extends RecyclerView.Adapter<MyScheduleViewAd
             endTime = (TextView) itemView.findViewById(R.id.end_time);
             image = (ImageView) itemView.findViewById(R.id.image);
             title = (TextView) itemView.findViewById(R.id.title);
-            layout = (LinearLayout) itemView.findViewById(R.id.layout);
+
             titleBar = itemView.findViewById(R.id.title_bar);
             removeButton = (ImageButton) itemView.findViewById(R.id.remove_session_from_schedule);
         }
