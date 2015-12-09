@@ -38,10 +38,11 @@
 
         <LinearLayout
             android:id="@+id/times"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/cardview_light_background"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <TextView
@@ -53,6 +54,7 @@
                 android:text="9:00"
                 android:textColor="@color/dn_black"
                 android:textSize="16sp" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="36dp"
@@ -77,53 +79,37 @@
             android:id="@+id/image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/times"
             android:layout_alignParentBottom="true"
-            android:padding="2dp"
+            android:layout_alignParentLeft="true"
+
+            android:layout_below="@+id/times"
             android:adjustViewBounds="true"
-            android:background="@color/AGILE"
+            android:background="@color/dn_white"
             android:scaleType="centerInside"
-            android:src="@drawable/agile"
-            android:layout_alignParentLeft="true"/>
-
-
-        <!-- Block/slot chip contents -->
-        <RelativeLayout
-            android:id="@+id/title_bar"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_alignTop="@+id/image"
-            android:layout_alignBottom="@+id/image"
-            android:layout_toRightOf="@+id/image"
-            android:paddingBottom="8dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="8dp">
-
-            <ImageButton
-                android:id="@+id/remove_session_from_schedule"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:layout_weight="1"
-                android:scaleType="center"
-                android:src="@android:drawable/ic_menu_delete"
-                android:visibility="gone" />
-        </RelativeLayout>
+            android:src="@drawable/ic_action_calendar_month" />
 
         <TextView
             android:id="@+id/title"
-            android:layout_below="@+id/times"
             android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:layout_toRightOf="@+id/image"
-            android:ellipsize="end"
-            android:gravity="top|left"
-            android:maxLines="2"
-            android:text="One two threee four five six"
-            android:textSize="14sp"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_below="@id/times"
+            android:layout_toRightOf="@+id/image"
+            android:background="@android:color/transparent"
+            android:padding="16dp"
+            android:text="One two threee four five six"
+            android:textSize="14sp" />
+
+        <ImageButton
+            android:id="@+id/remove_session_from_schedule"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/title"
+            android:layout_margin="4dp"
+            android:layout_weight="1"
+            android:scaleType="center"
+            android:src="@drawable/ic_clear_white_18dp" />
 
     </RelativeLayout>
 </android.support.v7.widget.CardView>

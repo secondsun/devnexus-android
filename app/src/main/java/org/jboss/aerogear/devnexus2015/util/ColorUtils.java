@@ -13,7 +13,7 @@ public class ColorUtils {
         double lightness = lightness(color); 
 
         if (lightness >.5d) {
-            return (context.getResources().getColor(R.color.dn_black));
+            return (context.getResources().getColor(R.color.dn_white));
         } else {
             return (context.getResources().getColor(R.color.dn_white));
         }
