@@ -21,7 +21,9 @@ import org.devnexus.vo.Schedule;
 import org.devnexus.vo.ScheduleItem;
 import org.devnexus.vo.contract.ScheduleContract;
 import org.jboss.aerogear.devnexus2015.R;
+import org.jboss.aerogear.devnexus2015.model.GWCCLocations;
 import org.jboss.aerogear.devnexus2015.ui.adapter.ScheduleItemViewAdapter;
+import org.jboss.aerogear.devnexus2015.util.CenteringDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +66,7 @@ public class RoomViewFragment extends DialogFragment {
             protected Object doInBackground(Object... params) {
 
                 Bundle args = getArguments();
-                String trackName = args.getString(ROOM_NAME);
+                String viewRoomName = args.getString(ROOM_NAME);
 
                 if (schedule == null) {
                     Cursor cursor = null;
@@ -75,8 +77,7 @@ public class RoomViewFragment extends DialogFragment {
                         if (cursor != null && cursor.moveToNext()) {
                             Schedule scheduleFromDb = GSON.fromJson(cursor.getString(0), Schedule.class);
                             for (ScheduleItem scheduleItem : scheduleFromDb.scheduleItems) {
-                                Log.d("Room", scheduleItem.room.name);
-                                if (scheduleItem.room.name.equals(trackName)) {
+                                if (GWCCLocations.roomNameMatchesMarkerName(scheduleItem.room.name, viewRoomName)) {
                                     schedule.add(scheduleItem);
                                 }
                             }
@@ -127,6 +128,7 @@ public class RoomViewFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.session_picker, null);
         listView = (RecyclerView) view.findViewById(R.id.listView);
         listView.setLayoutManager(new GridLayoutManager(getActivity(), 1));
+        listView.addItemDecoration(new CenteringDecoration(1,210,getActivity()));
 //
 //        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //            @Override

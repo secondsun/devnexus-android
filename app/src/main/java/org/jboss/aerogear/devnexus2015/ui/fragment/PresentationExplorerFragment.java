@@ -42,6 +42,7 @@ import static org.devnexus.vo.contract.ScheduleItemContract.toQuery;
 public class PresentationExplorerFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,SessionClickListener {
 
     private static final int SCHEDULE_LOADER = 0x0100;
+    @Nullable
     @Bind(R.id.my_recycler_view) RecyclerView recycler;
     @Bind(R.id.toolbar) Toolbar toolbar;
     @Bind(R.id.spinner_nav) Spinner spinner;

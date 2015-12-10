@@ -25,61 +25,61 @@ import static org.jboss.aerogear.devnexus2015.model.RoomMetaData.GalleriaFloor;
 
 public final class GWCCLocations {
 
-    private GWCCLocations() {}
+    private GWCCLocations() {
+    }
 
-    public static final RoomMetaData A301 = new RoomMetaData(GalleriaFloor.THREE, 33.758336, -84.396093, Color.rgb(231, 126, 165));
-    public static final RoomMetaData A302 = new RoomMetaData(GalleriaFloor.THREE, 33.758524, -84.395996, Color.rgb(110, 199, 232));
-    public static final RoomMetaData A305 = new RoomMetaData(GalleriaFloor.THREE, 33.758520, -84.396205, Color.rgb(166, 196, 231));
-    public static final RoomMetaData A307 = new RoomMetaData(GalleriaFloor.THREE, 33.759381, -84.396442, Color.rgb(1, 83, 81));
-    public static final RoomMetaData A311 = new RoomMetaData(GalleriaFloor.THREE, 33.759530, -84.395973, Color.rgb(131, 108, 176));
-    public static final RoomMetaData A312 = new RoomMetaData(GalleriaFloor.THREE, 33.759422, -84.395979, Color.rgb(142, 199, 65));
-    public static final RoomMetaData A313 = new RoomMetaData(GalleriaFloor.THREE, 33.759251, -84.395974, Color.rgb(250, 162, 27));
-    public static final RoomMetaData A314 = new RoomMetaData(GalleriaFloor.THREE, 33.759120, -84.395984, Color.rgb(42, 45, 124));
-    public static final RoomMetaData A315 = new RoomMetaData(GalleriaFloor.THREE, 33.758997, -84.395937, Color.rgb(139, 34, 70));
-    public static final RoomMetaData A316 = new RoomMetaData(GalleriaFloor.THREE, 33.758993, -84.395888, Color.rgb(139, 34, 70));
+    public static final RoomMetaData A301 = new RoomMetaData(GalleriaFloor.THREE, 33.758336, -84.396093, 0x2a2d7c);
+    public static final RoomMetaData A302 = new RoomMetaData(GalleriaFloor.THREE, 33.758524, -84.395996, 0xfaa21b);
+    public static final RoomMetaData A305 = new RoomMetaData(GalleriaFloor.THREE, 33.758520, -84.396205, 0x8b2246);
+    public static final RoomMetaData A307 = new RoomMetaData(GalleriaFloor.THREE, 33.759381, -84.396442, 0x6c7070);
+    public static final RoomMetaData A311 = new RoomMetaData(GalleriaFloor.THREE, 33.759530, -84.395973, 0x015351);
+    public static final RoomMetaData A312 = new RoomMetaData(GalleriaFloor.THREE, 33.759422, -84.395979, 0xa6c4e7);
+    public static final RoomMetaData A313 = new RoomMetaData(GalleriaFloor.THREE, 33.759251, -84.395974, 0x522f92);
+    public static final RoomMetaData A314 = new RoomMetaData(GalleriaFloor.THREE, 33.759120, -84.395984, 0x015351);
+    public static final RoomMetaData A315 = new RoomMetaData(GalleriaFloor.THREE, 33.758997, -84.395937, 0x836cb0);
+    public static final RoomMetaData A316 = new RoomMetaData(GalleriaFloor.THREE, 33.758993, -84.395888, 0x836cb0);
 
     public static final RoomMetaData EXHIBIT_AREA = new RoomMetaData(GalleriaFloor.ONE, 33.759765, -84.396876, 0xe5e5e5);
-    public static final RoomMetaData SIDNEY_MARCUS_AUDITORIUM = new RoomMetaData(GalleriaFloor.FOUR, 33.758537, -84.396089, 0xe5e5e5);
+    public static final RoomMetaData SIDNEY_MARCUS_AUDITORIUM = new RoomMetaData(GalleriaFloor.FOUR, 33.758537, -84.396089, 0xedcd1c);
 
-    public static final RoomMetaData A402 = new RoomMetaData(GalleriaFloor.FOUR, 33.759322, -84.396430, Color.rgb(91, 144, 63));
-    public static final RoomMetaData A403 = new RoomMetaData(GalleriaFloor.FOUR, 33.759431, -84.396433, Color.rgb(91, 144, 63));
-    public static final RoomMetaData A404 = new RoomMetaData(GalleriaFloor.FOUR, 33.759601, -84.396433, Color.rgb(72, 121, 188));
-    public static final RoomMetaData A405 = new RoomMetaData(GalleriaFloor.FOUR, 33.759716, -84.396433, Color.rgb(72, 121, 188));
-    public static final RoomMetaData A406 = new RoomMetaData(GalleriaFloor.FOUR, 33.759850, -84.396437, Color.rgb(72, 121, 188));
-    public static final RoomMetaData A407 = new RoomMetaData(GalleriaFloor.FOUR, 33.759943, -84.396438, Color.rgb(72, 121, 188));
-    public static final RoomMetaData A411 = new RoomMetaData(GalleriaFloor.FOUR, 33.759481, -84.395963, Color.rgb(72, 121, 188));
-    public static final RoomMetaData A412 = new RoomMetaData(GalleriaFloor.FOUR, 33.759295, -84.395962, Color.rgb(72, 121, 188));
+    public static final RoomMetaData A402 = new RoomMetaData(GalleriaFloor.FOUR, 33.759322, -84.396430, 0xe77ea5);
+    public static final RoomMetaData A403 = new RoomMetaData(GalleriaFloor.FOUR, 33.759431, -84.396433, 0xe77ea5);
+    public static final RoomMetaData A404 = new RoomMetaData(GalleriaFloor.FOUR, 33.759601, -84.396433, 0x8ec741);
+    public static final RoomMetaData A405 = new RoomMetaData(GalleriaFloor.FOUR, 33.759716, -84.396433, 0x8ec741);
+    public static final RoomMetaData A406 = new RoomMetaData(GalleriaFloor.FOUR, 33.759850, -84.396437, 0x6ec7e8);
+    public static final RoomMetaData A407 = new RoomMetaData(GalleriaFloor.FOUR, 33.759943, -84.396438, 0x6ec7e8);
+    public static final RoomMetaData A411 = new RoomMetaData(GalleriaFloor.FOUR, 33.759481, -84.395963, 0x5b903f);
+    public static final RoomMetaData A412 = new RoomMetaData(GalleriaFloor.FOUR, 33.759295, -84.395962, 0x4879bc);
 
     private static final Map<LatLng, RoomMetaData> positionLookup = new HashMap<>(21);
 
     static {
-        positionLookup.put(A301.location,A301);
-        positionLookup.put(A302.location,A302);
-        positionLookup.put(A305.location,A305);
-        positionLookup.put(A307.location,A307);
-        positionLookup.put(A311.location,A311);
-        positionLookup.put(A312.location,A312);
-        positionLookup.put(A313.location,A313);
-        positionLookup.put(A314.location,A314);
-        positionLookup.put(A315.location,A315);
-        positionLookup.put(A316.location,A316);
+        positionLookup.put(A301.location, A301);
+        positionLookup.put(A302.location, A302);
+        positionLookup.put(A305.location, A305);
+        positionLookup.put(A307.location, A307);
+        positionLookup.put(A311.location, A311);
+        positionLookup.put(A312.location, A312);
+        positionLookup.put(A313.location, A313);
+        positionLookup.put(A314.location, A314);
+        positionLookup.put(A315.location, A315);
+        positionLookup.put(A316.location, A316);
 
-        positionLookup.put(EXHIBIT_AREA.location,EXHIBIT_AREA);
-        positionLookup.put(SIDNEY_MARCUS_AUDITORIUM.location,SIDNEY_MARCUS_AUDITORIUM);
+        positionLookup.put(EXHIBIT_AREA.location, EXHIBIT_AREA);
+        positionLookup.put(SIDNEY_MARCUS_AUDITORIUM.location, SIDNEY_MARCUS_AUDITORIUM);
 
-        positionLookup.put(A402.location,A402);
-        positionLookup.put(A403.location,A403);
-        positionLookup.put(A404.location,A404);
-        positionLookup.put(A405.location,A405);
-        positionLookup.put(A406.location,A406);
-        positionLookup.put(A407.location,A407);
-        positionLookup.put(A411.location,A411);
-        positionLookup.put(A412.location,A412);
-        
+        positionLookup.put(A402.location, A402);
+        positionLookup.put(A403.location, A403);
+        positionLookup.put(A404.location, A404);
+        positionLookup.put(A405.location, A405);
+        positionLookup.put(A406.location, A406);
+        positionLookup.put(A407.location, A407);
+        positionLookup.put(A411.location, A411);
+        positionLookup.put(A412.location, A412);
+
     }
 
     /**
-     *
      * Gets the marker options for a floor.
      *
      * @param appContext the applicaiton Context.  Used for loading resources
@@ -168,6 +168,69 @@ public final class GWCCLocations {
 
     public static RoomMetaData lookupRoomFromPosition(LatLng position) {
         return positionLookup.get(position);
+    }
+
+    public static boolean roomNameMatchesMarkerName(String roomName, String markerName) {
+        switch (markerName) {
+            case "A301":
+                return roomName.equals("WS Room A301") || roomName.equals("Room A301");
+
+            case "A302":
+                return roomName.equals("WS Room A302") || roomName.equals("Room A302");
+
+            case "A305":
+                return roomName.equals("WS Room A305") || roomName.equals("Room A305");
+
+            case "A307":
+                return roomName.equals("WS Room A307") || roomName.equals("Room A307");
+
+            case "A311":
+                return roomName.equals("WS Room A311") || roomName.equals("Room A311");
+
+            case "A312":
+                return roomName.equals("WS Room A312") || roomName.equals("Room A312");
+
+            case "A313":
+                return roomName.equals("WS Room A313") || roomName.equals("Room A313");
+
+            case "A314":
+                return roomName.equals("WS Room A314") || roomName.equals("Room A314");
+
+            case "A315":
+                return roomName.equals("WS Room A315-316") || roomName.equals("Room A315-316");
+
+            case "A316":
+                return roomName.equals("WS Room A315-316") || roomName.equals("Room A315-316");
+
+            case "Sidney Marcus \n Auditorium":
+                return roomName.equals("Sidney Marcus Auditorium");
+
+            case "A402":
+                return roomName.equals("Room A402-403");
+
+            case "A403":
+                return roomName.equals("Room A402-403");
+
+            case "A404":
+                return roomName.equals("Room A404-405");
+
+            case "A405":
+                return roomName.equals("Room A404-405");
+
+            case "A406":
+                return roomName.equals("Room A406-407");
+
+            case "A407":
+                return roomName.equals("Room A406-407");
+
+            case "A411":
+                return roomName.equals("Room A411");
+
+            case "A412":
+                return roomName.equals("Room A412");
+
+        }
+        return false;
     }
 
 }

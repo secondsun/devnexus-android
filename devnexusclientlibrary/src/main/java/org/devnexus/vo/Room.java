@@ -55,4 +55,5 @@ public class Room implements Serializable {
         result = 31 * result + roomOrder;
         return result;
     }
+
 }

@@ -233,11 +233,12 @@ public class VenueMapFragment extends Fragment implements
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        RoomViewFragment.newInstance(marker.getTitle()).show(getFragmentManager(), TAG);
+
     }
 
     @Override
     public boolean onMarkerClick(Marker marker) {
+        RoomViewFragment.newInstance(marker.getTitle()).show(getFragmentManager(), TAG);
         return true;
     }
 
