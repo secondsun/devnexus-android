@@ -39,11 +39,11 @@ public class SimpleDataSyncAdapter  extends AbstractThreadedSyncAdapter {
     static {
         try {
             SCHEDULE_PIPE =PipeManager.config("schedule", RestfulPipeConfiguration.class)
-                .withUrl(new URL("https://devnexus.com/s/schedule.json"))
+                .withUrl(new URL("https://devnexus.com/api/schedule.json"))
                 .responseParser(new GsonResponseParser(GsonUtils.GSON))
                 .forClass(Schedule.class);
             PRESENTATION_PIPE =PipeManager.config("presentations", RestfulPipeConfiguration.class)
-                    .withUrl(new URL("https://devnexus.com/s/presentations.json"))
+                    .withUrl(new URL("https://devnexus.com/api/presentations.json"))
                     .responseParser(new GsonResponseParser(GsonUtils.GSON))
                     .forClass(PresentationResponse.class);
         } catch (MalformedURLException e) {
