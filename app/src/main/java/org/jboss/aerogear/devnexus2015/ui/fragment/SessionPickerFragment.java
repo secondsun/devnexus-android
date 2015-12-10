@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -146,6 +147,7 @@ public class SessionPickerFragment extends DialogFragment implements LoaderManag
     }
 
     private void refreshData(List<ScheduleItem> scheduleItems) {
+
         List<Presentation> presentations = new ArrayList<>(scheduleItems.size());
         for (ScheduleItem item :scheduleItems) {
             presentations.add(item.presentation);
@@ -158,6 +160,7 @@ public class SessionPickerFragment extends DialogFragment implements LoaderManag
                 receiver.receiveSessionItem(calendarItem, item);
             }
         });
+        Log.d("AdapterFinished", adapter.toString());
         listView.setAdapter(adapter);
 
     }

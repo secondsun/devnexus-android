@@ -2,8 +2,10 @@ package org.jboss.aerogear.devnexus2015;
 
 import android.accounts.AccountManager;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -22,7 +24,6 @@ import butterknife.ButterKnife;
 
 
 public class MainActivity extends AppCompatActivity {
-
 
 
     public enum BackStackOperation {NONE, ADD, RESET};
@@ -80,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
 
     }
+
 
     public void attachToolbar(Toolbar toolbar) {
         setSupportActionBar(toolbar );

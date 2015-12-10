@@ -50,6 +50,7 @@ public class PresentationViewAdapter extends RecyclerView.Adapter<PresentationVi
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         final Presentation item = items.get(i);
         if (item == null) {
+            Log.d("AdapterFailing", this.toString());
             Log.e(TAG, " No presentation at index i " + i);
         }
         ImageView photo = (ImageView) viewHolder.presentationView.findViewById(R.id.photo);
@@ -69,10 +70,7 @@ public class PresentationViewAdapter extends RecyclerView.Adapter<PresentationVi
         TextView infoText = ((TextView) viewHolder.presentationView.findViewById(R.id.info_text));
         infoText.setText(item.title);
 
-
         Log.d("Presentation Image", "https://devnexus.com/s/speakers/" + item.speakers.get(0).id + ".jpg");
-        Picasso picasso = Picasso.with(mContext);
-
 
         ((TextView) viewHolder.presentationView.findViewById(R.id.info_text)).setText(item.title);
 

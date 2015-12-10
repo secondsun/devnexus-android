@@ -233,7 +233,7 @@ public class DevNexusContentProvider extends ContentProvider {
         final SQLStore store = tempStore;
 
 
-        synchronized (TAG) {
+        synchronized (store) {
             returnRef.set(op.exec(GSON, store, uri, values, selection, selectionArgs));
         }
         return returnRef.get();
@@ -393,8 +393,11 @@ public class DevNexusContentProvider extends ContentProvider {
         @Override
         public SingleColumnJsonArrayList exec(Gson gson, SQLStore scheduleStore, Uri uri, ContentValues[] values, String selection, String[] selectionArgs) {
 
-            if (DevNexusContentProvider.schedule == null) {
+            if (DevNexusContentProvider.schedule == null || DevNexusContentProvider.schedule.isEmpty()) {
                 DevNexusContentProvider.schedule = new ArrayList<Schedule>(scheduleStore.readAll());
+                if (scheduleStore.isEmpty()) {
+                    return new SingleColumnJsonArrayList(new ArrayList<ScheduleItem>());
+                }
             }
 
             if (selection == null || selection.isEmpty()) {
@@ -460,7 +463,6 @@ public class DevNexusContentProvider extends ContentProvider {
             }
             Schedule schedule = gson.fromJson(values[0].getAsString(ScheduleContract.DATA), Schedule.class);
             scheduleStore.save(schedule);
-            DevNexusContentProvider.schedule = null;
             DevNexusContentProvider.schedule = null;
             if (values[0].getAsBoolean(ScheduleContract.NOTIFY) != null && values[0].getAsBoolean(ScheduleContract.NOTIFY)) {
                 resolver.notifyChange(ScheduleContract.URI, null, false);

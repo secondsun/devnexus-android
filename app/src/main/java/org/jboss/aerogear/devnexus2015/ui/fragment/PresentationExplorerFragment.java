@@ -2,6 +2,7 @@ package org.jboss.aerogear.devnexus2015.ui.fragment;
 
 import android.app.Fragment;
 import android.app.LoaderManager;
+import android.content.ContentResolver;
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Spinner;
 
+import org.devnexus.sync.simple.SimpleDataAuthenticator;
 import org.devnexus.util.GsonUtils;
 import org.devnexus.vo.Presentation;
 import org.devnexus.vo.ScheduleItem;
@@ -186,12 +188,22 @@ public class PresentationExplorerFragment extends Fragment implements LoaderMana
         scheduleItems.removeAll(nonPresentationItems);
 
         Collections.sort(scheduleItems);
+        if (scheduleItems.isEmpty()) {
+            Bundle settingsBundle = new Bundle();
+
+            settingsBundle.putBoolean(
+                    ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+
+            ContentResolver.requestSync(SimpleDataAuthenticator.SIMPLE_ACCOUNT,
+                    "org.devnexus.sync", settingsBundle);
+
+        }
         refreshData(scheduleItems);
 
     }
 
     private void refreshData(List<ScheduleItem> presentationList) {
-        if (sechduleItemList.equals(presentationList) ||presentationList.isEmpty()) {
+        if (sechduleItemList.equals(presentationList) || presentationList.isEmpty()) {
             ((GridLayoutManager)this.recycler.getLayoutManager()).scrollToPosition(scrollPosition);
             return;
         }
