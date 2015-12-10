@@ -71,6 +71,15 @@
                     android:layout_below="@id/date_label"
 
                     android:text="Track:" />
+                <TextView
+                    android:id="@+id/room_label"
+                    style="@style/Label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@id/track_label"
+
+                    android:text="Room:" />
 
                 <TextView
                     android:id="@+id/skill_level_label"
@@ -78,7 +87,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:layout_below="@id/track_label"
+                    android:layout_below="@id/room_label"
                     android:layout_toLeftOf="@+id/center"
                     android:text="Skill Level:" />
 
@@ -122,10 +131,18 @@
                     android:text="HTML5" />
 
                 <TextView
+                    android:id="@+id/room"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/track"
+                    android:layout_toRightOf="@id/center"
+                    android:text="HTML5" />
+
+                <TextView
                     android:id="@+id/skill_level"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/track_label"
+                    android:layout_below="@id/room_label"
                     android:layout_toRightOf="@id/center" />
 
                 <TextView

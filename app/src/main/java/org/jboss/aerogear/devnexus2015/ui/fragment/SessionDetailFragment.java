@@ -64,6 +64,7 @@ public class SessionDetailFragment extends Fragment implements LoaderManager.Loa
     @Bind(R.id.skill_level) TextView skill;
     @Bind(R.id.track) TextView track;
     @Bind(R.id.slot) TextView slot;
+    @Bind(R.id.room) TextView room;
     @Bind(R.id.tags) HorizontalListView tags;
 
     private Uri contentUri;
@@ -231,6 +232,7 @@ public class SessionDetailFragment extends Fragment implements LoaderManager.Loa
                 skill.setText(presentation.skillLevel);
                 if (presentation.track != null ) {
                     track.setText(presentation.track.name);
+                    room.setText(item.room.name);
                     track.setVisibility(View.VISIBLE);
                 } else {
                     track.setVisibility(View.INVISIBLE);
