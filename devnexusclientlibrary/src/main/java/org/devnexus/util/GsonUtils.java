@@ -36,7 +36,7 @@ public final class GsonUtils {
         builder = new GsonBuilder();
         builder.registerTypeAdapter(Date.class, new JsonDeserializer() {
             public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-                return new Date(json.getAsJsonPrimitive().getAsLong());
+                return new Date(json.getAsJsonPrimitive().getAsLong() + 5 * 60 * 60 * 1000);//Json dates are GMT, translate to EST
             }
         });
 
@@ -44,7 +44,7 @@ public final class GsonUtils {
             @Override
             public JsonElement serialize(Date src, Type typeOfSrc, JsonSerializationContext
                     context) {
-                return src == null ? null : new JsonPrimitive(src.getTime());
+                return src == null ? null : new JsonPrimitive(src.getTime() - 5 * 60 * 60 * 1000);
             }
         });
         GSON = builder.create();

@@ -63,7 +63,6 @@ public class DevNexusContentProvider extends ContentProvider {
     private SQLStore<Presentation> presentationSQLStore;
     private final CountDownLatch createdLatch = new CountDownLatch(3);
 
-    private static final long UTCOffsetMillis = 5 * 60 * 60 * 1000;
     private static ArrayList<Schedule> schedule = null;
 
     @Override
@@ -188,6 +187,14 @@ public class DevNexusContentProvider extends ContentProvider {
             } else {
                 vals = new ContentValues[]{values};
                 op = new UserCalendarUpdate();
+            }
+        } else if (uri.equals(PresentationContract.URI)) {
+            if (values == null) {
+                vals = new ContentValues[]{null};
+                op = new PresentationUpdate();
+            } else {
+                vals = new ContentValues[]{values};
+                op = new PresentationUpdate();
             }
         } else if (uri.equals(ScheduleContract.URI)) {
             if (values == null) {
@@ -419,7 +426,7 @@ public class DevNexusContentProvider extends ContentProvider {
                                 }
                                 break;
                             case ScheduleItemContract.FROM_TIME:
-                                if ((item.fromTime == null) || !(item.fromTime.equals(new Date(Long.parseLong(value))) || item.fromTime.equals(new Date(Long.parseLong(value) - UTCOffsetMillis))) ) {//Some UTC offsets because of JSON <-> Date
+                                if ((item.fromTime == null) || !(item.fromTime.equals(new Date(Long.parseLong(value)))) ) {//Some UTC offsets because of JSON <-> Date
                                     filteredItems.add(item);
                                 }
                                 break;
@@ -648,8 +655,7 @@ public class DevNexusContentProvider extends ContentProvider {
         }
     }
 
-
-    private static class PresentationDelete implements Operation<Integer> {
+    private static class PresentationUpdate implements Operation<Integer> {
 
         @Override
         public Integer exec(Gson gson, SQLStore presentationStore, Uri uri, ContentValues[] values, String selection, String[] selectionArgs) {
@@ -666,6 +672,27 @@ public class DevNexusContentProvider extends ContentProvider {
                 resolver.notifyChange(PresentationContract.URI, null, false);
             }
 
+            return 1;
+        }
+    }
+
+    private static class PresentationDelete implements Operation<Integer> {
+
+        @Override
+        public Integer exec(Gson gson, SQLStore presentationStore, Uri uri, ContentValues[] values, String selection, String[] selectionArgs) {
+
+            if (selectionArgs == null || selectionArgs[0] == null) {
+                presentationStore.reset();
+            } else {
+                Long id = Long.getLong(selectionArgs[0]);
+                presentationStore.remove(id);
+            }
+            Presentation schedule = gson.fromJson(values[0].getAsString(PresentationContract.DATA), Presentation.class);
+            presentationStore.save(schedule);
+            DevNexusContentProvider.presentations = null;
+            if (values[0].getAsBoolean(ScheduleContract.NOTIFY) != null && values[0].getAsBoolean(PresentationContract.NOTIFY)) {
+                resolver.notifyChange(PresentationContract.URI, null, false);
+            }
             return 1;
         }
     }

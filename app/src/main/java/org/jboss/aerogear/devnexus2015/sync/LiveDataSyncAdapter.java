@@ -16,6 +16,7 @@ import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.io.IOUtils;
 import org.devnexus.util.GsonUtils;
+import org.devnexus.vo.Presentation;
 import org.devnexus.vo.PresentationResponse;
 import org.devnexus.vo.Schedule;
 import org.devnexus.vo.UserCalendar;
@@ -106,10 +107,9 @@ public class LiveDataSyncAdapter extends AbstractThreadedSyncAdapter {
         SCHEDULE_PIPE.read(new Callback<List<Schedule>>() {
             @Override
             public void onSuccess(List<Schedule> schedules) {
-                mContentResolver.delete(ScheduleContract.URI, "", null);
                 ContentValues scheduleValues = ScheduleContract.valueize(schedules.get(0));
                 scheduleValues.put(ScheduleContract.NOTIFY, true);
-                mContentResolver.insert(ScheduleContract.URI, scheduleValues);
+                mContentResolver.update(ScheduleContract.URI, scheduleValues, null, null);
                 Log.d("DevNexus", "Schedules Saved");
                 syncFinished.countDown();
             }
@@ -124,10 +124,21 @@ public class LiveDataSyncAdapter extends AbstractThreadedSyncAdapter {
         PRESENTATION_PIPE.read(new Callback<List<PresentationResponse>>() {
             @Override
             public void onSuccess(List<PresentationResponse> presentationResponses) {
-                mContentResolver.delete(PresentationContract.URI, "", null);
-                ContentValues[] scheduleValues = PresentationContract.valueize(presentationResponses.get(0).presentations);
+                //mContentResolver.delete(PresentationContract.URI, "", null);
+                List<Presentation> presentations = presentationResponses.get(0).presentations;
 
-                mContentResolver.bulkInsert(PresentationContract.URI, scheduleValues);
+                for (Presentation presentation : presentations) {
+                    ContentValues scheduleValues = PresentationContract.valueize(presentation);
+                    Cursor presentationCursor = mContentResolver.query(PresentationContract.URI, null, PresentationContract._ID, new String[]{presentation.id + ""}, null);
+                    if (presentationCursor.moveToFirst()) {
+                        mContentResolver.update(PresentationContract.URI, scheduleValues, PresentationContract._ID, new String[]{presentation.id + ""});
+                    } else {
+                        mContentResolver.insert(PresentationContract.URI, scheduleValues);
+                    }
+                    presentationCursor.close();
+                }
+
+
                 Log.d("DevNexus", "Presentations Saved");
                 syncFinished.countDown();
             }
