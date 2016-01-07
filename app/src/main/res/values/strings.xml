@@ -6,7 +6,7 @@
     <string name="action_settings">Settings</string>
     <string name="loading_text">Please wait while we download DevNexus data.</string>
     <string name="all_events">All Events</string>
-    
+
     <string name="workshops">Workshop (Full Day)</string>
     <string name="breakouts">Breakouts</string>
     <string name="breaks_and_social">Breaks and Social</string>
@@ -49,5 +49,9 @@
     <string name="topic_microservices">Microservices</string>
     <string name="topic_security">Security</string>
     <string name="topic_architecture">Architecture</string>
+    <string name="permission_camera_rationale">Access to the camera is needed for badge scanning.</string>
+    <string name="ok">OK</string>
+    <string name="low_storage_error">Badge Scanning cannot be run due to low storage.</string>
+    <string name="no_camera_permission">Badge Scanning requires the Camera permission.  The Activity will return to the main app.</string>
 
 </resources>

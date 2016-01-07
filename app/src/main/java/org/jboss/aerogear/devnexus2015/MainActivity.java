@@ -2,19 +2,21 @@ package org.jboss.aerogear.devnexus2015;
 
 import android.accounts.AccountManager;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
+
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.samples.vision.barcodereader.BarcodeCaptureActivity;
+import com.google.android.gms.vision.barcode.Barcode;
 
 import org.devnexus.sync.simple.SimpleDataAuthenticator;
 import org.jboss.aerogear.devnexus2015.ui.fragment.SetupFragment;
@@ -26,17 +28,14 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity {
 
 
-    public enum BackStackOperation {NONE, ADD, RESET};
     public static final String LAUNCH_SCREEN = "LaunchScreen";
     public static final int LAUNCH_EXPLORE = 0;
-    public static final int LAUNCH_PODCAST = 0x4200;
-
-    private int launch = LAUNCH_EXPLORE;
+    public static final int LAUNCH_BARCODE = 0x4200;
     @Bind(R.id.my_drawer_layout) DrawerLayout drawerLayout;
     @Nullable @Bind(R.id.one_column) View oneColumn;
     @Nullable @Bind(R.id.two_column) View twoColumn;
     @Nullable @Bind(R.id.three_column) View threeColumn;
-
+    private int launch = LAUNCH_EXPLORE;
     private int columnCount = 1;
 
     @Override
@@ -64,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (((LinearLayout)findViewById(R.id.display_fragment)).getChildCount() == 0) {
+        if (((LinearLayout) findViewById(R.id.display_fragment)).getChildCount() == 0) {
             if (getIntent() != null) {
                 launch = getIntent().getIntExtra(LAUNCH_SCREEN, LAUNCH_EXPLORE);
             }
@@ -73,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
             tx.add(R.id.display_fragment, loading);
             tx.commit();
         }
-        
+
     }
 
     @Override
@@ -81,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
 
     }
-
 
     public void attachToolbar(Toolbar toolbar) {
         setSupportActionBar(toolbar );
@@ -92,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
                 drawerLayout.openDrawer(GravityCompat.START);
             }
         });
-        
+
     }
 
     public void switchFragment(Fragment fragment, BackStackOperation operation, String tag) {
@@ -139,5 +137,32 @@ public class MainActivity extends AppCompatActivity {
     public void closeDrawer() {
         drawerLayout.closeDrawers();
     }
+
+    public void launchBarcodeScanner() {
+        Intent intent = new Intent(this, BarcodeCaptureActivity.class);
+        intent.putExtra(BarcodeCaptureActivity.AutoFocus, true);
+        intent.putExtra(BarcodeCaptureActivity.UseFlash, false);
+
+        startActivityForResult(intent, LAUNCH_BARCODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == LAUNCH_BARCODE) {
+            if (resultCode == CommonStatusCodes.SUCCESS) {
+                if (data != null) {
+                    Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
+                    Barcode.ContactInfo vCard = barcode.contactInfo;
+                    Toast.makeText(this, vCard.toString(), Toast.LENGTH_LONG).show();
+                } else {
+                }
+            } else {
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    public enum BackStackOperation {NONE, ADD, RESET}
 
 }

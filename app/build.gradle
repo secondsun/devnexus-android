@@ -37,8 +37,9 @@ dependencies {
         exclude group: "com.google.android.gms"
     }
     compile project(':google-io-utils')
-    compile 'com.google.android.gms:play-services-maps:8.4.+'
+    compile 'com.google.android.gms:play-services-maps:8.4.0'
     compile 'com.google.android.gms:play-services-base:8.4.+'
+    compile 'com.google.android.gms:play-services-vision:8.4.+'
     compile 'com.google.android.gms:play-services-identity:8.4.+'
     compile 'com.google.android.gms:play-services-plus:8.4.+'
     compile 'com.squareup.okhttp:okhttp:2.+'
@@ -50,4 +51,6 @@ dependencies {
     compile 'com.android.support:support-v13:23.1.1'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.github.siyamed:android-shape-imageview:0.9.+'
+    compile 'com.android.support:design:23.1.1'
+    compile 'com.android.support:support-v4:23.1.1'
 }

@@ -26,8 +26,6 @@ public class DevNexusDrawerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.drawer_layout, null);
 
-        List<DrawerItem> list1Items = new ArrayList<>();
-
         List<DrawerItem> list2Items = new ArrayList<>();
         list2Items.add(new DrawerItem(R.drawable.ic_presentations, "All Presentations"));
         list2Items.add(new DrawerItem(R.drawable.ic_schedule, "My Schedule"));
@@ -51,6 +49,9 @@ public class DevNexusDrawerFragment extends Fragment {
                         break;
                     case 2:
                         activity.switchFragment(new VenueMapFragment(), RESET, "Map");
+                        break;
+                    case 3:
+                        activity.switchFragment(BadgeContactsFragment.newInstance(), RESET, "BadgeContact");
                         break;
 
                 }
