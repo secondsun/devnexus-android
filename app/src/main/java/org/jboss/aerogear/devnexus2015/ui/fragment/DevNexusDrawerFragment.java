@@ -17,7 +17,7 @@ import org.jboss.aerogear.devnexus2015.ui.adapter.DrawerListAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.jboss.aerogear.devnexus2015.MainActivity.BackStackOperation.*;
+import static org.jboss.aerogear.devnexus2015.MainActivity.BackStackOperation.RESET;
 
 public class DevNexusDrawerFragment extends Fragment {
 
