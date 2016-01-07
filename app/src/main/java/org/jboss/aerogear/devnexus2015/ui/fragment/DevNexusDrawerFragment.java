@@ -29,9 +29,12 @@ public class DevNexusDrawerFragment extends Fragment {
         List<DrawerItem> list1Items = new ArrayList<>();
 
         List<DrawerItem> list2Items = new ArrayList<>();
-        list2Items.add(new DrawerItem(R.drawable.ic_action_book, "All Presentations"));
-        list2Items.add(new DrawerItem(R.drawable.ic_action_calendar_day, "My Schedule"));
-        list2Items.add(new DrawerItem(R.drawable.ic_action_map, "Map"));
+        list2Items.add(new DrawerItem(R.drawable.ic_presentations, "All Presentations"));
+        list2Items.add(new DrawerItem(R.drawable.ic_schedule, "My Schedule"));
+        list2Items.add(new DrawerItem(R.drawable.ic_map, "Map"));
+        list2Items.add(new DrawerItem(R.drawable.ic_person_add, "Scan Badge"));
+        list2Items.add(new DrawerItem(R.drawable.ic_settings, "Settings"));
+        list2Items.add(new DrawerItem(R.drawable.ic_info, "About"));
 
         ListView list2 = (ListView) view.findViewById(R.id.list2);
         list2.setAdapter(new DrawerListAdapter(getActivity(), list2Items));
