@@ -3,6 +3,7 @@ package org.jboss.aerogear.devnexus2015;
 import android.accounts.AccountManager;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,13 +13,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.samples.vision.barcodereader.BarcodeCaptureActivity;
 import com.google.android.gms.vision.barcode.Barcode;
 
 import org.devnexus.sync.simple.SimpleDataAuthenticator;
+import org.devnexus.vo.BadgeContact;
+import org.devnexus.vo.contract.BadgeContactContract;
 import org.jboss.aerogear.devnexus2015.ui.fragment.SetupFragment;
 
 import butterknife.Bind;
@@ -153,7 +155,22 @@ public class MainActivity extends AppCompatActivity {
                 if (data != null) {
                     Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
                     Barcode.ContactInfo vCard = barcode.contactInfo;
-                    Toast.makeText(this, vCard.toString(), Toast.LENGTH_LONG).show();
+                    BadgeContact contact = new BadgeContact();
+                    if (vCard.emails != null || vCard.emails.length > 0) {
+                        contact.setEmail(vCard.emails[0].address);
+                    }
+
+                    if (vCard.name != null) {
+                        contact.setFirstName(vCard.name.first);
+                        contact.setLastName(vCard.name.last);
+                    }
+
+                    contact.setOrganization(vCard.organization);
+                    contact.setTitle(vCard.title);
+
+                    ContentValues badgeValues = BadgeContactContract.valueize(contact);
+                    getContentResolver().insert(BadgeContactContract.URI_NOTIFY, badgeValues);
+
                 } else {
                 }
             } else {

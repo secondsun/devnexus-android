@@ -611,9 +611,8 @@ public class DevNexusContentProvider extends ContentProvider {
         public Uri exec(Gson gson, SQLStore badgeContactStore, Uri uri, ContentValues[] values, String selection, String[] selectionArgs) {
             BadgeContact presentation = gson.fromJson(values[0].getAsString(BadgeContactContract.DATA), BadgeContact.class);
             badgeContactStore.save(presentation);
-            schedule = null;
-            if (values[0].getAsBoolean(BadgeContactContract.NOTIFY) != null || uri.equals(BadgeContactContract.URI_NOTIFY)) {
-                resolver.notifyChange(BadgeContactContract.URI, null, false);
+            if (uri.equals(BadgeContactContract.URI_NOTIFY)) {
+                resolver.notifyChange(BadgeContactContract.URI, null);
             }
             return BadgeContactContract.URI;
         }

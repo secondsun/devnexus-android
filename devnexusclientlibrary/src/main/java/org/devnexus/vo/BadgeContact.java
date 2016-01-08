@@ -12,9 +12,10 @@ import static org.devnexus.util.StringUtils.compare;
 public class BadgeContact implements Serializable, Comparable<BadgeContact> {
 
     @RecordId
-    private Long id;
+    private int id;
 
     private String firstName, lastName, organization, title, email;
+
 
     @Override
     public boolean equals(Object o) {
@@ -23,7 +24,7 @@ public class BadgeContact implements Serializable, Comparable<BadgeContact> {
 
         BadgeContact that = (BadgeContact) o;
 
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (id != that.id) return false;
         if (firstName != null ? !firstName.equals(that.firstName) : that.firstName != null)
             return false;
         if (lastName != null ? !lastName.equals(that.lastName) : that.lastName != null)
@@ -37,7 +38,7 @@ public class BadgeContact implements Serializable, Comparable<BadgeContact> {
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
+        int result = id;
         result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
         result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
         result = 31 * result + (organization != null ? organization.hashCode() : 0);
@@ -46,11 +47,11 @@ public class BadgeContact implements Serializable, Comparable<BadgeContact> {
         return result;
     }
 
-    public Long getId() {
-        return id;
+    public int getId() {
+        return hashCode();
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -107,8 +108,7 @@ public class BadgeContact implements Serializable, Comparable<BadgeContact> {
         if (compare(this.lastName, another.lastName) == 0) {
             if (compare(this.firstName, another.firstName) == 0) {
                 if (compare(this.email, another.email) == 0) {
-                    Long tempid = (id == null ? 0 : id);
-                    return tempid.compareTo(another.id);
+                    return id - (another.id);
                 } else {
                     return compare(this.email, another.email);
                 }
