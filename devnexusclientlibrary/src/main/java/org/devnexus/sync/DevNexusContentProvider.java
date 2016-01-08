@@ -15,11 +15,13 @@ import org.apache.commons.io.IOUtils;
 import org.devnexus.R;
 import org.devnexus.util.CountDownCallback;
 import org.devnexus.util.GsonUtils;
+import org.devnexus.vo.BadgeContact;
 import org.devnexus.vo.Presentation;
 import org.devnexus.vo.PresentationResponse;
 import org.devnexus.vo.Schedule;
 import org.devnexus.vo.ScheduleItem;
 import org.devnexus.vo.UserCalendar;
+import org.devnexus.vo.contract.BadgeContactContract;
 import org.devnexus.vo.contract.PresentationContract;
 import org.devnexus.vo.contract.PreviousYearPresentationContract;
 import org.devnexus.vo.contract.ScheduleContract;
@@ -58,12 +60,12 @@ public class DevNexusContentProvider extends ContentProvider {
     private static ContentResolver resolver;
     private static Context context;
     private static ArrayList<Presentation> presentations;
+    private static ArrayList<Schedule> schedule = null;
+    private final CountDownLatch createdLatch = new CountDownLatch(4);
     private SQLStore<UserCalendar> userCalendarStore;
     private SQLStore<Schedule> scheduleSQLStore;
     private SQLStore<Presentation> presentationSQLStore;
-    private final CountDownLatch createdLatch = new CountDownLatch(3);
-
-    private static ArrayList<Schedule> schedule = null;
+    private SQLStore<BadgeContact> badgeContactSQLStore;
 
     @Override
     public boolean onCreate() {
@@ -76,7 +78,8 @@ public class DevNexusContentProvider extends ContentProvider {
         scheduleSQLStore.open(new CountDownCallback<SQLStore<Schedule>>(createdLatch));
         presentationSQLStore = new SQLStore<Presentation>(Presentation.class, getContext(), GsonUtils.builder(), new DefaultIdGenerator());
         presentationSQLStore.open(new CountDownCallback<SQLStore<Presentation>>(createdLatch));
-
+        badgeContactSQLStore = new SQLStore<BadgeContact>(BadgeContact.class, getContext(), GsonUtils.builder(), new DefaultIdGenerator());
+        badgeContactSQLStore.open(new CountDownCallback<SQLStore<BadgeContact>>(createdLatch));
 
         return true;
     }
@@ -93,6 +96,8 @@ public class DevNexusContentProvider extends ContentProvider {
             return execute(uri, null, selection, selectionArgs, new PresentationQuery());
         } else if (uri.equals(PreviousYearPresentationContract.URI)) {
             return execute(uri, null, selection, selectionArgs, new PreviousYearPresentationQuery(getContext()));
+        } else if (uri.equals(BadgeContactContract.URI)) {
+            return execute(uri, null, selection, selectionArgs, new BadgeContactQuery());
         } else
             throw new IllegalArgumentException(String.format("%s not supported", uri.toString()));
     }
@@ -109,6 +114,8 @@ public class DevNexusContentProvider extends ContentProvider {
             return uri.toString();
         } else if (uri.equals(PreviousYearPresentationContract.URI)) {
             return uri.toString();
+        } else if (uri.equals(BadgeContactContract.URI)) {
+            return uri.toString();
         } else
             throw new IllegalArgumentException(String.format("%s not supported", uri.toString()));
     }
@@ -121,6 +128,8 @@ public class DevNexusContentProvider extends ContentProvider {
             return execute(uri, new ContentValues[]{values}, null, null, new ScheduleInsert());
         } else if (uri.equals(PresentationContract.URI)) {
             return execute(uri, new ContentValues[]{values}, null, null, new PresentationInsert());
+        } else if (uri.equals(BadgeContactContract.URI) || uri.equals(BadgeContactContract.URI_NOTIFY)) {
+            return execute(uri, new ContentValues[]{values}, null, null, new BadgeContactInsert());
         } else
             throw new IllegalArgumentException(String.format("%s not supported", uri.toString()));
     }
@@ -148,6 +157,13 @@ public class DevNexusContentProvider extends ContentProvider {
             } else {
                 return res;
             }
+        } else if (uri.equals(BadgeContactContract.URI) || uri.equals(BadgeContactContract.URI_NOTIFY)) {
+            Integer res = execute(uri, values, "", null, new BadgeContactBulkInsert());
+            if (res == null) {
+                return 0;
+            } else {
+                return res;
+            }
         } else
             throw new IllegalArgumentException(String.format("%s not supported", uri.toString()));
 
@@ -164,6 +180,8 @@ public class DevNexusContentProvider extends ContentProvider {
             op = new ScheduleDelete();
         } else if (uri.equals(PresentationContract.URI) || uri.equals(PresentationContract.URI_NOTIFY)) {
             op = new PresentationDelete();
+        } else if (uri.equals(BadgeContactContract.URI) || uri.equals(BadgeContactContract.URI_NOTIFY)) {
+            op = new BadgeContactDelete();
         } else
             throw new IllegalArgumentException(String.format("%s not supported", uri.toString()));
 
@@ -233,6 +251,8 @@ public class DevNexusContentProvider extends ContentProvider {
             tempStore = scheduleSQLStore;
         } else if (uri.equals(PresentationContract.URI) || uri.equals(PresentationContract.URI_NOTIFY) || uri.equals(PreviousYearPresentationContract.URI)) {
             tempStore = presentationSQLStore;
+        } else if (uri.equals(BadgeContactContract.URI) || uri.equals(BadgeContactContract.URI_NOTIFY)) {
+            tempStore = badgeContactSQLStore;
         } else {
             throw new IllegalArgumentException(String.format("%s not supported", uri.toString()));
         }
@@ -394,6 +414,14 @@ public class DevNexusContentProvider extends ContentProvider {
         }
     }
 
+    private static class BadgeContactQuery implements Operation<Cursor> {
+
+        @Override
+        public SingleColumnJsonArrayList exec(Gson gson, SQLStore badgeContactStore, Uri uri, ContentValues[] values, String selection, String[] selectionArgs) {
+            return new SingleColumnJsonArrayList(new ArrayList<BadgeContact>(badgeContactStore.readAll()));
+        }
+    }
+
 
     private static class ScheduleItemQuery implements Operation<Cursor> {
 
@@ -493,6 +521,26 @@ public class DevNexusContentProvider extends ContentProvider {
     }
 
 
+    private static class BadgeContactBulkInsert implements Operation<Integer> {
+
+        @Override
+        public Integer exec(Gson gson, SQLStore badgeContactStore, Uri uri, ContentValues[] values, String selection, String[] selectionArgs) {
+            List<BadgeContact> badgeContactsList = new ArrayList<>(values.length);
+            for (ContentValues value : values) {
+                BadgeContact badgeContact = gson.fromJson(value.getAsString(BadgeContactContract.DATA), BadgeContact.class);
+                badgeContactsList.add(badgeContact);
+
+            }
+            badgeContactStore.save(badgeContactsList);
+
+            if (uri.equals(BadgeContactContract.URI_NOTIFY)) {
+                resolver.notifyChange(BadgeContactContract.URI, null, false);
+            }
+            return values.length;
+        }
+    }
+
+
     private static class ScheduleDelete implements Operation<Integer> {
 
         @Override
@@ -553,6 +601,21 @@ public class DevNexusContentProvider extends ContentProvider {
 
             resolver.notifyChange(PresentationContract.URI, null, false);
             return values.length;
+        }
+    }
+
+
+    public static class BadgeContactInsert implements Operation<Uri> {
+
+        @Override
+        public Uri exec(Gson gson, SQLStore badgeContactStore, Uri uri, ContentValues[] values, String selection, String[] selectionArgs) {
+            BadgeContact presentation = gson.fromJson(values[0].getAsString(BadgeContactContract.DATA), BadgeContact.class);
+            badgeContactStore.save(presentation);
+            schedule = null;
+            if (values[0].getAsBoolean(BadgeContactContract.NOTIFY) != null || uri.equals(BadgeContactContract.URI_NOTIFY)) {
+                resolver.notifyChange(BadgeContactContract.URI, null, false);
+            }
+            return BadgeContactContract.URI;
         }
     }
 
@@ -697,5 +760,25 @@ public class DevNexusContentProvider extends ContentProvider {
         }
     }
 
+    private static class BadgeContactDelete implements Operation<Integer> {
+
+        @Override
+        public Integer exec(Gson gson, SQLStore badgeContactStore, Uri uri, ContentValues[] values, String selection, String[] selectionArgs) {
+
+            if (selectionArgs == null || selectionArgs[0] == null) {
+                badgeContactStore.reset();
+            } else {
+                Long id = Long.getLong(selectionArgs[0]);
+                badgeContactStore.remove(id);
+            }
+            BadgeContact schedule = gson.fromJson(values[0].getAsString(BadgeContactContract.DATA), BadgeContact.class);
+            badgeContactStore.save(schedule);
+
+            if (values[0].getAsBoolean(BadgeContactContract.NOTIFY) != null || uri.equals(BadgeContactContract.URI_NOTIFY)) {
+                resolver.notifyChange(BadgeContactContract.URI, null, false);
+            }
+            return 1;
+        }
+    }
 
 }
