@@ -32,7 +32,7 @@ public class LicenseRecyclerViewAdapter extends RecyclerView.Adapter<LicenseRecy
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = (LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.license_template, null);
-        return null;
+        return new ViewHolder(view);
     }
 
     @Override
@@ -51,6 +51,7 @@ public class LicenseRecyclerViewAdapter extends RecyclerView.Adapter<LicenseRecy
         });
 
     }
+
 
     @Override
     public int getItemCount() {
