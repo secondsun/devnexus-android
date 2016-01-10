@@ -71,21 +71,21 @@ public class CenteringDecoration extends RecyclerView.ItemDecoration {
         }
 
         final int[] originalLefts, originalRights;
-        originalLefts = new int[rowSpanCount];
-        originalRights = new int[rowSpanCount];
+        originalLefts = new int[spanCount];
+        originalRights = new int[spanCount];
 
         int runningLeft = 0;
-        for (int counter = 0; counter < rowSpanCount; counter++) {
+        for (int counter = 0; counter < spanCount; counter++) {
             originalLefts[counter] = runningLeft;
-            originalRights[counter] = runningLeft + viewWidth;
-            runningLeft += parent.getWidth() / rowSpanCount;
+            originalRights[counter] = runningLeft + (parent.getWidth() / spanCount);
+            runningLeft += parent.getWidth() / spanCount;
         }
 
         int newFarLeft = (parent.getWidth()  - viewWidth * rowSpanCount) / 2;
 
         if (rowSpanCount != 1) {
             outRect.left = newFarLeft + viewWidth * spanPosition - originalLefts[spanPosition];
-            outRect.right = newFarLeft + viewWidth * spanPosition - originalRights[spanPosition];
+            outRect.right = (newFarLeft +(parent.getWidth() / spanCount)) + viewWidth * (spanPosition+1) - originalRights[spanPosition];
         } else {
             outRect.left = newFarLeft + viewWidth * spanPosition - originalLefts[spanPosition];
             outRect.right = parent.getWidth();

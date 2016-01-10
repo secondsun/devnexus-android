@@ -53,7 +53,11 @@ public class DevNexusDrawerFragment extends Fragment {
                     case 3:
                         activity.switchFragment(BadgeContactsFragment.newInstance(), RESET, "BadgeContact");
                         break;
-
+                    case 4:
+                        break;
+                    case 5:
+                        activity.switchFragment(AboutFragment.newInstance(), RESET, "About");
+                        break;
                 }
                 activity.closeDrawer();
             }

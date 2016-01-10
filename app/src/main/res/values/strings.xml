@@ -53,5 +53,14 @@
     <string name="ok">OK</string>
     <string name="low_storage_error">Badge Scanning cannot be run due to low storage.</string>
     <string name="no_camera_permission">Badge Scanning requires the Camera permission.  The Activity will return to the main app.</string>
+    <string name="sponsors">Sponsors</string>
+    <string name="spnsor_note">We would like to thank all DevNexus 2016 sponsors.</string>
+    <string name="platinum_sponsors">Platinum Sponsors</string>
+    <string name="gold_sponsors">Gold Sponsors</string>
+    <string name="silver_sponsors">Silver Sponsors</string>
+    <string name="badge_sponsor">Badge Sponsor</string>
+    <string name="cocktail_sponsors">Cocktail Hour Sponsors</string>
+    <string name="licenses">Licenses</string>
+    <string name="license_note">The DevNexus app makes use of the following Open Source libraries:</string>
 
 </resources>
