@@ -31,22 +31,6 @@
         android:id="@+id/sponsor_content"
         android:orientation="vertical">
 
-        <TextView
-            style="@style/Base.TextAppearance.AppCompat.Display2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:layout_gravity="left"
-            android:text="@string/sponsors"
-            android:textColor="@color/dn_black" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:layout_gravity="left"
-            android:text="@string/spnsor_note" />
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/sponsors_list"
             android:padding="5dp"
@@ -63,30 +47,6 @@
         android:id="@+id/opensource_content"
         android:visibility="gone"
         android:orientation="vertical">
-
-        <TextView
-            style="@style/Base.TextAppearance.AppCompat.Headline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:layout_gravity="left"
-            android:text="@string/sponsors" />
-
-        <TextView
-            style="@style/Base.TextAppearance.AppCompat.Display2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:layout_gravity="left"
-            android:text="@string/licenses"
-            android:textColor="@color/dn_black" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:layout_gravity="left"
-            android:text="@string/license_note" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/license_list"

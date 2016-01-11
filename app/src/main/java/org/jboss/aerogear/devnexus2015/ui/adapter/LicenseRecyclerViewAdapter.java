@@ -46,6 +46,7 @@ public class LicenseRecyclerViewAdapter extends RecyclerView.Adapter<LicenseRecy
                 String url = license.link;
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(url));
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mContext.startActivity(i);
             }
         });

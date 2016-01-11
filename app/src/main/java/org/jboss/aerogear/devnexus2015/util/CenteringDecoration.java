@@ -33,7 +33,7 @@ public class CenteringDecoration extends RecyclerView.ItemDecoration {
         outRect.set(0,0,0,0);
 
         GridLayoutManager.SpanSizeLookup lookup = ((GridLayoutManager) parent.getLayoutManager()).getSpanSizeLookup();
-        int rowSpanCount = this.spanCount;
+        int rowItemsCount = this.spanCount;
         int adapterPosition = parent.getChildAdapterPosition(view);
         int spanSize = lookup.getSpanSize(adapterPosition);
 
@@ -41,56 +41,46 @@ public class CenteringDecoration extends RecyclerView.ItemDecoration {
             return;
         }
 
-        int spanPosition = 0;
+        int columnPosition = 0;
 
         for (int itemindex = 0; itemindex < adapterPosition; itemindex++) {
             spanSize = lookup.getSpanSize(itemindex);
             if (spanSize == this.spanCount) {//short circuit if header
-                spanPosition = 0;
+                columnPosition = 0;
             }  else {
-                spanPosition++;
+                columnPosition++;
             }
         }
 
-        spanPosition = spanPosition % spanCount;
+        columnPosition = columnPosition % spanCount;
 
         //calculate how many items are on this row
-        if (spanPosition != rowSpanCount - 1) {//we are not at the end of a row, peek
-            rowSpanCount = spanPosition + 1;//counts vs positions
+        if (columnPosition != rowItemsCount - 1) {//we are not at the end of a row, peek
+            rowItemsCount = columnPosition + 1;//counts vs positions
             for ( int itemIndex = (adapterPosition + 1); itemIndex < parent.getAdapter().getItemCount(); itemIndex++) {
                 spanSize = lookup.getSpanSize(itemIndex);
                 if (spanSize == this.spanCount) {//short circuit if header
                     break;
                 }  else {
-                    rowSpanCount++;
-                    if (rowSpanCount== this.spanCount) {//short circuit if full
+                    rowItemsCount++;
+                    if (rowItemsCount== this.spanCount) {//short circuit if full
                         break;
                     }
                 }
             }
         }
 
-        final int[] originalLefts, originalRights;
-        originalLefts = new int[spanCount];
-        originalRights = new int[spanCount];
 
-        int runningLeft = 0;
-        for (int counter = 0; counter < spanCount; counter++) {
-            originalLefts[counter] = runningLeft;
-            originalRights[counter] = runningLeft + (parent.getWidth() / spanCount);
-            runningLeft += parent.getWidth() / spanCount;
-        }
+        int originalLeft = (parent.getWidth() / spanCount) * columnPosition;
+        int originalRight = (parent.getWidth() / spanCount) * (columnPosition + 2);
 
-        int newFarLeft = (parent.getWidth()  - viewWidth * rowSpanCount) / 2;
+        int newFarLeft = (parent.getWidth()  - viewWidth * rowItemsCount) / 2;
 
-        if (rowSpanCount != 1) {
-            outRect.left = newFarLeft + viewWidth * spanPosition - originalLefts[spanPosition];
-            outRect.right = (newFarLeft +(parent.getWidth() / spanCount)) + viewWidth * (spanPosition+1) - originalRights[spanPosition];
-        } else {
-            outRect.left = newFarLeft + viewWidth * spanPosition - originalLefts[spanPosition];
-            outRect.right = parent.getWidth();
-        }
+        int newLeft = newFarLeft + (this.viewWidth * columnPosition);
+        int newRight =newLeft + viewWidth;
 
+        outRect.left = newLeft - originalLeft;
+        outRect.right = newRight - originalRight;
 
     }
 }

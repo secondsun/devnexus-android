@@ -31,7 +31,6 @@ public class DevNexusDrawerFragment extends Fragment {
         list2Items.add(new DrawerItem(R.drawable.ic_schedule, "My Schedule"));
         list2Items.add(new DrawerItem(R.drawable.ic_map, "Map"));
         list2Items.add(new DrawerItem(R.drawable.ic_person_add, "Scan Badge"));
-        list2Items.add(new DrawerItem(R.drawable.ic_settings, "Settings"));
         list2Items.add(new DrawerItem(R.drawable.ic_info, "About"));
 
         ListView list2 = (ListView) view.findViewById(R.id.list2);
@@ -54,8 +53,6 @@ public class DevNexusDrawerFragment extends Fragment {
                         activity.switchFragment(BadgeContactsFragment.newInstance(), RESET, "BadgeContact");
                         break;
                     case 4:
-                        break;
-                    case 5:
                         activity.switchFragment(AboutFragment.newInstance(), RESET, "About");
                         break;
                 }
