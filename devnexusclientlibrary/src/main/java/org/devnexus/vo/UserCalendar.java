@@ -3,7 +3,9 @@ package org.devnexus.vo;
 import org.jboss.aerogear.android.core.RecordId;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by summers on 12/1/13.
@@ -21,7 +23,7 @@ public class UserCalendar implements Comparable<UserCalendar>, Serializable {
     public Date fromTime;
     public int duration;//inMinutes
 
-    public ScheduleItem item;
+    public List<ScheduleItem> items = new ArrayList<>();
     public Boolean fixed;
     public Boolean template;
 
@@ -40,30 +42,38 @@ public class UserCalendar implements Comparable<UserCalendar>, Serializable {
 
         UserCalendar that = (UserCalendar) o;
 
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-
-        if (fixed != that.fixed) return false;
-        if (template != that.template) return false;
         if (version != that.version) return false;
-        if (fromTime != null ? !fromTime.equals(that.fromTime) : that.fromTime != null)
+        if (duration != that.duration) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (createdDate != null ? !createdDate.equals(that.createdDate) : that.createdDate != null)
             return false;
-
-        if (item != null ? !item.equals(that.item) : that.item != null) return false;
+        if (updatedDate != null ? !updatedDate.equals(that.updatedDate) : that.updatedDate != null)
+            return false;
         if (username != null ? !username.equals(that.username) : that.username != null)
             return false;
+        if (fixedTitle != null ? !fixedTitle.equals(that.fixedTitle) : that.fixedTitle != null)
+            return false;
+        if (fromTime != null ? !fromTime.equals(that.fromTime) : that.fromTime != null)
+            return false;
+        if (items != null ? !items.equals(that.items) : that.items != null) return false;
+        if (fixed != null ? !fixed.equals(that.fixed) : that.fixed != null) return false;
+        return template != null ? template.equals(that.template) : that.template == null;
 
-        return true;
     }
 
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
+        result = 31 * result + (updatedDate != null ? updatedDate.hashCode() : 0);
         result = 31 * result + version;
         result = 31 * result + (username != null ? username.hashCode() : 0);
+        result = 31 * result + (fixedTitle != null ? fixedTitle.hashCode() : 0);
         result = 31 * result + (fromTime != null ? fromTime.hashCode() : 0);
-        result = 31 * result + (item != null ? item.hashCode() : 0);
-        result = 31 * result + (fixed ? 1 : 0);
-        result = 31 * result + (template ? 1 : 0);
+        result = 31 * result + duration;
+        result = 31 * result + (items != null ? items.hashCode() : 0);
+        result = 31 * result + (fixed != null ? fixed.hashCode() : 0);
+        result = 31 * result + (template != null ? template.hashCode() : 0);
         return result;
     }
 
