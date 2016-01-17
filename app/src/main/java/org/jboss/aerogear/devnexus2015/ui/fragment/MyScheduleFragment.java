@@ -189,7 +189,7 @@ public class MyScheduleFragment extends Fragment implements LoaderManager.Loader
 
     @Override
     public void receiveSessionItem(UserCalendar calendarItem, ScheduleItem session) {
-        calendarItem.item = session;
+        calendarItem.items.add(session);
         resolver.update(UserCalendarContract.URI, UserCalendarContract.valueize(calendarItem, true), UserCalendarContract.ID, new String[]{calendarItem.getId() + ""} );
         if (pickerFragment != null) {
             pickerFragment.dismiss();

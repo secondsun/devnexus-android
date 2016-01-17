@@ -66,7 +66,7 @@
     "id": -8,
     "fromTime": "02/16/16 09:15 AM",
     "duration": 60,
-    "item": 5920,
+    "items": [5920],
     "fixedTitle": "Keynote",
     "fixed": "TRUE",
     "template": "TRUE"
@@ -174,7 +174,7 @@
     "id": -20,
     "fromTime": "02/17/16 09:15 AM",
     "duration": 60,
-    "item": 5927,
+    "items": [5927],
     "fixedTitle": "Keynote",
     "fixed": "TRUE",
     "template": "TRUE"

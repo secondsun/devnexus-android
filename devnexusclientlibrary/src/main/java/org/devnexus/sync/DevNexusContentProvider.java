@@ -357,9 +357,17 @@ public class DevNexusContentProvider extends ContentProvider {
                 int presentationId = Integer.parseInt(selectionArgs[0]);
 
                 for (UserCalendar userCalendarItem :results) {
-                    if (userCalendarItem.item == null || userCalendarItem.item.presentation.id != presentationId){
+                    boolean remove = true;
+                    for (ScheduleItem item : userCalendarItem.items) {
+                        if (item.presentation.id == presentationId){
+                            remove = false;
+                            break;
+                        }
+                    }
+                    if (remove) {
                         toRemove.add(userCalendarItem);
                     }
+
                 }
                 results.removeAll(toRemove);
                 Collections.sort(results);

@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class layous out presentations separated by time.  It assumes the presentations are in a gridlayout.
+ * This class layous out presentations separated by userCalendar.  It assumes the presentations are in a gridlayout.
  */
 public class ScheduleItemWithHeaderViewAdapter extends RecyclerView.Adapter<ScheduleItemWithHeaderViewAdapter.ViewHolder>  {
 

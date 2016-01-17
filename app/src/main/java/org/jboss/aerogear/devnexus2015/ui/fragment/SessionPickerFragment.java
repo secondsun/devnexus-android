@@ -54,8 +54,6 @@ public class SessionPickerFragment extends DialogFragment implements LoaderManag
     private SessionPickerReceiver receiver;
     private RecyclerView listView;
 
-    private static final Gson GSON = GsonUtils.GSON;
-
     public static SessionPickerFragment newInstance(UserCalendar calendarItem) {
         SessionPickerFragment fragment = new SessionPickerFragment();
         Bundle args = new Bundle();

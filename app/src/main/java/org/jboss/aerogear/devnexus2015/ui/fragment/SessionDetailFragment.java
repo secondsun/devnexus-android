@@ -29,7 +29,6 @@ import org.devnexus.vo.ScheduleItem;
 import org.devnexus.vo.Speaker;
 import org.devnexus.vo.UserCalendar;
 import org.devnexus.vo.contract.PresentationContract;
-import org.devnexus.vo.contract.PreviousYearPresentationContract;
 import org.devnexus.vo.contract.ScheduleItemContract;
 import org.devnexus.vo.contract.UserCalendarContract;
 import org.jboss.aerogear.devnexus2015.MainActivity;
@@ -127,10 +126,6 @@ public class SessionDetailFragment extends Fragment implements LoaderManager.Loa
             case DETAIL_LOADER:
                 if (contentUri.equals(PresentationContract.URI)) {
                     return new CursorLoader(getActivity(), ScheduleItemContract.URI, null, ScheduleItemContract.toQuery(ScheduleItemContract.PRESENTATION_ID), new String[]{"" + args.getInt(PRESENTATION_ID)}, null);
-                } else if (contentUri.equals(PreviousYearPresentationContract.URI)) {
-                    view.findViewById(R.id.date).setVisibility(View.INVISIBLE);
-                    view.findViewById(R.id.date_label).setVisibility(View.INVISIBLE);
-                    return new CursorLoader(getActivity(), contentUri, null, PresentationContract.toQuery(PresentationContract.PRESENTATION_ID, PreviousYearPresentationContract.EVENT_LABEL), new String[]{"" + args.getInt(PRESENTATION_ID), args.getString(EVENT_LABEL)}, null);
                 }
                 throw new IllegalStateException("Unsupported content Uri");
             default:
@@ -151,6 +146,7 @@ public class SessionDetailFragment extends Fragment implements LoaderManager.Loa
                     button.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+
                             Cursor scheduleItemCursor = resolver.query(ScheduleItemContract.URI, null, ScheduleItemContract.PRESENTATION_ID, new String[]{getArguments().getInt(PRESENTATION_ID) + ""}, null);
                             scheduleItemCursor.moveToFirst();
                             ScheduleItem item = GsonUtils.GSON.fromJson(scheduleItemCursor.getString(0), ScheduleItem.class);
@@ -161,16 +157,12 @@ public class SessionDetailFragment extends Fragment implements LoaderManager.Loa
                             UserCalendar userItem = GsonUtils.GSON.fromJson(userItemCursor.getString(0), UserCalendar.class);
                             userItemCursor.close();
 
-                            Presentation presentation = null;
-                            Cursor presentationCursor = resolver.query(PresentationContract.URI, null, PresentationContract._ID, new String[]{getArguments().getInt(PRESENTATION_ID) + ""}, null);
-                            presentationCursor.moveToFirst();
-                            presentation = GsonUtils.GSON.fromJson(presentationCursor.getString(0), Presentation.class);
-                            presentationCursor.close();
+                            Presentation presentation = item.presentation;
 
                             item = new ScheduleItem();
                             item.presentation = presentation;
 
-                            userItem.item = item;
+                            userItem.items.add( item );
 
                             resolver.update(UserCalendarContract.URI, UserCalendarContract.valueize(userItem, true), UserCalendarContract.ID, new String[]{userItem.getId() + ""});
                             button.setText("Scheduled!");
@@ -188,7 +180,17 @@ public class SessionDetailFragment extends Fragment implements LoaderManager.Loa
                         button.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                userCalendarItem.item = null;
+                                Presentation presentation = null;
+                                Cursor scheduleItemCursor = resolver.query(ScheduleItemContract.URI, null, ScheduleItemContract.PRESENTATION_ID, new String[]{getArguments().getInt(PRESENTATION_ID) + ""}, null);
+                                scheduleItemCursor.moveToFirst();
+                                ScheduleItem item = GsonUtils.GSON.fromJson(scheduleItemCursor.getString(0), ScheduleItem.class);
+                                scheduleItemCursor.close();
+
+                                presentation = item.presentation;
+
+                                item = new ScheduleItem();
+                                item.presentation = presentation;
+                                userCalendarItem.items.remove( item );
                                 resolver.update(UserCalendarContract.URI, UserCalendarContract.valueize(userCalendarItem, true), UserCalendarContract.ID, new String[]{userCalendarItem.getId() + ""});
                                 button.setText("Removed!");
                             }
