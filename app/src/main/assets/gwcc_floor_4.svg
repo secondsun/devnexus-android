@@ -2,7 +2,6 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   xmlns:osb="http://www.openswatchbook.org/uri/2009/osb"
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
@@ -24,11 +23,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1"
-     inkscape:cx="19.675057"
-     inkscape:cy="183.0213"
+     inkscape:zoom="16"
+     inkscape:cx="16.710923"
+     inkscape:cy="438.52193"
      inkscape:document-units="px"
-     inkscape:current-layer="layer13"
+     inkscape:current-layer="layer11"
      showgrid="false"
      inkscape:window-width="1920"
      inkscape:window-height="1136"
@@ -48,7 +47,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -146,5 +145,12 @@
        height="41.391659"
        x="494.41974"
        y="258.51443" />
+    <rect
+       style="display:inline;opacity:1;fill:#3b750b;fill-opacity:1;fill-rule:evenodd;stroke:#5e9422;stroke-width:1.6118989;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:26.39999962;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect7272-8-2-4-0-4"
+       width="51.161934"
+       height="42.514397"
+       x="493.77179"
+       y="586.05194" />
   </g>
 </svg>

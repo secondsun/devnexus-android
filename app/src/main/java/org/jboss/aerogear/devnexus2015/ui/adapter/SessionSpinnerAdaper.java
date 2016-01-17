@@ -165,6 +165,7 @@ public class SessionSpinnerAdaper extends BaseAdapter implements SpinnerAdapter 
         JAVA(R.string.topic_java, true, false, false, R.color.JAVA),
         JVM_LANGUAGES(R.string.topic_jvm_languages, true, false, false, R.color.JVM_LANGUAGES),
         DATA_INTEGRATION_IOT(R.string.topic_data_integration_iot, true, false, false, R.color.DATA_INTEGRATION_IOT),
+        NO_SQL(R.string.topic_nosql, true, false, false, R.color.NOSQL),
         WEB(R.string.topic_web, true, false, false, R.color.WEB),
         CLOUD_DEVOPTS(R.string.topic_cloud_and_devopts, true, false, false, R.color.CLOUD_DEVOPS),
         MICROSERVICES(R.string.topic_microservices, true, false, false, R.color.MICROSERVICES),

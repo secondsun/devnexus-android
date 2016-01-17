@@ -39,8 +39,10 @@ public final class GWCCLocations {
     public static final RoomMetaData A315 = new RoomMetaData(GalleriaFloor.THREE, 33.758997, -84.395937, 0x836cb0);
     public static final RoomMetaData A316 = new RoomMetaData(GalleriaFloor.THREE, 33.758993, -84.395888, 0x836cb0);
 
+
     public static final RoomMetaData EXHIBIT_AREA = new RoomMetaData(GalleriaFloor.ONE, 33.759765, -84.396876, 0xe5e5e5);
     public static final RoomMetaData SIDNEY_MARCUS_AUDITORIUM = new RoomMetaData(GalleriaFloor.FOUR, 33.758537, -84.396089, 0xedcd1c);
+
 
     public static final RoomMetaData A402 = new RoomMetaData(GalleriaFloor.FOUR, 33.759322, -84.396430, 0xe77ea5);
     public static final RoomMetaData A403 = new RoomMetaData(GalleriaFloor.FOUR, 33.759431, -84.396433, 0xe77ea5);
@@ -51,13 +53,15 @@ public final class GWCCLocations {
     public static final RoomMetaData A411 = new RoomMetaData(GalleriaFloor.FOUR, 33.759481, -84.395963, 0x5b903f);
     public static final RoomMetaData A412 = new RoomMetaData(GalleriaFloor.FOUR, 33.759295, -84.395962, 0x4879bc);
 
+    public static final RoomMetaData EXHIBIT_HALL_A2 = new RoomMetaData(GalleriaFloor.ONE, 33.759765, -84.396876, 0xe5e5e5);
+    public static final RoomMetaData A401 = new RoomMetaData(GalleriaFloor.FOUR, 33.759182, -84.396440, 0x836cb0);
+
     private static final Map<LatLng, RoomMetaData> positionLookup = new HashMap<>(21);
 
     static {
         positionLookup.put(A301.location, A301);
         positionLookup.put(A302.location, A302);
         positionLookup.put(A305.location, A305);
-        positionLookup.put(A307.location, A307);
         positionLookup.put(A311.location, A311);
         positionLookup.put(A312.location, A312);
         positionLookup.put(A313.location, A313);
@@ -65,8 +69,11 @@ public final class GWCCLocations {
         positionLookup.put(A315.location, A315);
         positionLookup.put(A316.location, A316);
 
+        positionLookup.put(EXHIBIT_HALL_A2.location, EXHIBIT_HALL_A2);
         positionLookup.put(EXHIBIT_AREA.location, EXHIBIT_AREA);
         positionLookup.put(SIDNEY_MARCUS_AUDITORIUM.location, SIDNEY_MARCUS_AUDITORIUM);
+
+        positionLookup.put(A401.location, A401);
 
         positionLookup.put(A402.location, A402);
         positionLookup.put(A403.location, A403);
@@ -132,6 +139,9 @@ public final class GWCCLocations {
             case FOUR:
                 icon = BitmapDescriptorFactory.fromBitmap(new GWCCMapIconGenerator(appContext).getIcon(SIDNEY_MARCUS_AUDITORIUM, resources.getString(R.string.sidney_marcus_auditorium)));
                 optionsList.add(new MarkerOptions().position(SIDNEY_MARCUS_AUDITORIUM.location).title(resources.getString(R.string.sidney_marcus_auditorium)).icon(icon));
+
+                icon = BitmapDescriptorFactory.fromBitmap(new GWCCMapIconGenerator(appContext).getIcon(A401, resources.getString(R.string.a401)));
+                optionsList.add(new MarkerOptions().position(A401.location).title(resources.getString(R.string.a401)).anchor(0.5f, 0.5f).icon(icon));
 
                 icon = BitmapDescriptorFactory.fromBitmap(new GWCCMapIconGenerator(appContext).getIcon(A402, resources.getString(R.string.a402)));
                 optionsList.add(new MarkerOptions().position(A402.location).title(resources.getString(R.string.a402)).anchor(0.5f, 0.5f).icon(icon));
@@ -204,6 +214,9 @@ public final class GWCCLocations {
 
             case "Sidney Marcus \n Auditorium":
                 return roomName.equals("Sidney Marcus Auditorium");
+
+            case "A401":
+                return roomName.equals("Room A401");
 
             case "A402":
                 return roomName.equals("Room A402-403");

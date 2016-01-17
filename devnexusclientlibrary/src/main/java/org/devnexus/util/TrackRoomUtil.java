@@ -19,6 +19,7 @@ public enum TrackRoomUtil {
     WORKSHOPS("Workshop (Full Day)", R.color.WORKSHOP, R.drawable.workshop, "Workshop (Full Day)"),
     ROOM_A412("Room A412", R.color.HTML5, R.drawable.html5, "HTML5"),
     ROOM_A411("Room A411", R.color.JAVASCRIPT, R.drawable.js, "JavaScript"),
+    ROOM_A401("Room A401", R.color.NOSQL, R.drawable.nosql, "NoSQL"),
     ROOM_A404_405("Room A404-405", R.color.MOBILE, R.drawable.mobile, "Mobile"),
     ROOM_A406_407("Room A406-407", R.color.AGILE, R.drawable.agile, "Agile"),
     ROOM_A402_403("Room A402-403", R.color.USER_EXPERIENCE_TOOLS, R.drawable.ux, "User Experience + Tools");

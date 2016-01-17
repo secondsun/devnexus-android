@@ -37,6 +37,7 @@
     <string name="a315">A315</string>
     <string name="a316">A316</string>
     <string name="sidney_marcus_auditorium">Sidney Marcus \n Auditorium</string>
+    <string name="a401">A401</string>
     <string name="a402">A402</string>
     <string name="a403">A403</string>
     <string name="a404">A404</string>
@@ -62,5 +63,7 @@
     <string name="cocktail_sponsors">Cocktail Hour Sponsors</string>
     <string name="licenses">Licenses</string>
     <string name="license_note">The DevNexus app makes use of the following Open Source libraries:</string>
+    <string name="topic_nosql">NoSQL</string>
+
 
 </resources>

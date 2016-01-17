@@ -103,6 +103,7 @@ public class PresentationExplorerFragment extends Fragment implements LoaderMana
                     case MICROSERVICES:
                     case SECURITY:
                     case MOBILE:
+                    case NO_SQL:
                     case USER_EXPERIENCE_AND_TOOLS:
                     case WORKSHOP:
                     case KEYNOTE:
