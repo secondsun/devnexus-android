@@ -17,13 +17,11 @@ import org.devnexus.util.CountDownCallback;
 import org.devnexus.util.GsonUtils;
 import org.devnexus.vo.BadgeContact;
 import org.devnexus.vo.Presentation;
-import org.devnexus.vo.PresentationResponse;
 import org.devnexus.vo.Schedule;
 import org.devnexus.vo.ScheduleItem;
 import org.devnexus.vo.UserCalendar;
 import org.devnexus.vo.contract.BadgeContactContract;
 import org.devnexus.vo.contract.PresentationContract;
-import org.devnexus.vo.contract.PreviousYearPresentationContract;
 import org.devnexus.vo.contract.ScheduleContract;
 import org.devnexus.vo.contract.ScheduleItemContract;
 import org.devnexus.vo.contract.SingleColumnJsonArrayList;
@@ -41,7 +39,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -94,8 +91,6 @@ public class DevNexusContentProvider extends ContentProvider {
             return execute(uri, null, selection, selectionArgs, new ScheduleItemQuery());
         } else if (uri.equals(PresentationContract.URI)) {
             return execute(uri, null, selection, selectionArgs, new PresentationQuery());
-        } else if (uri.equals(PreviousYearPresentationContract.URI)) {
-            return execute(uri, null, selection, selectionArgs, new PreviousYearPresentationQuery(getContext()));
         } else if (uri.equals(BadgeContactContract.URI)) {
             return execute(uri, null, selection, selectionArgs, new BadgeContactQuery());
         } else
@@ -111,8 +106,6 @@ public class DevNexusContentProvider extends ContentProvider {
         } else if (uri.equals(ScheduleItemContract.URI)) {
             return uri.toString();
         } else if (uri.equals(PresentationContract.URI)) {
-            return uri.toString();
-        } else if (uri.equals(PreviousYearPresentationContract.URI)) {
             return uri.toString();
         } else if (uri.equals(BadgeContactContract.URI)) {
             return uri.toString();
@@ -249,7 +242,7 @@ public class DevNexusContentProvider extends ContentProvider {
             tempStore = userCalendarStore;
         } else if (uri.equals(ScheduleContract.URI) || uri.equals(ScheduleItemContract.URI)) {
             tempStore = scheduleSQLStore;
-        } else if (uri.equals(PresentationContract.URI) || uri.equals(PresentationContract.URI_NOTIFY) || uri.equals(PreviousYearPresentationContract.URI)) {
+        } else if (uri.equals(PresentationContract.URI) || uri.equals(PresentationContract.URI_NOTIFY)) {
             tempStore = presentationSQLStore;
         } else if (uri.equals(BadgeContactContract.URI) || uri.equals(BadgeContactContract.URI_NOTIFY)) {
             tempStore = badgeContactSQLStore;
@@ -650,72 +643,6 @@ public class DevNexusContentProvider extends ContentProvider {
     }
 
 
-    private static class PreviousYearPresentationQuery implements Operation<Cursor> {
-
-        private final Context context;
-
-        private PreviousYearPresentationQuery(Context context) {
-            this.context = context;
-        }
-
-        @Override
-        public SingleColumnJsonArrayList exec(Gson gson, SQLStore presentationStore, Uri uri, ContentValues[] values, String selection, String[] selectionArgs) {
-
-
-            if (selection == null || selection.isEmpty()) {
-                return new SingleColumnJsonArrayList(new ArrayList<Presentation>(0));//No Event selected
-            } else {
-
-                String[] queries = selection.split(" && ");
-                JSONObject where = new JSONObject();
-                for (int i = 0; i < queries.length; i++) {
-                    try {
-                        where.put(queries[i], selectionArgs[i]);
-                    } catch (JSONException e) {
-                        Log.e(TAG, e.getMessage(), e);
-                    }
-                }
-
-                try {
-                    String eventId = where.getString(PreviousYearPresentationContract.EVENT_LABEL);
-                    PreviousYearPresentationContract.Events event = PreviousYearPresentationContract.Events.fromLabel(eventId);
-
-                    PresentationResponse presentationsObject = gson.fromJson(IOUtils.toString(context.getResources().openRawResource(event.getRawResourceId())), PresentationResponse.class);
-                    List<Presentation> presentations = presentationsObject.presentations;
-                    Iterator<String> keys = where.keys();
-
-                    while (keys.hasNext()) {
-                        String key = keys.next();
-                        if (key == PreviousYearPresentationContract.EVENT_LABEL) {
-                            continue;
-                        }
-
-                        if (key.equals(PreviousYearPresentationContract.PRESENTATION_ID)) {
-                            for (Presentation presentation : presentations) {
-                                if (Integer.toString(presentation.getId()).equals(where.getString(key))) {
-                                    ArrayList<Presentation> toReturn = new ArrayList<>(1);
-                                    toReturn.add(presentation);
-                                    return new SingleColumnJsonArrayList(toReturn);
-                                }
-                            }
-                        }
-
-                    }
-
-                    return new SingleColumnJsonArrayList(presentations);
-
-                } catch (JSONException e) {
-                    Log.e(TAG, e.getMessage(), e);
-                    return new SingleColumnJsonArrayList(new ArrayList<Presentation>(0));//No Event selected
-                } catch (IOException e) {
-                    Log.e(TAG, e.getMessage(), e);
-                    return new SingleColumnJsonArrayList(new ArrayList<Presentation>(0));//No Event selected
-                }
-
-
-            }
-        }
-    }
 
     private static class PresentationUpdate implements Operation<Integer> {
 
