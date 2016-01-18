@@ -1,4 +1,7 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
+
+def SERVER_KEY = '"' + DevNexusServerKeyProp + '"'?: '"Define DevNexusServerKeyProp in gradle.properties"'
 
 android {
     compileSdkVersion 23
@@ -29,6 +32,10 @@ android {
     }
 }
 
+android.buildTypes.each { type ->
+    type.buildConfigField 'String', 'SERVER_KEY', SERVER_KEY
+}
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':devnexusclientlibrary')
@@ -37,11 +44,11 @@ dependencies {
         exclude group: "com.google.android.gms"
     }
     compile project(':google-io-utils')
-    compile 'com.google.android.gms:play-services-maps:8.4.0'
-    compile 'com.google.android.gms:play-services-base:8.4.+'
-    compile 'com.google.android.gms:play-services-vision:8.4.+'
-    compile 'com.google.android.gms:play-services-identity:8.4.+'
-    compile 'com.google.android.gms:play-services-plus:8.4.+'
+    compile 'com.google.android.gms:play-services-maps:8.3.0'
+    compile 'com.google.android.gms:play-services-base:8.3.0'
+    compile 'com.google.android.gms:play-services-vision:8.3.0'
+    compile 'com.google.android.gms:play-services-identity:8.3.0'
+    compile 'com.google.android.gms:play-services-auth:8.3.0'
     compile 'com.squareup.okhttp:okhttp:2.+'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.+'
     compile 'com.squareup.picasso:picasso:2.+'

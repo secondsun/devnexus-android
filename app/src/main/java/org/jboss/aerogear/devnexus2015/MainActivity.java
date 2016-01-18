@@ -6,15 +6,24 @@ import android.app.FragmentTransaction;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.samples.vision.barcodereader.BarcodeCaptureActivity;
 import com.google.android.gms.vision.barcode.Barcode;
 
@@ -27,18 +36,28 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
 
     public static final String LAUNCH_SCREEN = "LaunchScreen";
     public static final int LAUNCH_EXPLORE = 0;
     public static final int LAUNCH_BARCODE = 0x4200;
-    @Bind(R.id.my_drawer_layout) DrawerLayout drawerLayout;
-    @Nullable @Bind(R.id.one_column) View oneColumn;
-    @Nullable @Bind(R.id.two_column) View twoColumn;
-    @Nullable @Bind(R.id.three_column) View threeColumn;
+    public static final int RC_SIGN_IN = 1000;
+
+    @Bind(R.id.my_drawer_layout)
+    DrawerLayout drawerLayout;
+    @Nullable
+    @Bind(R.id.one_column)
+    View oneColumn;
+    @Nullable
+    @Bind(R.id.two_column)
+    View twoColumn;
+    @Nullable
+    @Bind(R.id.three_column)
+    View threeColumn;
     private int launch = LAUNCH_EXPLORE;
     private int columnCount = 1;
+    private GoogleApiClient mAPiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void attachToolbar(Toolbar toolbar) {
-        setSupportActionBar(toolbar );
+        setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_drawer_black);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
                 tx.addToBackStack(tag);
                 break;
             case RESET:
-                while(getFragmentManager().getBackStackEntryCount() > 0) {
+                while (getFragmentManager().getBackStackEntryCount() > 0) {
                     getFragmentManager().popBackStackImmediate();
                 }
 
@@ -171,15 +190,50 @@ public class MainActivity extends AppCompatActivity {
                     ContentValues badgeValues = BadgeContactContract.valueize(contact);
                     getContentResolver().insert(BadgeContactContract.URI_NOTIFY, badgeValues);
 
-                } else {
                 }
-            } else {
             }
+        } else if (RC_SIGN_IN == requestCode) {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            handleSignInResult(result);
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
+    private void handleSignInResult(GoogleSignInResult result) {
+        if (result.isSuccess()) {
+            GoogleSignInAccount account = result.getSignInAccount();
+            Log.d("SIGN_IN", String.format("%s %s %s %s", account.getDisplayName(), account.getEmail(), account.getId(), account.getServerAuthCode()));
+        } else {
+            Toast.makeText(this,"Did not sign into Google.  Synchronization is disabled.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
     public enum BackStackOperation {NONE, ADD, RESET}
+
+    private GoogleApiClient enableGoogleSignIn() {
+        if (mAPiClient == null) {
+            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestServerAuthCode(BuildConfig.SERVER_KEY)
+                    .requestEmail()
+                    .build();
+            mAPiClient = new GoogleApiClient.Builder(this)
+                    .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                    .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                    .build();
+        }
+        return mAPiClient;
+    }
+
+    public void signIntoGoogleAccount() {
+        GoogleApiClient apiClient = enableGoogleSignIn();
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(apiClient);
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
 
 }

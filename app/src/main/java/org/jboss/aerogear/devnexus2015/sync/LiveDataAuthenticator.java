@@ -10,6 +10,8 @@ import android.os.Bundle;
 
 public class LiveDataAuthenticator extends AbstractAccountAuthenticator {
 
+    public static final String GOOGLE_ACCOUNT_TYPE = "devnexus.org.Account.Google";
+
     // Simple constructor
     public LiveDataAuthenticator(Context context) {
         super(context);
@@ -37,6 +39,10 @@ public class LiveDataAuthenticator extends AbstractAccountAuthenticator {
     public Bundle getAuthToken(AccountAuthenticatorResponse response, final Account account, String authTokenType, Bundle options) throws NetworkErrorException {
         final Bundle toReturn = new Bundle();
 
+        if (GOOGLE_ACCOUNT_TYPE.equals(authTokenType)) {
+
+        }
+
         return toReturn;
 
     }
@@ -55,5 +61,7 @@ public class LiveDataAuthenticator extends AbstractAccountAuthenticator {
     public Bundle hasFeatures(AccountAuthenticatorResponse response, Account account, String[] features) throws NetworkErrorException {
         throw new UnsupportedOperationException();
     }
+
+
 }
 

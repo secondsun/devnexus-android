@@ -64,6 +64,7 @@
     <string name="licenses">Licenses</string>
     <string name="license_note">The DevNexus app makes use of the following Open Source libraries:</string>
     <string name="topic_nosql">NoSQL</string>
+    <string name="pick_account" >You must pick an account to synchronize your schedule.</string>
 
 
 </resources>

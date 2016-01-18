@@ -17,6 +17,9 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -79,6 +82,7 @@ public class MyScheduleFragment extends Fragment implements LoaderManager.Loader
         View view = inflater.inflate(R.layout.my_schedule, null);
         ButterKnife.bind(this,view);
         toolbar.setTitle("");
+        setHasOptionsMenu(true);
         ((MainActivity) getActivity()).attachToolbar(toolbar);
 
         recycler.setLayoutManager(new GridLayoutManager(getActivity(), 1));
@@ -97,6 +101,19 @@ public class MyScheduleFragment extends Fragment implements LoaderManager.Loader
         Bundle args = new Bundle();
         args.putInt(DATE_KEY, spinner.getSelectedItemPosition());
         getLoaderManager().restartLoader(SCHEDULE_LOADER, args, MyScheduleFragment.this);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.schedule_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_sync) {
+            ((MainActivity)getActivity()).signIntoGoogleAccount();
+        }
+        return true;
     }
 
     @Override

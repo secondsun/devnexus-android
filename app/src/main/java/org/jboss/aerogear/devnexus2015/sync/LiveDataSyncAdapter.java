@@ -44,6 +44,7 @@ public class LiveDataSyncAdapter extends AbstractThreadedSyncAdapter {
 
     private static final Pipe<Schedule> SCHEDULE_PIPE;
     private static final Pipe<PresentationResponse> PRESENTATION_PIPE;
+    public static final String SYNC_CALENDAR = "devnexus.org.account.SYNC_USER_CALENDAR";
 
     static {
         try {
@@ -154,6 +155,10 @@ public class LiveDataSyncAdapter extends AbstractThreadedSyncAdapter {
             syncFinished.await();
         } catch (InterruptedException e) {
             e.printStackTrace();
+        }
+
+        if (AccountManager.get(getContext()).getUserData(account, SYNC_CALENDAR) != null) {
+
         }
 
     }
