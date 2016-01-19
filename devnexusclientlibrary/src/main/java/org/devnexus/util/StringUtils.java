@@ -17,4 +17,7 @@ public final class StringUtils {
         return a.compareTo(b);
     }
 
+    public static boolean isEmpty(String string) {
+        return string == null || string.isEmpty();
+    }
 }

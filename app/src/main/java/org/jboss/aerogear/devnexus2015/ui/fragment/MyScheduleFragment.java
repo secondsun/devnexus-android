@@ -3,9 +3,12 @@ package org.jboss.aerogear.devnexus2015.ui.fragment;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.LoaderManager;
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.CursorLoader;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -27,6 +30,7 @@ import android.widget.BaseAdapter;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.devnexus.util.GsonUtils;
 import org.devnexus.vo.Presentation;
@@ -59,12 +63,27 @@ public class MyScheduleFragment extends Fragment implements LoaderManager.Loader
 
     private static final String TAG = MyScheduleFragment.class.getSimpleName();
     private static final int SCHEDULE_LOADER = 0x0100;
+
+    private static final String DOWNLOAD_ACTION = "MyScheduleFragment.Download";
+    private static final String SAVE_ACTION = "MyScheduleFragment.Save";
+
     private static final String DATE_KEY = "Schedule.dateKey";
+    private final BroadcastReceiver downloadActionReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Toast.makeText(getActivity(), "Start Download", Toast.LENGTH_LONG).show();
+        }
+    };
+    private final BroadcastReceiver saveActionReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Toast.makeText(getActivity(), "Start Save", Toast.LENGTH_LONG).show();
+        }
+    };
     @Bind(R.id.my_recycler_view) RecyclerView recycler;
-    private ContentResolver resolver;
     @Bind(R.id.toolbar) Toolbar toolbar;
     @Bind(R.id.spinner_nav) Spinner spinner;
-
+    private ContentResolver resolver;
     private ContentObserver userCalendarObserver = new ContentObserver(new Handler(Looper.getMainLooper())) {
         @Override
         public void onChange(boolean selfChange) {
@@ -101,6 +120,8 @@ public class MyScheduleFragment extends Fragment implements LoaderManager.Loader
         Bundle args = new Bundle();
         args.putInt(DATE_KEY, spinner.getSelectedItemPosition());
         getLoaderManager().restartLoader(SCHEDULE_LOADER, args, MyScheduleFragment.this);
+        getActivity().registerReceiver(downloadActionReceiver, new IntentFilter(DOWNLOAD_ACTION));
+        getActivity().registerReceiver(saveActionReceiver, new IntentFilter(SAVE_ACTION));
     }
 
     @Override
@@ -110,8 +131,10 @@ public class MyScheduleFragment extends Fragment implements LoaderManager.Loader
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_sync) {
-            ((MainActivity)getActivity()).signIntoGoogleAccount();
+        if (item.getItemId() == R.id.action_download) {
+            ((MainActivity) getActivity()).signIntoGoogleAccount(DOWNLOAD_ACTION);
+        } else if (item.getItemId() == R.id.action_save) {
+            ((MainActivity) getActivity()).signIntoGoogleAccount(SAVE_ACTION);
         }
         return true;
     }
@@ -121,6 +144,8 @@ public class MyScheduleFragment extends Fragment implements LoaderManager.Loader
         super.onPause();
         getActivity().getContentResolver().unregisterContentObserver(userCalendarObserver);
         getLoaderManager().destroyLoader(SCHEDULE_LOADER);
+        getActivity().unregisterReceiver(downloadActionReceiver);
+        getActivity().unregisterReceiver(saveActionReceiver);
     }
 
     private void loadSpinnerNav(final Spinner spinner) {

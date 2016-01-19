@@ -28,9 +28,12 @@ import com.google.android.gms.samples.vision.barcodereader.BarcodeCaptureActivit
 import com.google.android.gms.vision.barcode.Barcode;
 
 import org.devnexus.sync.simple.SimpleDataAuthenticator;
+import org.devnexus.util.AccountUtil;
+import org.devnexus.util.StringUtils;
 import org.devnexus.vo.BadgeContact;
 import org.devnexus.vo.contract.BadgeContactContract;
 import org.jboss.aerogear.devnexus2015.ui.fragment.SetupFragment;
+import org.jboss.aerogear.devnexus2015.util.AndroidSignInTask;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -43,6 +46,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     public static final int LAUNCH_EXPLORE = 0;
     public static final int LAUNCH_BARCODE = 0x4200;
     public static final int RC_SIGN_IN = 1000;
+
+    //When the devnexus token exchange completes, send return action broadcast.
+    private static final String RETURN_ACTION = "return_action";
 
     @Bind(R.id.my_drawer_layout)
     DrawerLayout drawerLayout;
@@ -58,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private int launch = LAUNCH_EXPLORE;
     private int columnCount = 1;
     private GoogleApiClient mAPiClient;
+    //Hack to keep the aciton a schedule is asking the account for
+    private String scheduleCallbackAction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -203,9 +211,19 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private void handleSignInResult(GoogleSignInResult result) {
         if (result.isSuccess()) {
             GoogleSignInAccount account = result.getSignInAccount();
+            new AndroidSignInTask(this).execute(account);
             Log.d("SIGN_IN", String.format("%s %s %s %s", account.getDisplayName(), account.getEmail(), account.getId(), account.getServerAuthCode()));
         } else {
             Toast.makeText(this,"Did not sign into Google.  Synchronization is disabled.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void setDevNexusToken(String token) {
+        AccountUtil.setCookie(this, token);
+        if (!StringUtils.isEmpty(this.scheduleCallbackAction)) {
+            String action = this.scheduleCallbackAction;
+            this.scheduleCallbackAction = null;
+            sendBroadcast(new Intent(action));
         }
     }
 
@@ -214,12 +232,18 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     }
 
-    public enum BackStackOperation {NONE, ADD, RESET}
+    public void tokenExchangeError(String error) {
+        Log.d("LOGIN", error);
+        this.scheduleCallbackAction = null;
+        Toast.makeText(this, "Could not connect to DevNexus. Error : " + error, Toast.LENGTH_LONG).show();
+        AccountUtil.setCookie(this, null);
+    }
 
     private GoogleApiClient enableGoogleSignIn() {
         if (mAPiClient == null) {
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     .requestServerAuthCode(BuildConfig.SERVER_KEY)
+                    .requestIdToken(BuildConfig.SERVER_KEY)
                     .requestEmail()
                     .build();
             mAPiClient = new GoogleApiClient.Builder(this)
@@ -230,10 +254,20 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         return mAPiClient;
     }
 
-    public void signIntoGoogleAccount() {
+    public void signIntoGoogleAccount(String action) {
+
+        if (!StringUtils.isEmpty(AccountUtil.getCookie(this))) {
+            sendBroadcast(new Intent(action));
+            return;
+        }
+
         GoogleApiClient apiClient = enableGoogleSignIn();
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(apiClient);
+        signInIntent.putExtra(RETURN_ACTION, action);
+        this.scheduleCallbackAction = action;
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
+
+    public enum BackStackOperation {NONE, ADD, RESET}
 
 }
