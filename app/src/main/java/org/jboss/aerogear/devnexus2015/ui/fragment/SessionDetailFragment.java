@@ -159,7 +159,9 @@ public class SessionDetailFragment extends Fragment implements LoaderManager.Loa
 
                             Presentation presentation = item.presentation;
 
+                            int id = item.id;
                             item = new ScheduleItem();
+                            item.id = id;
                             item.presentation = presentation;
 
                             userItem.items.add( item );
@@ -188,7 +190,9 @@ public class SessionDetailFragment extends Fragment implements LoaderManager.Loa
 
                                 presentation = item.presentation;
 
+                                int id = item.id;
                                 item = new ScheduleItem();
+                                item.id = id;
                                 item.presentation = presentation;
                                 userCalendarItem.items.remove( item );
                                 resolver.update(UserCalendarContract.URI, UserCalendarContract.valueize(userCalendarItem, true), UserCalendarContract.ID, new String[]{userCalendarItem.getId() + ""});

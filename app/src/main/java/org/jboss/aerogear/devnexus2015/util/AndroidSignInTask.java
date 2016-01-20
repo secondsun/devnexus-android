@@ -35,7 +35,7 @@ public class AndroidSignInTask extends AsyncTask<GoogleSignInAccount, Void, Stri
             OkHttpClient client = new OkHttpClient();
 
             Request request = new Request.Builder()
-                    .url("http://10.0.2.2:8080/s/loginAndroid")
+                    .url("https://devnexus.com/s/loginAndroid")
                     .post(RequestBody.create(MediaType.parse("text/json"), "{\"idToken\":\"" + token + "\"}"))
                     .build();
 

@@ -5,7 +5,9 @@ import org.jboss.aerogear.android.core.RecordId;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by summers on 12/1/13.
@@ -23,7 +25,7 @@ public class UserCalendar implements Comparable<UserCalendar>, Serializable {
     public Date fromTime;
     public int duration;//inMinutes
 
-    public List<ScheduleItem> items = new ArrayList<>();
+    public Set<ScheduleItem> items = new HashSet<>();
     public Boolean fixed;
     public Boolean template;
 

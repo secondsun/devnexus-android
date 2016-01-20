@@ -41,6 +41,8 @@ import org.jboss.aerogear.devnexus2015.MainActivity;
 import org.jboss.aerogear.devnexus2015.R;
 import org.jboss.aerogear.devnexus2015.ui.adapter.MyScheduleViewAdapter;
 import org.jboss.aerogear.devnexus2015.util.AddSessionClickListener;
+import org.jboss.aerogear.devnexus2015.util.LoadUserCalendarFromDevNexusTask;
+import org.jboss.aerogear.devnexus2015.util.SaveUserCalendarToDevNexusTask;
 import org.jboss.aerogear.devnexus2015.util.SessionClickListener;
 import org.jboss.aerogear.devnexus2015.util.SessionPickerReceiver;
 
@@ -71,13 +73,13 @@ public class MyScheduleFragment extends Fragment implements LoaderManager.Loader
     private final BroadcastReceiver downloadActionReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Toast.makeText(getActivity(), "Start Download", Toast.LENGTH_LONG).show();
+            new LoadUserCalendarFromDevNexusTask(context,  context.getContentResolver()).execute();
         }
     };
     private final BroadcastReceiver saveActionReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Toast.makeText(getActivity(), "Start Save", Toast.LENGTH_LONG).show();
+            new SaveUserCalendarToDevNexusTask(context,  context.getContentResolver()).execute();
         }
     };
     @Bind(R.id.my_recycler_view) RecyclerView recycler;
