@@ -17,7 +17,7 @@ public class ScheduleItem implements Serializable, Comparable<ScheduleItem> {
     public Date toTime;
     public Room room;
     public Presentation presentation;
-    public int rowspan;
+
 
     @Override
     public boolean equals(Object o) {

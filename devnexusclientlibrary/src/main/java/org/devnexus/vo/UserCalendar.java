@@ -15,27 +15,29 @@ import java.util.Set;
 public class UserCalendar implements Comparable<UserCalendar>, Serializable {
 
     @RecordId
-    private Long id = -1l;
+    public int id;
 
     public Date createdDate;
     public Date updatedDate;
     public int version;
-    public String username;
     public String fixedTitle;
     public Date fromTime;
     public int duration;//inMinutes
 
     public Set<ScheduleItem> items = new HashSet<>();
-    public Boolean fixed;
-    public Boolean template;
+    public Boolean fixed = Boolean.FALSE;
+    public String room;
+    public String color;
 
-    public Long getId() {
+
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
+
 
     @Override
     public boolean equals(Object o) {
@@ -44,38 +46,27 @@ public class UserCalendar implements Comparable<UserCalendar>, Serializable {
 
         UserCalendar that = (UserCalendar) o;
 
-        if (version != that.version) return false;
         if (duration != that.duration) return false;
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (createdDate != null ? !createdDate.equals(that.createdDate) : that.createdDate != null)
-            return false;
-        if (updatedDate != null ? !updatedDate.equals(that.updatedDate) : that.updatedDate != null)
-            return false;
-        if (username != null ? !username.equals(that.username) : that.username != null)
-            return false;
         if (fixedTitle != null ? !fixedTitle.equals(that.fixedTitle) : that.fixedTitle != null)
             return false;
         if (fromTime != null ? !fromTime.equals(that.fromTime) : that.fromTime != null)
             return false;
         if (items != null ? !items.equals(that.items) : that.items != null) return false;
         if (fixed != null ? !fixed.equals(that.fixed) : that.fixed != null) return false;
-        return template != null ? template.equals(that.template) : that.template == null;
+        if (room != null ? !room.equals(that.room) : that.room != null) return false;
+        return color != null ? color.equals(that.color) : that.color == null;
 
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
-        result = 31 * result + (updatedDate != null ? updatedDate.hashCode() : 0);
-        result = 31 * result + version;
-        result = 31 * result + (username != null ? username.hashCode() : 0);
-        result = 31 * result + (fixedTitle != null ? fixedTitle.hashCode() : 0);
+        int result = fixedTitle != null ? fixedTitle.hashCode() : 0;
         result = 31 * result + (fromTime != null ? fromTime.hashCode() : 0);
         result = 31 * result + duration;
         result = 31 * result + (items != null ? items.hashCode() : 0);
         result = 31 * result + (fixed != null ? fixed.hashCode() : 0);
-        result = 31 * result + (template != null ? template.hashCode() : 0);
+        result = 31 * result + (room != null ? room.hashCode() : 0);
+        result = 31 * result + (color != null ? color.hashCode() : 0);
         return result;
     }
 
@@ -86,7 +77,7 @@ public class UserCalendar implements Comparable<UserCalendar>, Serializable {
         } else if (!fromTime.equals(another.fromTime)) {
             return fromTime.compareTo(another.fromTime);
         } else {
-            return id.compareTo(another.id);
+            return Integer.valueOf(id).compareTo(another.id);
         }
     }
 

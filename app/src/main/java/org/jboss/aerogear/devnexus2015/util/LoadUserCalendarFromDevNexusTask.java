@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.util.SparseArray;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.squareup.okhttp.MediaType;
@@ -100,5 +101,11 @@ public class LoadUserCalendarFromDevNexusTask extends AsyncTask<Void, Void, Void
         }
 
         return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        super.onPostExecute(aVoid);
+        Toast.makeText(context, "Fetch complete.", Toast.LENGTH_LONG).show();
     }
 }

@@ -1,6 +1,7 @@
 package org.jboss.aerogear.devnexus2015.ui.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -106,9 +107,9 @@ public class MyScheduleViewAdapter extends RecyclerView.Adapter<MyScheduleViewAd
             case SESSION_TYPE: {
                 final ScheduleItem scheduleItem = timeOrPresentation.scheduleItem.getItem();
                 if (userCalendarItem.fixed) {
-                    holder.title.setText(userCalendarItem.fixedTitle);
+                    holder.title.setText(userCalendarItem.fixedTitle + " - " + userCalendarItem.room);
                     holder.title.setTextColor(context.getResources().getColor(R.color.dn_white));
-                    holder.box.setBackgroundColor(context.getResources().getColor(R.color.dn_light_gray));
+                    holder.box.setBackgroundColor(Color.parseColor(userCalendarItem.color));
 
 
                     holder.image.setImageDrawable(new ColorDrawable(context.getResources().getColor(R.color.dn_light_gray)));
@@ -116,7 +117,9 @@ public class MyScheduleViewAdapter extends RecyclerView.Adapter<MyScheduleViewAd
                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            return;//do nothing
+                            if (userCalendarItem.items != null && userCalendarItem.items.size() > 0 ) {
+                                showSessionInfo(userCalendarItem.items.iterator().next());
+                            }
                         }
                     });
                 } else if (scheduleItem == null) {
@@ -133,7 +136,7 @@ public class MyScheduleViewAdapter extends RecyclerView.Adapter<MyScheduleViewAd
                     });
                 } else {
                     int color = context.getResources().getColor(TrackRoomUtil.colorForTrack(scheduleItem.presentation.track.name));
-                    holder.title.setText(scheduleItem.presentation.title);
+                    holder.title.setText(scheduleItem.presentation.title + " - " + scheduleItem.room.name);
                     holder.title.setTextColor(context.getResources().getColor(R.color.dn_black));
                     holder.box.setBackgroundColor(color);
                     if (!userCalendarItem.fixed) {

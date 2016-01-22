@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.util.SparseArray;
+import android.widget.Toast;
 
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
@@ -118,5 +119,11 @@ public class SaveUserCalendarToDevNexusTask extends AsyncTask<Void, Void, Void> 
         }
 
         return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        super.onPostExecute(aVoid);
+        Toast.makeText(context, "Upload complete.", Toast.LENGTH_LONG).show();
     }
 }

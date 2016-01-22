@@ -7,6 +7,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
+import android.util.SparseArray;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -19,6 +20,7 @@ import org.devnexus.vo.BadgeContact;
 import org.devnexus.vo.Presentation;
 import org.devnexus.vo.Schedule;
 import org.devnexus.vo.ScheduleItem;
+import org.devnexus.vo.ScheduleItemType;
 import org.devnexus.vo.UserCalendar;
 import org.devnexus.vo.contract.BadgeContactContract;
 import org.devnexus.vo.contract.PresentationContract;
@@ -39,7 +41,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -329,78 +333,128 @@ public class DevNexusContentProvider extends ContentProvider {
 
         @Override
         public SingleColumnJsonArrayList exec(Gson gson, SQLStore calendarStore, Uri uri, ContentValues[] values, String selection, String[] selectionArgs) {
-
-            List<UserCalendar> results = new ArrayList<UserCalendar>(calendarStore.readAll());
-            if (results.isEmpty() || results.get(0).fromTime.getYear() < 116) {
-                results = loadTemplate(calendarStore);
-            }
-
-            Collections.sort(results);
-            
-            if (selection != null &&selection.contains(UserCalendarContract.DATE)) {
-                List<UserCalendar> toRemove = new ArrayList<>(results.size());
-                int dateIndex = Integer.parseInt(selectionArgs[0]);
-                Date startDate = UserCalendarContract.DATES.get(dateIndex);
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(startDate);
-                cal.add(Calendar.DATE, 1);
-                Date startDateNextDay = cal.getTime();
-                for (UserCalendar userCalendarItem :results) {
-                    if (!(userCalendarItem.fromTime.after(startDate) && userCalendarItem.fromTime.before(startDateNextDay) )){
-                        toRemove.add(userCalendarItem);
-                    }
+            synchronized (calendarStore) {
+                List<UserCalendar> results = new ArrayList<UserCalendar>(calendarStore.readAll());
+                if (results.isEmpty() || results.get(0).fromTime.getYear() < 116 ) {
+                    results = loadTemplate(calendarStore);
                 }
-                results.removeAll(toRemove);
-                Collections.sort(results);
-            } else if (selection != null && selection.contains(UserCalendarContract.PRESENTATION_ID)){
-                List<UserCalendar> toRemove = new ArrayList<>(results.size());
-                int presentationId = Integer.parseInt(selectionArgs[0]);
 
-                for (UserCalendar userCalendarItem :results) {
-                    boolean remove = true;
-                    for (ScheduleItem item : userCalendarItem.items) {
-                        if (item.presentation.id == presentationId){
-                            remove = false;
-                            break;
+
+                Collections.sort(results);
+
+                if (selection != null && selection.contains(UserCalendarContract.DATE)) {
+                    List<UserCalendar> toRemove = new ArrayList<>(results.size());
+                    int dateIndex = Integer.parseInt(selectionArgs[0]);
+                    Date startDate = UserCalendarContract.DATES.get(dateIndex);
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(startDate);
+                    cal.add(Calendar.DATE, 1);
+                    Date startDateNextDay = cal.getTime();
+                    for (UserCalendar userCalendarItem : results) {
+                        if (!(userCalendarItem.fromTime.after(startDate) && userCalendarItem.fromTime.before(startDateNextDay))) {
+                            toRemove.add(userCalendarItem);
                         }
                     }
-                    if (remove) {
-                        toRemove.add(userCalendarItem);
-                    }
+                    results.removeAll(toRemove);
+                    Collections.sort(results);
+                } else if (selection != null && selection.contains(UserCalendarContract.PRESENTATION_ID)) {
+                    List<UserCalendar> toRemove = new ArrayList<>(results.size());
+                    int presentationId = Integer.parseInt(selectionArgs[0]);
 
-                }
-                results.removeAll(toRemove);
-                Collections.sort(results);
-            } else if (selection != null && selection.contains(UserCalendarContract.START_TIME)){
-                List<UserCalendar> toRemove = new ArrayList<>(results.size());
-                Date startTime = new Date(Long.parseLong(selectionArgs[0]));
+                    for (UserCalendar userCalendarItem : results) {
+                        boolean remove = true;
+                        for (ScheduleItem item : userCalendarItem.items) {
+                            if (item.presentation.id == presentationId) {
+                                remove = false;
+                                break;
+                            }
+                        }
+                        if (remove) {
+                            toRemove.add(userCalendarItem);
+                        }
 
-                for (UserCalendar userCalendarItem :results) {
-                    if (userCalendarItem.fromTime.compareTo(startTime) != 0){
-                        toRemove.add(userCalendarItem);
+                    }
+                    results.removeAll(toRemove);
+                    Collections.sort(results);
+                } else if (selection != null && selection.contains(UserCalendarContract.START_TIME)) {
+                    List<UserCalendar> toRemove = new ArrayList<>(results.size());
+                    Date startTime = new Date(Long.parseLong(selectionArgs[0]));
+
+                    for (UserCalendar userCalendarItem : results) {
+                        if (userCalendarItem.fromTime.compareTo(startTime) != 0) {
+                            toRemove.add(userCalendarItem);
+                        }
+                    }
+                    results.removeAll(toRemove);
+                    Collections.sort(results);
+                }
+
+                //TODO: Replace all instance where I attach a new schedule item to a calendar with an appropriate schedule item and remove this workaround.
+                ArrayList<ScheduleItem> items = new ArrayList<>(schedule.get(0).scheduleItems);
+                SparseArray<ScheduleItem> mappedItems = new SparseArray<>(items.size());
+                for (ScheduleItem item : items) {
+                    if (item.presentation != null) {
+                        mappedItems.put(item.presentation.id, item);
                     }
                 }
-                results.removeAll(toRemove);
-                Collections.sort(results);
+
+                for (UserCalendar calendarItem : results) {
+                    if (calendarItem.items != null && calendarItem.items.size() > 0) {
+                        for (ScheduleItem item : calendarItem.items) {
+                            if (item.presentation != null && item.room == null) {
+                                //TODO: Replace all instance where I attach a new schedule item to a calendar with an appropriate schedule item and remove this workaround.
+                                ScheduleItem fullItem = mappedItems.get(item.presentation.id);
+                                item.room = fullItem.room;
+                            }
+                        }
+                    }
+                }
+
+                return new SingleColumnJsonArrayList(new ArrayList<UserCalendar>(results));
             }
-            
-            return new SingleColumnJsonArrayList(new ArrayList<UserCalendar>(results));
         }
 
-        private List<UserCalendar> loadTemplate(SQLStore calendarStore) {
+        private List<UserCalendar> loadTemplate(SQLStore<UserCalendar> calendarSQLStore) {
 
-            InputStream templateStream = context.getResources().openRawResource(R.raw.calendar_template);
-            String calendarTemplateJson = null;
+            InputStream templateStream = context.getResources().openRawResource(R.raw.schedule);
+            String scheduleDataJson = null;
             try {
-                calendarTemplateJson = IOUtils.toString(templateStream);
+                scheduleDataJson = IOUtils.toString(templateStream);
             } catch (IOException ignore) {
                 Log.e(TAG, ignore.getMessage(), ignore);
             }
-            List<UserCalendar> userCalendarItems = GsonUtils.gson(new SimpleDateFormat("M/dd/yy hh:mm a"), resolver).fromJson(calendarTemplateJson, new TypeToken<List<UserCalendar>>() {
-            }.getType());
-            resolver.delete(UserCalendarContract.URI, "", null);
-            resolver.bulkInsert(UserCalendarContract.URI, UserCalendarContract.valueize(userCalendarItems, true));
-            return userCalendarItems;
+            Schedule schedule = GSON.fromJson(scheduleDataJson, Schedule.class);
+            Set<UserCalendar> userCalendarItems = new HashSet<>(schedule.scheduleItems.size());
+            for (ScheduleItem item : schedule.scheduleItems) {
+                UserCalendar uc = new UserCalendar();
+                uc.id = item.id;
+                uc.fromTime = item.fromTime;
+                uc.duration = (int) ((item.toTime.getTime() - item.fromTime.getTime()) / 60000);
+                if (ScheduleItemType.SESSION.name().equalsIgnoreCase(item.scheduleItemType)) {
+                    uc.fixed = false;
+                    uc.fixedTitle = "";
+                } else {
+                    uc.fixed = true;
+                    uc.fixedTitle = item.title;
+                    uc.room = item.room.name;
+                    uc.color = item.room.color;
+                    if (item.presentation != null) {
+                        uc.fixedTitle = item.presentation.title;
+                        uc.items.add(item);
+                    }
+                }
+                userCalendarItems.add(uc);
+            }
+
+
+            ArrayList<UserCalendar> toReturn = new ArrayList<>(userCalendarItems);
+            Collections.sort(toReturn);
+            if (userCalendarItems.size() == 1 || toReturn.size() == 1) {
+                return toReturn;
+            }
+            calendarSQLStore.reset();
+            calendarSQLStore.save(toReturn);
+            return toReturn;
         }
     }
 
