@@ -40,12 +40,12 @@ public class RoomViewFragment extends DialogFragment {
 
     private List<ScheduleItem> schedule;
     private RecyclerView listView;
+    private View emptyIcon, emptyText;
     private static final Gson GSON = GsonUtils.GSON;
     
 
     public static RoomViewFragment newInstance(String roomName) {
         Bundle args = new Bundle();
-
         args.putString(ROOM_NAME, roomName);
         RoomViewFragment frag = new RoomViewFragment();
         frag.setArguments(args);
@@ -78,7 +78,9 @@ public class RoomViewFragment extends DialogFragment {
                             Schedule scheduleFromDb = GSON.fromJson(cursor.getString(0), Schedule.class);
                             for (ScheduleItem scheduleItem : scheduleFromDb.scheduleItems) {
                                 if (GWCCLocations.roomNameMatchesMarkerName(scheduleItem.room.name, viewRoomName)) {
-                                    schedule.add(scheduleItem);
+                                    if (scheduleItem.presentation != null) {
+                                        schedule.add(scheduleItem);
+                                    }
                                 }
                             }
                         } else {
@@ -111,6 +113,15 @@ public class RoomViewFragment extends DialogFragment {
                     listView.requestLayout();
                     listView.refreshDrawableState();
                 }
+                if (scheduleItems.isEmpty()) {
+                    listView.setVisibility(View.GONE);
+                    emptyIcon.setVisibility(View.VISIBLE);
+                    emptyText.setVisibility(View.VISIBLE);
+                } else {
+                    listView.setVisibility(View.VISIBLE);
+                    emptyIcon.setVisibility(View.GONE);
+                    emptyText.setVisibility(View.GONE);
+                }
             }
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
@@ -127,17 +138,10 @@ public class RoomViewFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.session_picker, null);
         listView = (RecyclerView) view.findViewById(R.id.listView);
+        emptyIcon = view.findViewById(R.id.empty_icon);
+        emptyText = view.findViewById(R.id.empty_text);
         listView.setLayoutManager(new GridLayoutManager(getActivity(), 1));
         listView.addItemDecoration(new CenteringDecoration(1,210,getActivity()));
-//
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                UserCalendar userCal = new UserCalendar();
-//                userCal.fixed = true;
-//                SessionDetailFragment.newInstance(userCal, adapter.getItem(position)).show(getActivity().getSupportFragmentManager(), TAG);
-//            }
-//        });
 
 
         return view;

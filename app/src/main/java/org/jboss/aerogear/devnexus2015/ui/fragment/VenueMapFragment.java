@@ -74,6 +74,8 @@ public class VenueMapFragment extends Fragment implements
         GoogleMap.OnCameraChangeListener, OnMapReadyCallback, GoogleMap.OnIndoorStateChangeListener {
 
     private static final Map<Integer, String> tileMap;
+    private static final String ROOM_VIEW_TAG = "Room View Tag";
+
     static {
         tileMap = new HashMap<>(6);
         tileMap.put(3, "gwcc_floor_3.svg");
@@ -238,7 +240,7 @@ public class VenueMapFragment extends Fragment implements
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        RoomViewFragment.newInstance(marker.getTitle()).show(getFragmentManager(), TAG);
+        RoomViewFragment.newInstance(marker.getTitle()).show(getFragmentManager(), ROOM_VIEW_TAG);
         return true;
     }
 

@@ -181,6 +181,9 @@ public final class GWCCLocations {
     }
 
     public static boolean roomNameMatchesMarkerName(String roomName, String markerName) {
+        if (markerName == null || roomName == null) {
+            return false;
+        }
         switch (markerName) {
             case "A301":
                 return roomName.equals("WS Room A301") || roomName.equals("Room A301");

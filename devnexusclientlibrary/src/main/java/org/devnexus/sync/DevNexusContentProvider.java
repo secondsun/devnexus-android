@@ -333,7 +333,7 @@ public class DevNexusContentProvider extends ContentProvider {
 
         @Override
         public SingleColumnJsonArrayList exec(Gson gson, SQLStore calendarStore, Uri uri, ContentValues[] values, String selection, String[] selectionArgs) {
-            synchronized (calendarStore) {
+            synchronized (schedule) {
                 List<UserCalendar> results = new ArrayList<UserCalendar>(calendarStore.readAll());
                 if (results.isEmpty() || results.get(0).fromTime.getYear() < 116 ) {
                     results = loadTemplate(calendarStore);
@@ -565,13 +565,15 @@ public class DevNexusContentProvider extends ContentProvider {
 
         @Override
         public Integer exec(Gson gson, SQLStore scheduleStore, Uri uri, ContentValues[] values, String selection, String[] selectionArgs) {
-            for (ContentValues value : values) {
-                Schedule calendar = gson.fromJson(value.getAsString(ScheduleContract.DATA), Schedule.class);
-                scheduleStore.save(calendar);
+            synchronized (schedule) {
+                for (ContentValues value : values) {
+                    Schedule calendar = gson.fromJson(value.getAsString(ScheduleContract.DATA), Schedule.class);
+                    scheduleStore.save(calendar);
+                }
+                DevNexusContentProvider.schedule = null;
+                resolver.notifyChange(ScheduleContract.URI, null, false);
+                return values.length;
             }
-            DevNexusContentProvider.schedule = null;
-            resolver.notifyChange(ScheduleContract.URI, null, false);
-            return values.length;
         }
     }
 
@@ -617,13 +619,15 @@ public class DevNexusContentProvider extends ContentProvider {
 
         @Override
         public Uri exec(Gson gson, SQLStore scheduleStore, Uri uri, ContentValues[] values, String selection, String[] selectionArgs) {
-            Schedule calendar = gson.fromJson(values[0].getAsString(ScheduleContract.DATA), Schedule.class);
-            scheduleStore.save(calendar);
-            schedule = null;
-            if (values[0].getAsBoolean(ScheduleContract.NOTIFY) != null && values[0].getAsBoolean(ScheduleContract.NOTIFY)) {
-                resolver.notifyChange(ScheduleContract.URI, null, false);
+            synchronized (schedule) {
+                Schedule calendar = gson.fromJson(values[0].getAsString(ScheduleContract.DATA), Schedule.class);
+                scheduleStore.save(calendar);
+                schedule = null;
+                if (values[0].getAsBoolean(ScheduleContract.NOTIFY) != null && values[0].getAsBoolean(ScheduleContract.NOTIFY)) {
+                    resolver.notifyChange(ScheduleContract.URI, null, false);
+                }
+                return ScheduleContract.URI;
             }
-            return ScheduleContract.URI;
         }
     }
 
