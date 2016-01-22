@@ -28,32 +28,32 @@ public final class GWCCLocations {
     private GWCCLocations() {
     }
 
-    public static final RoomMetaData A301 = new RoomMetaData(GalleriaFloor.THREE, 33.758336, -84.396093, 0x2a2d7c);
-    public static final RoomMetaData A302 = new RoomMetaData(GalleriaFloor.THREE, 33.758524, -84.395996, 0xfaa21b);
-    public static final RoomMetaData A305 = new RoomMetaData(GalleriaFloor.THREE, 33.758520, -84.396205, 0x8b2246);
+    public static final RoomMetaData A301 = new RoomMetaData(GalleriaFloor.THREE, 33.758336, -84.396093, 0xe77ea5);
+    public static final RoomMetaData A302 = new RoomMetaData(GalleriaFloor.THREE, 33.758524, -84.395996, 0x6ec7e8);
+    public static final RoomMetaData A305 = new RoomMetaData(GalleriaFloor.THREE, 33.758520, -84.396205, 0xa6c4e7);
     public static final RoomMetaData A307 = new RoomMetaData(GalleriaFloor.THREE, 33.759381, -84.396442, 0x6c7070);
     public static final RoomMetaData A311 = new RoomMetaData(GalleriaFloor.THREE, 33.759530, -84.395973, 0x015351);
-    public static final RoomMetaData A312 = new RoomMetaData(GalleriaFloor.THREE, 33.759422, -84.395979, 0xa6c4e7);
-    public static final RoomMetaData A313 = new RoomMetaData(GalleriaFloor.THREE, 33.759251, -84.395974, 0x522f92);
-    public static final RoomMetaData A314 = new RoomMetaData(GalleriaFloor.THREE, 33.759120, -84.395984, 0x015351);
-    public static final RoomMetaData A315 = new RoomMetaData(GalleriaFloor.THREE, 33.758997, -84.395937, 0x836cb0);
-    public static final RoomMetaData A316 = new RoomMetaData(GalleriaFloor.THREE, 33.758993, -84.395888, 0x836cb0);
+    public static final RoomMetaData A312 = new RoomMetaData(GalleriaFloor.THREE, 33.759422, -84.395979, 0x337ab7);
+    public static final RoomMetaData A313 = new RoomMetaData(GalleriaFloor.THREE, 33.759251, -84.395974, 0xfaa21b);
+    public static final RoomMetaData A314 = new RoomMetaData(GalleriaFloor.THREE, 33.759120, -84.395984, 0x2a2d7c);
+    public static final RoomMetaData A315 = new RoomMetaData(GalleriaFloor.THREE, 33.758997, -84.395937, 0x8b2246);
+    public static final RoomMetaData A316 = new RoomMetaData(GalleriaFloor.THREE, 33.758993, -84.395888, 0x8b2246);
 
 
-    public static final RoomMetaData EXHIBIT_AREA = new RoomMetaData(GalleriaFloor.ONE, 33.759765, -84.396876, 0xe5e5e5);
+    public static final RoomMetaData EXHIBIT_AREA = new RoomMetaData(GalleriaFloor.ONE, 33.759765, -84.396876, 0xed1e24);
     public static final RoomMetaData SIDNEY_MARCUS_AUDITORIUM = new RoomMetaData(GalleriaFloor.FOUR, 33.758537, -84.396089, 0xedcd1c);
 
 
-    public static final RoomMetaData A402 = new RoomMetaData(GalleriaFloor.FOUR, 33.759322, -84.396430, 0xe77ea5);
-    public static final RoomMetaData A403 = new RoomMetaData(GalleriaFloor.FOUR, 33.759431, -84.396433, 0xe77ea5);
-    public static final RoomMetaData A404 = new RoomMetaData(GalleriaFloor.FOUR, 33.759601, -84.396433, 0x8ec741);
-    public static final RoomMetaData A405 = new RoomMetaData(GalleriaFloor.FOUR, 33.759716, -84.396433, 0x8ec741);
-    public static final RoomMetaData A406 = new RoomMetaData(GalleriaFloor.FOUR, 33.759850, -84.396437, 0x6ec7e8);
-    public static final RoomMetaData A407 = new RoomMetaData(GalleriaFloor.FOUR, 33.759943, -84.396438, 0x6ec7e8);
-    public static final RoomMetaData A411 = new RoomMetaData(GalleriaFloor.FOUR, 33.759481, -84.395963, 0x5b903f);
-    public static final RoomMetaData A412 = new RoomMetaData(GalleriaFloor.FOUR, 33.759295, -84.395962, 0x4879bc);
+    public static final RoomMetaData A402 = new RoomMetaData(GalleriaFloor.FOUR, 33.759322, -84.396430, 0x5b903f);
+    public static final RoomMetaData A403 = new RoomMetaData(GalleriaFloor.FOUR, 33.759431, -84.396433, 0x5b903f);
+    public static final RoomMetaData A404 = new RoomMetaData(GalleriaFloor.FOUR, 33.759601, -84.396433, 0x4879bc);
+    public static final RoomMetaData A405 = new RoomMetaData(GalleriaFloor.FOUR, 33.759716, -84.396433, 0x4879bc);
+    public static final RoomMetaData A406 = new RoomMetaData(GalleriaFloor.FOUR, 33.759850, -84.396437, 0x832381);
+    public static final RoomMetaData A407 = new RoomMetaData(GalleriaFloor.FOUR, 33.759943, -84.396438, 0x832381);
+    public static final RoomMetaData A411 = new RoomMetaData(GalleriaFloor.FOUR, 33.759481, -84.395963, 0x127e9c);
+    public static final RoomMetaData A412 = new RoomMetaData(GalleriaFloor.FOUR, 33.759295, -84.395962, 0x127e9c);
 
-    public static final RoomMetaData EXHIBIT_HALL_A2 = new RoomMetaData(GalleriaFloor.ONE, 33.759765, -84.396876, 0xe5e5e5);
+    public static final RoomMetaData EXHIBIT_HALL_A2 = new RoomMetaData(GalleriaFloor.ONE, 33.759765, -84.396876, 0x0BA861);
     public static final RoomMetaData A401 = new RoomMetaData(GalleriaFloor.FOUR, 33.759182, -84.396440, 0x836cb0);
 
     private static final Map<LatLng, RoomMetaData> positionLookup = new HashMap<>(21);
