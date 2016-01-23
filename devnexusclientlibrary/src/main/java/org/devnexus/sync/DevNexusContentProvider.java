@@ -509,7 +509,7 @@ public class DevNexusContentProvider extends ContentProvider {
                                 }
                                 break;
                             case ScheduleItemContract.FROM_TIME:
-                                if ((item.fromTime == null) || !(item.fromTime.equals(new Date(Long.parseLong(value))))) {//Some UTC offsets because of JSON <-> Date
+                                if ((item.fromTime == null) || !(item.fromTime.equals(new Date(Long.parseLong(value))))) {
                                     filteredItems.add(item);
                                 }
                                 break;

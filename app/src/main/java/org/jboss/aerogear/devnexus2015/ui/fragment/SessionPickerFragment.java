@@ -109,6 +109,7 @@ public class SessionPickerFragment extends DialogFragment implements LoaderManag
         
         listView = (RecyclerView) view.findViewById(R.id.listView);
         listView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        listView.setVisibility(View.VISIBLE);
         if (adapter == null) {
             adapter = new PresentationViewAdapter(new ArrayList<Presentation>(0), getActivity(), new SessionClickListener() {
                 @Override
