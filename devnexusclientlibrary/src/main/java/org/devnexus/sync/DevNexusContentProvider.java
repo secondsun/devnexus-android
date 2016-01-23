@@ -333,85 +333,85 @@ public class DevNexusContentProvider extends ContentProvider {
 
         @Override
         public SingleColumnJsonArrayList exec(Gson gson, SQLStore calendarStore, Uri uri, ContentValues[] values, String selection, String[] selectionArgs) {
-            synchronized (schedule) {
-                List<UserCalendar> results = new ArrayList<UserCalendar>(calendarStore.readAll());
-                if (results.isEmpty() || results.get(0).fromTime.getYear() < 116 ) {
-                    results = loadTemplate(calendarStore);
-                }
 
-
-                Collections.sort(results);
-
-                if (selection != null && selection.contains(UserCalendarContract.DATE)) {
-                    List<UserCalendar> toRemove = new ArrayList<>(results.size());
-                    int dateIndex = Integer.parseInt(selectionArgs[0]);
-                    Date startDate = UserCalendarContract.DATES.get(dateIndex);
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(startDate);
-                    cal.add(Calendar.DATE, 1);
-                    Date startDateNextDay = cal.getTime();
-                    for (UserCalendar userCalendarItem : results) {
-                        if (!(userCalendarItem.fromTime.after(startDate) && userCalendarItem.fromTime.before(startDateNextDay))) {
-                            toRemove.add(userCalendarItem);
-                        }
-                    }
-                    results.removeAll(toRemove);
-                    Collections.sort(results);
-                } else if (selection != null && selection.contains(UserCalendarContract.PRESENTATION_ID)) {
-                    List<UserCalendar> toRemove = new ArrayList<>(results.size());
-                    int presentationId = Integer.parseInt(selectionArgs[0]);
-
-                    for (UserCalendar userCalendarItem : results) {
-                        boolean remove = true;
-                        for (ScheduleItem item : userCalendarItem.items) {
-                            if (item.presentation.id == presentationId) {
-                                remove = false;
-                                break;
-                            }
-                        }
-                        if (remove) {
-                            toRemove.add(userCalendarItem);
-                        }
-
-                    }
-                    results.removeAll(toRemove);
-                    Collections.sort(results);
-                } else if (selection != null && selection.contains(UserCalendarContract.START_TIME)) {
-                    List<UserCalendar> toRemove = new ArrayList<>(results.size());
-                    Date startTime = new Date(Long.parseLong(selectionArgs[0]));
-
-                    for (UserCalendar userCalendarItem : results) {
-                        if (userCalendarItem.fromTime.compareTo(startTime) != 0) {
-                            toRemove.add(userCalendarItem);
-                        }
-                    }
-                    results.removeAll(toRemove);
-                    Collections.sort(results);
-                }
-
-                //TODO: Replace all instance where I attach a new schedule item to a calendar with an appropriate schedule item and remove this workaround.
-                ArrayList<ScheduleItem> items = new ArrayList<>(schedule.get(0).scheduleItems);
-                SparseArray<ScheduleItem> mappedItems = new SparseArray<>(items.size());
-                for (ScheduleItem item : items) {
-                    if (item.presentation != null) {
-                        mappedItems.put(item.presentation.id, item);
-                    }
-                }
-
-                for (UserCalendar calendarItem : results) {
-                    if (calendarItem.items != null && calendarItem.items.size() > 0) {
-                        for (ScheduleItem item : calendarItem.items) {
-                            if (item.presentation != null && item.room == null) {
-                                //TODO: Replace all instance where I attach a new schedule item to a calendar with an appropriate schedule item and remove this workaround.
-                                ScheduleItem fullItem = mappedItems.get(item.presentation.id);
-                                item.room = fullItem.room;
-                            }
-                        }
-                    }
-                }
-
-                return new SingleColumnJsonArrayList(new ArrayList<UserCalendar>(results));
+            List<UserCalendar> results = new ArrayList<UserCalendar>(calendarStore.readAll());
+            if (results.isEmpty() || results.get(0).fromTime.getYear() < 116) {
+                results = loadTemplate(calendarStore);
             }
+
+
+            Collections.sort(results);
+
+            if (selection != null && selection.contains(UserCalendarContract.DATE)) {
+                List<UserCalendar> toRemove = new ArrayList<>(results.size());
+                int dateIndex = Integer.parseInt(selectionArgs[0]);
+                Date startDate = UserCalendarContract.DATES.get(dateIndex);
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(startDate);
+                cal.add(Calendar.DATE, 1);
+                Date startDateNextDay = cal.getTime();
+                for (UserCalendar userCalendarItem : results) {
+                    if (!(userCalendarItem.fromTime.after(startDate) && userCalendarItem.fromTime.before(startDateNextDay))) {
+                        toRemove.add(userCalendarItem);
+                    }
+                }
+                results.removeAll(toRemove);
+                Collections.sort(results);
+            } else if (selection != null && selection.contains(UserCalendarContract.PRESENTATION_ID)) {
+                List<UserCalendar> toRemove = new ArrayList<>(results.size());
+                int presentationId = Integer.parseInt(selectionArgs[0]);
+
+                for (UserCalendar userCalendarItem : results) {
+                    boolean remove = true;
+                    for (ScheduleItem item : userCalendarItem.items) {
+                        if (item.presentation.id == presentationId) {
+                            remove = false;
+                            break;
+                        }
+                    }
+                    if (remove) {
+                        toRemove.add(userCalendarItem);
+                    }
+
+                }
+                results.removeAll(toRemove);
+                Collections.sort(results);
+            } else if (selection != null && selection.contains(UserCalendarContract.START_TIME)) {
+                List<UserCalendar> toRemove = new ArrayList<>(results.size());
+                Date startTime = new Date(Long.parseLong(selectionArgs[0]));
+
+                for (UserCalendar userCalendarItem : results) {
+                    if (userCalendarItem.fromTime.compareTo(startTime) != 0) {
+                        toRemove.add(userCalendarItem);
+                    }
+                }
+                results.removeAll(toRemove);
+                Collections.sort(results);
+            }
+
+            //TODO: Replace all instance where I attach a new schedule item to a calendar with an appropriate schedule item and remove this workaround.
+            ArrayList<ScheduleItem> items = new ArrayList<>(schedule.get(0).scheduleItems);
+            SparseArray<ScheduleItem> mappedItems = new SparseArray<>(items.size());
+            for (ScheduleItem item : items) {
+                if (item.presentation != null) {
+                    mappedItems.put(item.presentation.id, item);
+                }
+            }
+
+            for (UserCalendar calendarItem : results) {
+                if (calendarItem.items != null && calendarItem.items.size() > 0) {
+                    for (ScheduleItem item : calendarItem.items) {
+                        if (item.presentation != null && item.room == null) {
+                            //TODO: Replace all instance where I attach a new schedule item to a calendar with an appropriate schedule item and remove this workaround.
+                            ScheduleItem fullItem = mappedItems.get(item.presentation.id);
+                            item.room = fullItem.room;
+                        }
+                    }
+                }
+            }
+
+            return new SingleColumnJsonArrayList(new ArrayList<UserCalendar>(results));
+
         }
 
         private List<UserCalendar> loadTemplate(SQLStore<UserCalendar> calendarSQLStore) {
@@ -509,7 +509,7 @@ public class DevNexusContentProvider extends ContentProvider {
                                 }
                                 break;
                             case ScheduleItemContract.FROM_TIME:
-                                if ((item.fromTime == null) || !(item.fromTime.equals(new Date(Long.parseLong(value)))) ) {//Some UTC offsets because of JSON <-> Date
+                                if ((item.fromTime == null) || !(item.fromTime.equals(new Date(Long.parseLong(value))))) {//Some UTC offsets because of JSON <-> Date
                                     filteredItems.add(item);
                                 }
                                 break;
@@ -565,7 +565,7 @@ public class DevNexusContentProvider extends ContentProvider {
 
         @Override
         public Integer exec(Gson gson, SQLStore scheduleStore, Uri uri, ContentValues[] values, String selection, String[] selectionArgs) {
-            synchronized (schedule) {
+
                 for (ContentValues value : values) {
                     Schedule calendar = gson.fromJson(value.getAsString(ScheduleContract.DATA), Schedule.class);
                     scheduleStore.save(calendar);
@@ -573,7 +573,7 @@ public class DevNexusContentProvider extends ContentProvider {
                 DevNexusContentProvider.schedule = null;
                 resolver.notifyChange(ScheduleContract.URI, null, false);
                 return values.length;
-            }
+
         }
     }
 
@@ -619,15 +619,15 @@ public class DevNexusContentProvider extends ContentProvider {
 
         @Override
         public Uri exec(Gson gson, SQLStore scheduleStore, Uri uri, ContentValues[] values, String selection, String[] selectionArgs) {
-            synchronized (schedule) {
-                Schedule calendar = gson.fromJson(values[0].getAsString(ScheduleContract.DATA), Schedule.class);
-                scheduleStore.save(calendar);
-                schedule = null;
-                if (values[0].getAsBoolean(ScheduleContract.NOTIFY) != null && values[0].getAsBoolean(ScheduleContract.NOTIFY)) {
-                    resolver.notifyChange(ScheduleContract.URI, null, false);
-                }
-                return ScheduleContract.URI;
+
+            Schedule calendar = gson.fromJson(values[0].getAsString(ScheduleContract.DATA), Schedule.class);
+            scheduleStore.save(calendar);
+            schedule = null;
+            if (values[0].getAsBoolean(ScheduleContract.NOTIFY) != null && values[0].getAsBoolean(ScheduleContract.NOTIFY)) {
+                resolver.notifyChange(ScheduleContract.URI, null, false);
             }
+            return ScheduleContract.URI;
+
         }
     }
 
@@ -707,7 +707,6 @@ public class DevNexusContentProvider extends ContentProvider {
             }
         }
     }
-
 
 
     private static class PresentationUpdate implements Operation<Integer> {
