@@ -31,6 +31,7 @@ import org.jboss.aerogear.devnexus2015.util.SessionClickListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.Bind;
@@ -101,6 +102,7 @@ public class PresentationExplorerFragment extends Fragment implements LoaderMana
                     case JAVASCRIPT:
                     case JVM_LANGUAGES:
                     case MICROSERVICES:
+                    case MISC:
                     case SECURITY:
                     case MOBILE:
                     case NO_SQL:
@@ -211,8 +213,14 @@ public class PresentationExplorerFragment extends Fragment implements LoaderMana
         scrollPosition = 0;
         this.sechduleItemList = new ArrayList<>(presentationList);
 
-        recycler.setAdapter(new ScheduleItemWithHeaderViewAdapter(presentationList, getActivity(), columnCount, false, this));
+        ScheduleItemWithHeaderViewAdapter adapter = new ScheduleItemWithHeaderViewAdapter(presentationList, getActivity(), columnCount, false, this);
+        recycler.setAdapter(adapter);
         ((GridLayoutManager)recycler.getLayoutManager()).setSpanSizeLookup(((ScheduleItemWithHeaderViewAdapter)recycler.getAdapter()).getSpanSizeLookup());
+        scrollPosition = adapter.getDateIndex(new Date());
+        if (scrollPosition != 0) {
+            scrollPosition--;
+        }
+        recycler.scrollToPosition(scrollPosition);
     }
 
     @Override

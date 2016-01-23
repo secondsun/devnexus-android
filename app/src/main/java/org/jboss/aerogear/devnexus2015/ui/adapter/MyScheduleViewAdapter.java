@@ -24,6 +24,7 @@ import org.jboss.aerogear.devnexus2015.util.SessionClickListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by summers on 2/15/15.
@@ -67,6 +68,21 @@ public class MyScheduleViewAdapter extends RecyclerView.Adapter<MyScheduleViewAd
         }
         return toReturn;
     }
+
+    public int getDateItemIndex(Date date) {
+        int index = 0;
+
+        for (TimeOrPresentation item : timeOrPresentations) {
+            if (item.scheduleItem == null) {
+                if (item.userCalendar.fromTime.after(date)) {
+                    return index;
+                }
+            }
+            index++;
+        }
+        return 0;
+    }
+
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

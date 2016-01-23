@@ -162,6 +162,7 @@ public class SessionSpinnerAdaper extends BaseAdapter implements SpinnerAdapter 
         SESSION_TOPIC(R.string.topics, false, true, false, R.color.dn_white),
         WORKSHOP (R.string.workshops, true, false, false, R.color.WORKSHOP),
         KEYNOTE (R.string.keynote, true, false, false, R.color.KEYNOTES),
+        MISC(R.string.topic_misc, true, false, false, R.color.dn_default),
         JAVA(R.string.topic_java, true, false, false, R.color.JAVA),
         JVM_LANGUAGES(R.string.topic_jvm_languages, true, false, false, R.color.JVM_LANGUAGES),
         DATA_INTEGRATION_IOT(R.string.topic_data_integration_iot, true, false, false, R.color.DATA_INTEGRATION_IOT),

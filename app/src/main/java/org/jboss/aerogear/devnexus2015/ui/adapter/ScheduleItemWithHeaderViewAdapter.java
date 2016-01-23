@@ -21,6 +21,7 @@ import org.jboss.aerogear.devnexus2015.util.SessionClickListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -98,6 +99,23 @@ public class ScheduleItemWithHeaderViewAdapter extends RecyclerView.Adapter<Sche
 
         ViewHolder vh = new ViewHolder(v);
         return vh;
+
+    }
+
+    public int getDateIndex(Date date) {
+        int index = 0;
+
+        for (ItemOrHeader item : items) {
+            if (item.item != null) {
+                ScheduleItem scheduleItem = item.item;
+                if (scheduleItem.fromTime.after(date)) {
+                    return index;
+                }
+            }
+            index++;
+        }
+
+        return 0;
 
     }
 

@@ -18,6 +18,7 @@
     <string name="topic_jvm_languages">JVM Languages</string>
     <string name="topic_cloud_and_devopts">Cloud + DevOps</string>
     <string name="topic_mobile">Mobile</string>
+    <string name="topic_misc">Misc</string>
     <string name="topic_data_integration_iot"><![CDATA[Data, Integration & IoT]]></string>
     <string name="topic_microservices_and_security">Microservices + Security</string>
     <string name="keynote">Keynotes</string>
@@ -65,6 +66,7 @@
     <string name="license_note">The DevNexus app makes use of the following Open Source libraries:</string>
     <string name="topic_nosql">NoSQL</string>
     <string name="pick_account" >You must pick an account to synchronize your schedule.</string>
+
 
 
 </resources>

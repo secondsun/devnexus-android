@@ -8,6 +8,7 @@ import org.devnexus.R;
 public enum TrackRoomUtil {
 
     AUDITORIUM("Sidney Marcus Auditorium", R.color.KEYNOTES, R.drawable.keynote, "Keynotes"),
+    MISC("Misc", R.color.dn_default, R.drawable.misc, "Misc"),
     ROOM_A302("Room A302", R.color.JAVA, R.drawable.java, "Java"),
     ROOM_A305("Room A305", R.color.JVM_LANGUAGES, R.drawable.jvm_languages, "JVM Languages"),
     ROOM_A312("Room A312", R.color.DATA_INTEGRATION_IOT, R.drawable.data_iot, "Data, Integration & IoT"),
@@ -29,23 +30,12 @@ public enum TrackRoomUtil {
     public final String trackName;
     public final int iconResource;
 
-    private TrackRoomUtil(String roomName, int trackColor, int iconResource, String trackName) {
+    TrackRoomUtil(String roomName, int trackColor, int iconResource, String trackName) {
         this.roomName = roomName;
         this.trackColor = trackColor;
         this.trackName = trackName;
         this.iconResource = iconResource;
     }
-
-    public static TrackRoomUtil room(String roomName) {
-        for (TrackRoomUtil room : TrackRoomUtil.values()) {
-            if (room.roomName.equals(roomName)) {
-                return room;
-            }
-        }
-
-        throw new IllegalArgumentException("No such room " + roomName);
-    }
-
 
     public static int colorForTrack(String trackName) {
         for (TrackRoomUtil room : TrackRoomUtil.values()) {

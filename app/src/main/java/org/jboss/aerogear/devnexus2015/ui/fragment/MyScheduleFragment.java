@@ -17,6 +17,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -202,8 +203,12 @@ public class MyScheduleFragment extends Fragment implements LoaderManager.Loader
         int index = gridLayoutManager.findFirstVisibleItemPosition();
         View v = gridLayoutManager.getChildAt(0);
 
-        recycler.setAdapter(new MyScheduleViewAdapter(new ArrayList<UserCalendar>(calendarItems), getActivity(), this, this));
-        gridLayoutManager.scrollToPosition(index);
+        MyScheduleViewAdapter adapter = new MyScheduleViewAdapter(new ArrayList<UserCalendar>(calendarItems), getActivity(), this, this);
+        recycler.setAdapter(adapter);
+        if (index == 0) {
+            index = adapter.getDateItemIndex(new Date());
+        }
+        recycler.scrollToPosition(index);
 
     }
 
