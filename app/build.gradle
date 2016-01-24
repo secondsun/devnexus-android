@@ -11,8 +11,8 @@ android {
         applicationId "org.devnexus"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 5
-        versionName "3.0.0"
+        versionCode 6
+        versionName "3.0.1"
     }
 
     signingConfigs {
@@ -57,7 +57,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.1.1'
     compile 'com.android.support:support-v13:23.1.1'
     compile 'com.jakewharton:butterknife:7.0.1'
-    compile 'com.github.siyamed:android-shape-imageview:0.9.+'
+    compile 'com.github.siyamed:android-shape-imageview:0.9.+@aar'
     compile 'com.android.support:design:23.1.1'
     compile 'com.android.support:support-v4:23.1.1'
 }

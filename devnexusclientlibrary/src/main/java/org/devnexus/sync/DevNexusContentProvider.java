@@ -553,7 +553,7 @@ public class DevNexusContentProvider extends ContentProvider {
             }
             Schedule schedule = gson.fromJson(values[0].getAsString(ScheduleContract.DATA), Schedule.class);
             scheduleStore.save(schedule);
-            DevNexusContentProvider.schedule = null;
+            DevNexusContentProvider.schedule = (ArrayList<Schedule>) scheduleStore.readAll();
             if (values[0].getAsBoolean(ScheduleContract.NOTIFY) != null && values[0].getAsBoolean(ScheduleContract.NOTIFY)) {
                 resolver.notifyChange(ScheduleContract.URI, null, false);
             }
@@ -570,7 +570,7 @@ public class DevNexusContentProvider extends ContentProvider {
                     Schedule calendar = gson.fromJson(value.getAsString(ScheduleContract.DATA), Schedule.class);
                     scheduleStore.save(calendar);
                 }
-                DevNexusContentProvider.schedule = null;
+                DevNexusContentProvider.schedule = (ArrayList<Schedule>) scheduleStore.readAll();
                 resolver.notifyChange(ScheduleContract.URI, null, false);
                 return values.length;
 
@@ -609,7 +609,7 @@ public class DevNexusContentProvider extends ContentProvider {
                 Long id = Long.getLong(selectionArgs[0]);
                 scheduleStore.remove(id);
             }
-            DevNexusContentProvider.schedule = null;
+            DevNexusContentProvider.schedule = (ArrayList<Schedule>) scheduleStore.readAll();
             resolver.notifyChange(ScheduleContract.URI, null, false);
             return 1;
         }
@@ -622,7 +622,7 @@ public class DevNexusContentProvider extends ContentProvider {
 
             Schedule calendar = gson.fromJson(values[0].getAsString(ScheduleContract.DATA), Schedule.class);
             scheduleStore.save(calendar);
-            schedule = null;
+            schedule = (ArrayList<Schedule>) scheduleStore.readAll();
             if (values[0].getAsBoolean(ScheduleContract.NOTIFY) != null && values[0].getAsBoolean(ScheduleContract.NOTIFY)) {
                 resolver.notifyChange(ScheduleContract.URI, null, false);
             }
@@ -638,7 +638,7 @@ public class DevNexusContentProvider extends ContentProvider {
         public Uri exec(Gson gson, SQLStore presentationStore, Uri uri, ContentValues[] values, String selection, String[] selectionArgs) {
             Presentation presentation = gson.fromJson(values[0].getAsString(PresentationContract.DATA), Presentation.class);
             presentationStore.save(presentation);
-            schedule = null;
+
             if (values[0].getAsBoolean(PresentationContract.NOTIFY) != null && values[0].getAsBoolean(PresentationContract.NOTIFY)) {
                 resolver.notifyChange(PresentationContract.URI, null, false);
             }
@@ -657,7 +657,7 @@ public class DevNexusContentProvider extends ContentProvider {
 
             }
             presentationStore.save(presentationsList);
-
+            DevNexusContentProvider.presentations = null;
             resolver.notifyChange(PresentationContract.URI, null, false);
             return values.length;
         }

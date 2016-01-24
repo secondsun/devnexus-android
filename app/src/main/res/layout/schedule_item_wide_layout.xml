@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/tools"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+
     android:layout_gravity="center"
     android:gravity="center"
     android:layout_height="wrap_content">
@@ -59,8 +60,6 @@
                 android:layout_alignLeft="@+id/image_center"
                 android:layout_alignBottom="@+id/image_center"
                 android:layout_marginLeft="16dp"
-                app:siBorderRadius="60dp"
-                app:siBorderColor="@color/dn_white"
                 android:src="@drawable/speaker"
                 android:alpha="1"
                 />
@@ -71,8 +70,6 @@
                 android:layout_toRightOf="@+id/photo"
                 android:layout_alignBottom="@+id/image_center"
                 android:layout_marginLeft="16dp"
-                app:siBorderWidth="6dp"
-                app:siBorderColor="@color/dn_white"
                 android:src="@drawable/speaker"
                 android:alpha="1"
                 />
@@ -84,8 +81,6 @@
                 android:layout_toRightOf="@+id/photo_2"
                 android:layout_alignBottom="@+id/image_center"
                 android:layout_marginLeft="16dp"
-                app:siBorderWidth="6dp"
-                app:siBorderColor="@color/dn_white"
                 android:src="@drawable/speaker"
                 android:alpha="1"
                 />

@@ -125,8 +125,16 @@ public class MyScheduleViewAdapter extends RecyclerView.Adapter<MyScheduleViewAd
                 if (userCalendarItem.fixed) {
                     holder.title.setText(userCalendarItem.fixedTitle + " - " + userCalendarItem.room);
                     holder.title.setTextColor(context.getResources().getColor(R.color.dn_white));
-                    holder.box.setBackgroundColor(Color.parseColor(userCalendarItem.color));
+                    if (userCalendarItem.color != null) {
+                        holder.box.setBackgroundColor(Color.parseColor(userCalendarItem.color));
+                    } else {
+                        if (userCalendarItem.items.size() > 0) {
 
+                        } else {
+                            holder.box.setBackgroundColor(context.getResources().getColor(R.color.dn_default));
+                        }
+
+                    }
 
                     holder.image.setImageDrawable(new ColorDrawable(context.getResources().getColor(R.color.dn_light_gray)));
                     holder.removeButton.setVisibility(View.GONE);
