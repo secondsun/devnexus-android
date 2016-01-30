@@ -36,21 +36,21 @@
     <color name="track_11">#617784</color>
 
     <color name="WORKSHOP">#6c7070</color>
-    <color name="KEYNOTES">#edce1e</color>
-    <color name="JAVA">#faa21b</color>
-    <color name="JVM_LANGUAGES">#8b2246</color>
-    <color name="DATA_INTEGRATION_IOT">#a6c4e7</color>
+    <color name="KEYNOTES">#edcd1c</color>
+    <color name="JAVA">#6ec7e8</color>
+    <color name="JVM_LANGUAGES">#a6c4e7</color>
+    <color name="DATA_INTEGRATION_IOT">#8ec741</color>
     <color name="NOSQL">#836cb0</color>
-    <color name="WEB">#522f92</color>
-    <color name="CLOUD_DEVOPS">#836cb0</color>
-    <color name="MICROSERVICES">#2a2d7c</color>
-    <color name="SECURITY">#015351</color>
-    <color name="ARCHITECTURE">#015351</color>
-    <color name="HTML5">#4879bc</color>
-    <color name="JAVASCRIPT">#5b903f</color>
-    <color name="MOBILE">#8ec741</color>
-    <color name="AGILE">#6ec7e8</color>
-    <color name="USER_EXPERIENCE_TOOLS">#e77ea5</color>
+    <color name="WEB">#5b903f</color>
+    <color name="CLOUD_DEVOPS">#8b2246</color>
+    <color name="MICROSERVICES">#e77ea5</color>
+    <color name="SECURITY">#2a2d7c</color>
+    <color name="ARCHITECTURE">#a84617</color>
+    <color name="HTML5">#015351</color>
+    <color name="JAVASCRIPT">#127e9c</color>
+    <color name="MOBILE">#4879bc</color>
+    <color name="AGILE">#4879bc</color>
+    <color name="USER_EXPERIENCE_TOOLS">#8ec741</color>
     <color name="dn_default" >#0E27eB</color>
 
 </resources>
