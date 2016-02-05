@@ -183,8 +183,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                     Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
                     Barcode.ContactInfo vCard = barcode.contactInfo;
                     BadgeContact contact = new BadgeContact();
-                    if (vCard.emails != null || vCard.emails.length > 0) {
+                    if (vCard.emails != null && vCard.emails.length > 0) {
                         contact.setEmail(vCard.emails[0].address);
+                    } else {
+                        contact.setEmail("");
                     }
 
                     if (vCard.name != null) {

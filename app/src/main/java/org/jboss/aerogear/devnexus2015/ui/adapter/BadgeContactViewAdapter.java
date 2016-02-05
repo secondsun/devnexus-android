@@ -1,6 +1,7 @@
 package org.jboss.aerogear.devnexus2015.ui.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,9 +19,11 @@ import java.util.List;
 public class BadgeContactViewAdapter extends RecyclerView.Adapter<BadgeContactViewAdapter.BadgeContactViewHolder> {
 
     private final List<BadgeContact> conacts;
+    private final int columnCount;
 
-    public BadgeContactViewAdapter(List<BadgeContact> badgeContacts) {
+    public BadgeContactViewAdapter(List<BadgeContact> badgeContacts, int columnCount) {
         this.conacts = badgeContacts;
+        this.columnCount = columnCount;
     }
 
 
@@ -51,6 +54,15 @@ public class BadgeContactViewAdapter extends RecyclerView.Adapter<BadgeContactVi
     @Override
     public int getItemCount() {
         return conacts.size();
+    }
+
+    public GridLayoutManager.SpanSizeLookup getSpanSizeLookup() {
+        return new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                return columnCount;
+            }
+        };
     }
 
     public static class BadgeContactViewHolder extends RecyclerView.ViewHolder {

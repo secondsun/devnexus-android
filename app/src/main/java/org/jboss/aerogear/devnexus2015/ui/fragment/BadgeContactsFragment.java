@@ -33,6 +33,8 @@ import org.devnexus.vo.contract.BadgeContactContract;
 import org.jboss.aerogear.devnexus2015.MainActivity;
 import org.jboss.aerogear.devnexus2015.R;
 import org.jboss.aerogear.devnexus2015.ui.adapter.BadgeContactViewAdapter;
+import org.jboss.aerogear.devnexus2015.ui.adapter.ScheduleItemWithHeaderViewAdapter;
+import org.jboss.aerogear.devnexus2015.util.CenteringDecoration;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -80,6 +82,7 @@ public class BadgeContactsFragment extends Fragment implements LoaderManager.Loa
             getLoaderManager().getLoader(BADGE_LOADER).forceLoad();
         }
     };
+    private int columnCount = 1;
 
     public BadgeContactsFragment() {
         // Required empty public constructor
@@ -110,11 +113,13 @@ public class BadgeContactsFragment extends Fragment implements LoaderManager.Loa
         ((MainActivity) getActivity()).attachToolbar(toolbar);
         toolbar.setTitle("Badge Contacts");
         setHasOptionsMenu(true);
-        int columnCount = ((MainActivity) getActivity()).getColumnCount();
+        this.columnCount = ((MainActivity) getActivity()).getColumnCount();
 
         recycler.setLayoutManager(new GridLayoutManager(getActivity(), columnCount));
-        recycler.setAdapter(new BadgeContactViewAdapter(new ArrayList<BadgeContact>(0)));
+        recycler.setAdapter(new BadgeContactViewAdapter(new ArrayList<BadgeContact>(0), columnCount));
+        ((GridLayoutManager)recycler.getLayoutManager()).setSpanSizeLookup(((BadgeContactViewAdapter)recycler.getAdapter()).getSpanSizeLookup());
 
+        recycler.addItemDecoration(new CenteringDecoration(columnCount, 230, getActivity()));
         return view;
     }
 
@@ -238,7 +243,7 @@ public class BadgeContactsFragment extends Fragment implements LoaderManager.Loa
             emptyView.setVisibility(View.VISIBLE);
         } else {
             recycler.setVisibility(View.VISIBLE);
-            recycler.setAdapter(new BadgeContactViewAdapter(new ArrayList<>(contacts)));
+            recycler.setAdapter(new BadgeContactViewAdapter(new ArrayList<>(contacts), columnCount));
             progress.setVisibility(View.GONE);
             emptyView.setVisibility(View.GONE);
         }
