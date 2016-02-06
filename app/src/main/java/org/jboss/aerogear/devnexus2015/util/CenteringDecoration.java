@@ -73,6 +73,10 @@ public class CenteringDecoration extends RecyclerView.ItemDecoration {
 
         int originalLeft = (parent.getWidth() / spanCount) * columnPosition;
         int originalRight = (parent.getWidth() / spanCount) * (columnPosition + 2);
+        if (rowItemsCount == 1) {
+            originalLeft = 0;
+            originalRight = parent.getWidth();
+        }
 
         int newFarLeft = (parent.getWidth()  - viewWidth * rowItemsCount) / 2;
 

@@ -6,3 +6,4 @@
 *.iml
 /build
 /app/google-services.json
+/.nb-gradle/

@@ -72,13 +72,11 @@ public class BadgeContactsFragment extends Fragment implements LoaderManager.Loa
 
         @Override
         public void onChange(boolean selfChange) {
-            Toast.makeText(BadgeContactsFragment.this.getActivity(), "CHANGED", Toast.LENGTH_LONG).show();
             getLoaderManager().getLoader(BADGE_LOADER).forceLoad();
         }
 
         @Override
         public void onChange(boolean selfChange, Uri uri) {
-            Toast.makeText(BadgeContactsFragment.this.getActivity(), "CHANGED", Toast.LENGTH_LONG).show();
             getLoaderManager().getLoader(BADGE_LOADER).forceLoad();
         }
     };
@@ -118,7 +116,6 @@ public class BadgeContactsFragment extends Fragment implements LoaderManager.Loa
         recycler.setLayoutManager(new GridLayoutManager(getActivity(), columnCount));
         recycler.setAdapter(new BadgeContactViewAdapter(new ArrayList<BadgeContact>(0), columnCount));
         ((GridLayoutManager)recycler.getLayoutManager()).setSpanSizeLookup(((BadgeContactViewAdapter)recycler.getAdapter()).getSpanSizeLookup());
-
         recycler.addItemDecoration(new CenteringDecoration(columnCount, 230, getActivity()));
         return view;
     }
@@ -250,7 +247,8 @@ public class BadgeContactsFragment extends Fragment implements LoaderManager.Loa
             emptyView.setVisibility(View.VISIBLE);
         } else {
             recycler.setVisibility(View.VISIBLE);
-            recycler.setAdapter(new BadgeContactViewAdapter(new ArrayList<>(contacts), columnCount));
+            ((BadgeContactViewAdapter) recycler.getAdapter()).setContacts(contacts);
+            recycler.getAdapter().notifyDataSetChanged();
             progress.setVisibility(View.GONE);
             emptyView.setVisibility(View.GONE);
         }

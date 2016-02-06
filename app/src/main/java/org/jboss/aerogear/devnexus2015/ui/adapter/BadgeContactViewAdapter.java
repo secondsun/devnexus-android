@@ -60,9 +60,14 @@ public class BadgeContactViewAdapter extends RecyclerView.Adapter<BadgeContactVi
         return new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                return columnCount;
+                return 1;
             }
         };
+    }
+
+    public void setContacts(List<BadgeContact> contacts) {
+        this.conacts.clear();
+        this.conacts.addAll(contacts);
     }
 
     public static class BadgeContactViewHolder extends RecyclerView.ViewHolder {

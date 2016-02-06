@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.jboss.aerogear.devnexus2015" >
+    package="org.jboss.aerogear.devnexus2015"
+    android:installLocation="auto">
 
     <uses-feature
         android:name="android.hardware.camera"
