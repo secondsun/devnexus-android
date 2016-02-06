@@ -59,6 +59,12 @@ public class TileLoadingTask extends AsyncTaskLoader<List<TileLoadingTask.TileEn
         this.floorTileFileMapping = new HashMap<>(floorTileFileMapping);
     }
 
+    @Override
+    protected void onReset() {
+        super.onReset();
+        this.floorTileFileMapping.clear();
+
+    }
 
     @Override
     public List<TileEntry> loadInBackground() {

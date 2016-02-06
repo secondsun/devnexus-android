@@ -216,13 +216,7 @@ public class VenueMapFragment extends Fragment implements
             tx.add(R.id.map, mapFragment, TAG);
             tx.commit();
         } else {
-            // load all markers
-            LoaderManager lm = getLoaderManager();
-
-            // load the tile overlays
-            lm.initLoader(TOKEN_LOADER_TILES, null, mTileLoader).forceLoad();
-
-            setupMap(true);
+            mapFragment.getMapAsync(this);
         }
         if (this.dialog != null) {
             this.dialog.getDialog().show();
@@ -239,8 +233,6 @@ public class VenueMapFragment extends Fragment implements
                 } else {
                     this.dialog.getDialog().hide();
                 }
-            } else {
-                getFragmentManager().popBackStackImmediate(ROOM_VIEW_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             }
         }
     }
@@ -288,6 +280,7 @@ public class VenueMapFragment extends Fragment implements
             Fragment fragment = (getFragmentManager().findFragmentById(R.id.map));
             FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
             ft.remove(fragment);
+            this.mapFragment = null;
             ft.commit();
         } catch (Exception ignore) {
         }
@@ -300,7 +293,9 @@ public class VenueMapFragment extends Fragment implements
         LoaderManager lm = getLoaderManager();
 
         // load the tile overlays
-        lm.initLoader(TOKEN_LOADER_TILES, null, mTileLoader).forceLoad();
+        Loader<List<TileLoadingTask.TileEntry>> loader = lm.initLoader(TOKEN_LOADER_TILES, null, mTileLoader);
+        loader.reset();
+        loader.forceLoad();
 
         setupMap(true);
     }

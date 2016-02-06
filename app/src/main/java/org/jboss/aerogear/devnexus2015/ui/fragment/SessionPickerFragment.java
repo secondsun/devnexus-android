@@ -108,7 +108,7 @@ public class SessionPickerFragment extends DialogFragment implements LoaderManag
         View view = inflater.inflate(R.layout.session_picker, null);
         
         listView = (RecyclerView) view.findViewById(R.id.listView);
-        listView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        listView.setLayoutManager(new GridLayoutManager(getActivity(), 1));
         listView.setVisibility(View.VISIBLE);
         if (adapter == null) {
             adapter = new PresentationViewAdapter(new ArrayList<Presentation>(0), getActivity(), new SessionClickListener() {
@@ -121,9 +121,11 @@ public class SessionPickerFragment extends DialogFragment implements LoaderManag
                 }
             });
         }
+        listView.addItemDecoration(new CenteringDecoration(1, 230, getActivity()));
 
         listView.setAdapter(adapter);
-
+        listView.requestLayout();
+        listView.refreshDrawableState();
         return view;
     }
 

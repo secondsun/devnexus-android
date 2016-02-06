@@ -234,6 +234,7 @@ public class MyScheduleFragment extends Fragment implements LoaderManager.Loader
         pickerFragment = SessionPickerFragment.newInstance(userCalendar);
         pickerFragment.setReceiver(this);
         pickerFragment.show(getFragmentManager(), "SessionPicker");
+
     }
 
     @Override
