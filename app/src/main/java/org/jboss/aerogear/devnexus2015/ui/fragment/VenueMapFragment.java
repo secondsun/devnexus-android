@@ -19,6 +19,7 @@
 package org.jboss.aerogear.devnexus2015.ui.fragment;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.LoaderManager;
 import android.content.Loader;
@@ -37,8 +38,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.IndoorBuilding;
 import com.google.android.gms.maps.model.LatLng;
@@ -54,12 +53,10 @@ import org.jboss.aerogear.devnexus2015.MainActivity;
 import org.jboss.aerogear.devnexus2015.R;
 import org.jboss.aerogear.devnexus2015.model.GWCCLocations;
 import org.jboss.aerogear.devnexus2015.model.RoomMetaData;
-import org.jboss.aerogear.devnexus2015.util.GWCCMapIconGenerator;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -75,6 +72,12 @@ public class VenueMapFragment extends Fragment implements
 
     private static final Map<Integer, String> tileMap;
     private static final String ROOM_VIEW_TAG = "Room View Tag";
+    private static final int TOKEN_LOADER_TILES = 0x2;
+    // Initial camera position
+    private static final LatLng CAMERA_START_POSITION = new LatLng(33.759141, -84.396108);
+    private static final float CAMERA_ZOOM = 17.75f;
+    private static final String TAG = VenueMapFragment.class.getSimpleName();
+    private static View view;
 
     static {
         tileMap = new HashMap<>(6);
@@ -82,42 +85,48 @@ public class VenueMapFragment extends Fragment implements
         tileMap.put(1, "gwcc_floor_4.svg");
     }
 
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
     // Tile Providers
     private SparseArray<CachedTileProvider> mTileProviders =
             new SparseArray<>(6);
     private SparseArray<TileOverlay> mTileOverlays =
             new SparseArray<>(6);
-
     // Markers stored by floor
     private SparseArray<ArrayList<Marker>> mMarkersFloor =
             new SparseArray<>(3);
-
-
-
     // Screen DPI
     private float mDPI = 0;
-    private static final int TOKEN_LOADER_TILES = 0x2;
-
-
-    // Initial camera position
-    private static final LatLng CAMERA_START_POSITION = new LatLng(33.759141, -84.396108);
-    private static final float CAMERA_ZOOM = 17.75f;
-    private static final String TAG = VenueMapFragment.class.getSimpleName();
-
     private GoogleMap mMap;
-    private static View view;
     private MapFragment mapFragment;
+    private RoomViewFragment dialog;
+    /**
+     * LoaderCallbacks for the {@link TileLoadingTask} that loads all tile overlays for the map.
+     */
+    private LoaderManager.LoaderCallbacks<List<TileLoadingTask.TileEntry>> mTileLoader
+            = new LoaderManager.LoaderCallbacks<List<TileLoadingTask.TileEntry>>() {
+        @Override
+        public Loader<List<TileLoadingTask.TileEntry>> onCreateLoader(int id, Bundle args) {
+            return new TileLoadingTask(getActivity(), mDPI, tileMap);
+        }
 
-    @Bind(R.id.toolbar) Toolbar toolbar;
+        @Override
+        public void onLoadFinished(Loader<List<TileLoadingTask.TileEntry>> loader,
+                                   List<TileLoadingTask.TileEntry> data) {
+            onTilesLoaded(data);
+        }
 
-
+        @Override
+        public void onLoaderReset(Loader<List<TileLoadingTask.TileEntry>> loader) {
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // get DPI
         mDPI = getActivity().getResources().getDisplayMetrics().densityDpi / 160f;
-        
+
     }
 
     @Override
@@ -144,8 +153,6 @@ public class VenueMapFragment extends Fragment implements
     private void setupMap(boolean resetCamera) {
 
         mMap = mapFragment.getMap();
-
-
 
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
             @Override
@@ -196,6 +203,11 @@ public class VenueMapFragment extends Fragment implements
     public void onStart() {
         super.onStart();
         MapUtils.clearDiskCache(getActivity());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         mapFragment = (MapFragment) getFragmentManager().findFragmentByTag(TAG);
         if (mapFragment == null) {
             mapFragment = MapFragment.newInstance();
@@ -204,11 +216,34 @@ public class VenueMapFragment extends Fragment implements
             tx.add(R.id.map, mapFragment, TAG);
             tx.commit();
         } else {
+            // load all markers
+            LoaderManager lm = getLoaderManager();
+
+            // load the tile overlays
+            lm.initLoader(TOKEN_LOADER_TILES, null, mTileLoader).forceLoad();
+
             setupMap(true);
         }
-
+        if (this.dialog != null) {
+            this.dialog.getDialog().show();
+        }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (this.dialog != null) {
+            if (this.dialog.getDialog() != null) {
+                if (!this.dialog.getDialog().isShowing()) {
+                    this.dialog = null;
+                } else {
+                    this.dialog.getDialog().hide();
+                }
+            } else {
+                getFragmentManager().popBackStackImmediate(ROOM_VIEW_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            }
+        }
+    }
 
     @Override
     public void onStop() {
@@ -240,7 +275,8 @@ public class VenueMapFragment extends Fragment implements
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        RoomViewFragment.newInstance(marker.getTitle()).show(getFragmentManager(), ROOM_VIEW_TAG);
+        this.dialog = RoomViewFragment.newInstance(marker.getTitle());
+        dialog.show(getFragmentManager(), ROOM_VIEW_TAG);
         return true;
     }
 
@@ -279,7 +315,6 @@ public class VenueMapFragment extends Fragment implements
         LatLng camera = mMap.getCameraPosition().target;
         IndoorBuilding building = mMap.getFocusedBuilding();
         clearMap();
-
 
         if (building == null || !nearVenue(camera)) {
             return;
@@ -376,7 +411,6 @@ public class VenueMapFragment extends Fragment implements
         }
     }
 
-
     private void onTilesLoaded(List<TileLoadingTask.TileEntry> list) {
         if (list != null) {
             // Display tiles if they have been loaded, skip them otherwise but display the rest of
@@ -392,28 +426,6 @@ public class VenueMapFragment extends Fragment implements
         }
 
     }
-
-
-    /**
-     * LoaderCallbacks for the {@link TileLoadingTask} that loads all tile overlays for the map.
-     */
-    private LoaderManager.LoaderCallbacks<List<TileLoadingTask.TileEntry>> mTileLoader
-            = new LoaderManager.LoaderCallbacks<List<TileLoadingTask.TileEntry>>() {
-        @Override
-        public Loader<List<TileLoadingTask.TileEntry>> onCreateLoader(int id, Bundle args) {
-            return new TileLoadingTask(getActivity(), mDPI, tileMap);
-        }
-
-        @Override
-        public void onLoadFinished(Loader<List<TileLoadingTask.TileEntry>> loader,
-                                   List<TileLoadingTask.TileEntry> data) {
-            onTilesLoaded(data);
-        }
-
-        @Override
-        public void onLoaderReset(Loader<List<TileLoadingTask.TileEntry>> loader) {
-        }
-    };
 
 }
 

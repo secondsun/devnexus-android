@@ -39,7 +39,7 @@ public class PresentationViewAdapter extends RecyclerView.Adapter<PresentationVi
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.schedule_item_wide_layout, viewGroup, false);
+                .inflate(R.layout.schedule_item_layout, viewGroup, false);
 
         ViewHolder vh = new ViewHolder(v);
         return vh;

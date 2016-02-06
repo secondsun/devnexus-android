@@ -6,80 +6,91 @@
     <!-- A CardView that contains a TextView -->
     <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/card_view"
-        android:layout_width="200dp"
-        android:layout_height="256dp"
+        android:layout_width="270dp"
+        android:layout_height="164dp"
         android:layout_gravity="center"
         android:layout_margin="2dp"
+        android:background="@color/dn_white"
         card_view:cardCornerRadius="1dp"
-        card_view:cardElevation="4dp"
-        >
+        card_view:cardElevation="4dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/dn_white">
 
             <ImageView
                 android:id="@+id/icon"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
+                android:layout_width="96dp"
+                android:layout_height="match_parent"
                 android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
                 android:adjustViewBounds="true"
                 android:background="@color/WORKSHOP"
-                android:scaleType="centerCrop" />
+                android:scaleType="fitStart" />
 
             <TextView
                 android:id="@+id/info_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/icon"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="14dp"
+                android:layout_toRightOf="@+id/icon"
+                android:background="@color/dn_white"
+                android:ellipsize="end"
                 android:fontFamily="sans-serif"
-                android:maxLines="2"
+                android:maxLines="4"
                 android:minHeight="42dp"
-                android:layout_marginTop="18dp"
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp"
                 android:text="Ipsum Ipsum Ipsum"
-                android:background="@color/dn_white"
-                android:textColor="@color/dn_black" />
+                android:textColor="@color/dn_black"
+                android:textSize="16dp" />
 
             <View
                 android:id="@+id/image_center"
                 android:layout_width="match_parent"
-                android:layout_height="16dp"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true"
                 android:layout_below="@id/icon"
+                android:layout_marginBottom="8dp"
                 android:visibility="invisible" />
 
             <com.github.siyamed.shapeimageview.CircularImageView
                 android:id="@+id/photo"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:layout_alignLeft="@+id/image_center"
                 android:layout_alignBottom="@+id/image_center"
+                android:layout_alignLeft="@+id/image_center"
                 android:layout_marginLeft="16dp"
-                android:src="@drawable/speaker"
                 android:alpha="1"
-                />
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:src="@drawable/speaker" />
+
             <com.github.siyamed.shapeimageview.CircularImageView
                 android:id="@+id/photo_2"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:layout_toRightOf="@+id/photo"
                 android:layout_alignBottom="@+id/image_center"
                 android:layout_marginLeft="16dp"
-                android:src="@drawable/speaker"
+                android:layout_toRightOf="@+id/photo"
                 android:alpha="1"
-                />
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:src="@drawable/speaker" />
 
             <com.github.siyamed.shapeimageview.CircularImageView
                 android:id="@+id/photo_3"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:layout_toRightOf="@+id/photo_2"
                 android:layout_alignBottom="@+id/image_center"
                 android:layout_marginLeft="16dp"
-                android:src="@drawable/speaker"
+                android:layout_toRightOf="@+id/photo_2"
                 android:alpha="1"
-                />
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:src="@drawable/speaker" />
 
 
         </RelativeLayout>

@@ -55,6 +55,12 @@ public class PresentationExplorerFragment extends Fragment implements LoaderMana
     private int columnCount = 3;
     private int scrollPosition = 0;
 
+    public static Fragment newInstance() {
+        PresentationExplorerFragment fragment = new PresentationExplorerFragment();
+        fragment.setRetainInstance(true);
+        return fragment;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -70,7 +76,7 @@ public class PresentationExplorerFragment extends Fragment implements LoaderMana
         recycler.setAdapter(new ScheduleItemWithHeaderViewAdapter(sechduleItemList, getActivity(), columnCount));
         ((GridLayoutManager)recycler.getLayoutManager()).setSpanSizeLookup(((ScheduleItemWithHeaderViewAdapter)recycler.getAdapter()).getSpanSizeLookup());
 
-        recycler.addItemDecoration(new CenteringDecoration(columnCount, 230, getActivity()));
+        recycler.addItemDecoration(new CenteringDecoration(columnCount, 280, getActivity()));
 
         loadSpinnerNav(spinner);
         return view;
@@ -137,7 +143,7 @@ public class PresentationExplorerFragment extends Fragment implements LoaderMana
     @Override
     public void onResume() {
         super.onResume();
-        ((GridLayoutManager)this.recycler.getLayoutManager()).scrollToPosition(scrollPosition);
+        this.recycler.getLayoutManager().scrollToPosition(scrollPosition);
         ((ScheduleItemWithHeaderViewAdapter)recycler.getAdapter()).setClickListener(this);
     }
 
@@ -151,12 +157,6 @@ public class PresentationExplorerFragment extends Fragment implements LoaderMana
         catch(Throwable t){
             t.printStackTrace();
         }
-    }
-
-    public static Fragment newInstance() {
-        PresentationExplorerFragment fragment = new PresentationExplorerFragment();
-        fragment.setRetainInstance(true);
-        return fragment;
     }
 
     @Override
@@ -207,7 +207,7 @@ public class PresentationExplorerFragment extends Fragment implements LoaderMana
 
     private void refreshData(List<ScheduleItem> presentationList) {
         if (sechduleItemList.equals(presentationList) || presentationList.isEmpty()) {
-            ((GridLayoutManager)this.recycler.getLayoutManager()).scrollToPosition(scrollPosition);
+            this.recycler.getLayoutManager().scrollToPosition(scrollPosition);
             return;
         }
         scrollPosition = 0;

@@ -1,35 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/dn_white"
+    android:orientation="vertical">
 
     <ImageView
         android:id="@+id/empty_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:scaleType="fitEnd"
-        android:visibility="gone"
         android:layout_gravity="center|bottom"
+        android:layout_weight="1"
+        android:background="@color/dn_white"
         android:foregroundGravity="center|bottom"
-        android:src="@drawable/ic_action_calendar_month"/>
+        android:scaleType="fitEnd"
+        android:src="@drawable/ic_action_calendar_month"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/empty_text"
-        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingBottom="15dp"
         android:layout_gravity="center|top"
         android:layout_weight="1"
-        android:text="There are no sessions in this room." />
+        android:background="@color/dn_white"
+        android:paddingBottom="15dp"
+        android:text="There are no sessions in this room."
+        android:visibility="gone" />
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:id="@+id/listView"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:background="@color/dn_white"
+        android:visibility="gone" />
 
 </LinearLayout>

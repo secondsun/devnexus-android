@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,6 @@ import com.squareup.picasso.Picasso;
 import org.devnexus.util.TrackRoomUtil;
 import org.devnexus.vo.ScheduleItem;
 import org.jboss.aerogear.devnexus2015.R;
-import org.jboss.aerogear.devnexus2015.ui.fragment.PresentationExplorerFragment;
 import org.jboss.aerogear.devnexus2015.util.SessionClickListener;
 
 import java.text.SimpleDateFormat;
@@ -195,7 +193,7 @@ public class ScheduleItemWithHeaderViewAdapter extends RecyclerView.Adapter<Sche
         return items.size();
     }
 
-    public void setClickListener(PresentationExplorerFragment clickListener) {
+    public void setClickListener(SessionClickListener clickListener) {
         this.clickListener = clickListener;
     }
 
@@ -209,16 +207,13 @@ public class ScheduleItemWithHeaderViewAdapter extends RecyclerView.Adapter<Sche
 
     private static class ItemOrHeader {
         
-        enum TYPE {HEADER, ITEM};
-        
         final String header;
         final ScheduleItem item;
-
         private ItemOrHeader(String header, ScheduleItem item) {
             this.header = header;
             this.item = item;
         }
-        
+
         TYPE getType() {
             return item == null?TYPE.HEADER:TYPE.ITEM;
         }
@@ -226,6 +221,8 @@ public class ScheduleItemWithHeaderViewAdapter extends RecyclerView.Adapter<Sche
         <T> T  get(){
             return (T) (item == null?header:item);
         }
+
+        enum TYPE {HEADER, ITEM}
         
     }
 
