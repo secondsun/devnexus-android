@@ -5,6 +5,7 @@ import android.app.LoaderManager;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.pm.PackageManager;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
@@ -33,7 +34,6 @@ import org.devnexus.vo.contract.BadgeContactContract;
 import org.jboss.aerogear.devnexus2015.MainActivity;
 import org.jboss.aerogear.devnexus2015.R;
 import org.jboss.aerogear.devnexus2015.ui.adapter.BadgeContactViewAdapter;
-import org.jboss.aerogear.devnexus2015.ui.adapter.ScheduleItemWithHeaderViewAdapter;
 import org.jboss.aerogear.devnexus2015.util.CenteringDecoration;
 
 import java.io.File;
@@ -195,7 +195,14 @@ public class BadgeContactsFragment extends Fragment implements LoaderManager.Loa
                 }
                 break;
             case R.id.action_scan:
-                ((MainActivity) getActivity()).launchBarcodeScanner();
+                PackageManager pm = getActivity().getPackageManager();
+                boolean camera;
+
+                if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+                    ((MainActivity) getActivity()).launchBarcodeScanner();
+                } else {
+                    Toast.makeText(getActivity(), "This device does not have a camera.", Toast.LENGTH_LONG).show();
+                }
                 return true;
         }
         return false;
