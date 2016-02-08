@@ -73,6 +73,7 @@ public class AboutFragment extends Fragment implements LoaderManager.LoaderCallb
 
         this.columnCount = ((MainActivity) getActivity()).getColumnCount();
         sponsorsRecycler.setLayoutManager(new GridLayoutManager(getActivity(), columnCount));
+        sponsorsRecycler.addItemDecoration(new CenteringDecoration(columnCount, 230, getActivity()));
         ossRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         getLoaderManager().initLoader(SPONSOR_LOADER, new Bundle(), this).forceLoad();
         getLoaderManager().initLoader(OSS_LOADER, new Bundle(), this).forceLoad();
@@ -180,7 +181,7 @@ public class AboutFragment extends Fragment implements LoaderManager.LoaderCallb
     private void refreshSponsorData(List<Sponsor> sponsors) {
         sponsorsRecycler.setAdapter(new SponsorsRecyclerViewAdapter(new ArrayList<Sponsor>(sponsors), getActivity(), columnCount));
         ((GridLayoutManager)sponsorsRecycler.getLayoutManager()).setSpanSizeLookup(((SponsorsRecyclerViewAdapter)sponsorsRecycler.getAdapter()).getSpanSizeLookup());
-        sponsorsRecycler.addItemDecoration(new CenteringDecoration(columnCount, 230, getActivity()));
+
     }
 
     private void refreshLicenseData(List<License> licenses) {
