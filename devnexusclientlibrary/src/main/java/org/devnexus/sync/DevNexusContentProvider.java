@@ -18,6 +18,7 @@ import org.devnexus.util.CountDownCallback;
 import org.devnexus.util.GsonUtils;
 import org.devnexus.vo.BadgeContact;
 import org.devnexus.vo.Presentation;
+import org.devnexus.vo.PresentationResponse;
 import org.devnexus.vo.Schedule;
 import org.devnexus.vo.ScheduleItem;
 import org.devnexus.vo.ScheduleItemType;
@@ -464,8 +465,24 @@ public class DevNexusContentProvider extends ContentProvider {
         public SingleColumnJsonArrayList exec(Gson gson, SQLStore scheduleStore, Uri uri, ContentValues[] values, String selection, String[] selectionArgs) {
             if (DevNexusContentProvider.schedule == null) {
                 DevNexusContentProvider.schedule = new ArrayList<Schedule>(scheduleStore.readAll());
+                if (schedule.isEmpty()) {
+                    loadTemplate(scheduleStore);
+                }
             }
             return new SingleColumnJsonArrayList(new ArrayList<Schedule>(DevNexusContentProvider.schedule));
+        }
+
+        private void loadTemplate(SQLStore scheduleStore) {
+            InputStream templateStream = context.getResources().openRawResource(R.raw.schedule);
+            String scheduleDataJson = null;
+            try {
+                scheduleDataJson = IOUtils.toString(templateStream);
+            } catch (IOException ignore) {
+                Log.e(TAG, ignore.getMessage(), ignore);
+            }
+            schedule.add(GSON.fromJson(scheduleDataJson, Schedule.class));
+            scheduleStore.reset();
+            scheduleStore.save(schedule);
         }
     }
 
@@ -485,8 +502,8 @@ public class DevNexusContentProvider extends ContentProvider {
 
             if (DevNexusContentProvider.schedule == null || DevNexusContentProvider.schedule.isEmpty()) {
                 DevNexusContentProvider.schedule = new ArrayList<Schedule>(scheduleStore.readAll());
-                if (scheduleStore.isEmpty()) {
-                    return new SingleColumnJsonArrayList(new ArrayList<ScheduleItem>());
+                if (schedule.isEmpty()) {
+                    loadTemplate(scheduleStore);
                 }
             }
 
@@ -537,6 +554,19 @@ public class DevNexusContentProvider extends ContentProvider {
                 items.removeAll(filteredItems);
                 return new SingleColumnJsonArrayList(items);
             }
+        }
+
+        private void loadTemplate(SQLStore scheduleStore) {
+            InputStream templateStream = context.getResources().openRawResource(R.raw.schedule);
+            String scheduleDataJson = null;
+            try {
+                scheduleDataJson = IOUtils.toString(templateStream);
+            } catch (IOException ignore) {
+                Log.e(TAG, ignore.getMessage(), ignore);
+            }
+            schedule.add(GSON.fromJson(scheduleDataJson, Schedule.class));
+            scheduleStore.reset();
+            scheduleStore.save(schedule);
         }
     }
 
@@ -684,6 +714,9 @@ public class DevNexusContentProvider extends ContentProvider {
         public SingleColumnJsonArrayList exec(Gson gson, SQLStore presentationStore, Uri uri, ContentValues[] values, String selection, String[] selectionArgs) {
             if (DevNexusContentProvider.presentations == null) {
                 DevNexusContentProvider.presentations = new ArrayList<Presentation>(presentationStore.readAll());
+                if (presentations.isEmpty()) {
+                    loadTemplate(presentationStore);
+                }
             }
 
             if (selection == null || selection.isEmpty()) {
@@ -705,6 +738,19 @@ public class DevNexusContentProvider extends ContentProvider {
 
                 return new SingleColumnJsonArrayList(new ArrayList<Presentation>(presentationStore.readWithFilter(filter)));
             }
+        }
+
+        private void loadTemplate(SQLStore presentationStore) {
+            InputStream templateStream = context.getResources().openRawResource(R.raw.presentations);
+            String scheduleDataJson = null;
+            try {
+                scheduleDataJson = IOUtils.toString(templateStream);
+            } catch (IOException ignore) {
+                Log.e(TAG, ignore.getMessage(), ignore);
+            }
+            presentations = new ArrayList<>(GSON.fromJson(scheduleDataJson, PresentationResponse.class).presentations);
+            presentationStore.reset();
+            presentationStore.save(presentations);
         }
     }
 
