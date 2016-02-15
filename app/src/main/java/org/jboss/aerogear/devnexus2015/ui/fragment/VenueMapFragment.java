@@ -414,7 +414,7 @@ public class VenueMapFragment extends Fragment implements
     }
 
     private void onTilesLoaded(List<TileLoadingTask.TileEntry> list) {
-        if (list != null) {
+        if (list != null && mMap != null) {
             // Display tiles if they have been loaded, skip them otherwise but display the rest of
             // the map.
             for (TileLoadingTask.TileEntry entry : list) {
