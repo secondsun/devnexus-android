@@ -238,7 +238,11 @@ public class SessionDetailFragment extends Fragment implements LoaderManager.Loa
                 skill.setText(presentation.skillLevel);
                 if (presentation.track != null ) {
                     track.setText(presentation.track.name);
-                    room.setText(item.room.name);
+                    if (item.room != null) {
+                        room.setText(item.room.name);
+                    } else {
+                        room.setText("null");
+                    }
                     track.setVisibility(View.VISIBLE);
                 } else {
                     track.setVisibility(View.INVISIBLE);

@@ -19,6 +19,7 @@ import org.devnexus.util.GsonUtils;
 import org.devnexus.vo.BadgeContact;
 import org.devnexus.vo.Presentation;
 import org.devnexus.vo.PresentationResponse;
+import org.devnexus.vo.Room;
 import org.devnexus.vo.Schedule;
 import org.devnexus.vo.ScheduleItem;
 import org.devnexus.vo.ScheduleItemType;
@@ -405,7 +406,9 @@ public class DevNexusContentProvider extends ContentProvider {
                         if (item.presentation != null && item.room == null) {
                             //TODO: Replace all instance where I attach a new schedule item to a calendar with an appropriate schedule item and remove this workaround.
                             ScheduleItem fullItem = mappedItems.get(item.presentation.id);
-                            item.room = fullItem.room;
+                            if (fullItem != null) {
+                                item.room = new Room();
+                            }
                         }
                     }
                 }

@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.devnexus.util.TrackRoomUtil;
+import org.devnexus.vo.Room;
 import org.devnexus.vo.ScheduleItem;
 import org.devnexus.vo.UserCalendar;
 import org.devnexus.vo.contract.UserCalendarContract;
@@ -160,6 +161,9 @@ public class MyScheduleViewAdapter extends RecyclerView.Adapter<MyScheduleViewAd
                     });
                 } else {
                     int color = context.getResources().getColor(TrackRoomUtil.colorForTrack(scheduleItem.presentation.track.name));
+                    if (scheduleItem.room == null) {
+                        scheduleItem.room = new Room();
+                    }
                     holder.title.setText(scheduleItem.presentation.title + " - " + scheduleItem.room.name);
                     holder.title.setTextColor(context.getResources().getColor(R.color.dn_black));
                     holder.box.setBackgroundColor(color);
