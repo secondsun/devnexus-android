@@ -337,7 +337,7 @@ public class DevNexusContentProvider extends ContentProvider {
         public SingleColumnJsonArrayList exec(Gson gson, SQLStore calendarStore, Uri uri, ContentValues[] values, String selection, String[] selectionArgs) {
 
             List<UserCalendar> results = new ArrayList<UserCalendar>(calendarStore.readAll());
-            if (results.isEmpty() || results.get(0).fromTime.getYear() < 116) {
+            if (results.isEmpty() || results.get(0).fromTime.getYear() < 117) {
                 results = loadTemplate(calendarStore);
             }
 

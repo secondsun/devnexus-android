@@ -19,7 +19,7 @@ import java.util.List;
 public final class UserCalendarContract {
 
     public static final Uri URI = Uri.parse("content://org.devnexus.sync/UserCalendar");
-    public static final List<Date> DATES = Arrays.asList(new Date[]{asDate(Calendar.FEBRUARY, 15, 2016), asDate(Calendar.FEBRUARY, 16, 2016), asDate(Calendar.FEBRUARY, 17, 2016)});
+    public static final List<Date> DATES = Arrays.asList(new Date[]{asDate(Calendar.FEBRUARY, 22, 2017), asDate(Calendar.FEBRUARY, 23, 2017), asDate(Calendar.FEBRUARY, 24, 2017)});
 
     public static final String DATA = "DATA";
     public static final String ID = "ID";

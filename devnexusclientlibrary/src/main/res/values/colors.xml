@@ -12,6 +12,7 @@
     <color name="dn_teal">#44b75c</color>
     <color name="dn_red">#630d1a</color>
     <color name="dn_orange_red">#d14928</color>
+    <color name="dn_food_red">#ed1e24</color>
     <color name="dn_road_cone_orange">#ef5f2c</color>
     <color name="dn_orange">#fd8c2a</color>
     <color name="dn_gold">#dbaa2e</color>
@@ -35,6 +36,8 @@
     <color name="track_10">#6A237E</color>
     <color name="track_11">#617784</color>
 
+    <color name="DESSERT">#ed1e24</color>
+    <color name="LUNCH">#0BA861</color>
     <color name="WORKSHOP">#6c7070</color>
     <color name="KEYNOTES">#edcd1c</color>
     <color name="JAVA">#6ec7e8</color>
@@ -45,6 +48,7 @@
     <color name="CLOUD_DEVOPS">#8b2246</color>
     <color name="MICROSERVICES">#e77ea5</color>
     <color name="SECURITY">#2a2d7c</color>
+    <color name="FRAMEWORKS">#000e6f</color>
     <color name="ARCHITECTURE">#a84617</color>
     <color name="HTML5">#015351</color>
     <color name="JAVASCRIPT">#127e9c</color>
@@ -52,5 +56,10 @@
     <color name="AGILE">#4879bc</color>
     <color name="USER_EXPERIENCE_TOOLS">#8ec741</color>
     <color name="dn_default" >#0E27eB</color>
+    <color name="R2D2">#7be100</color>
+    <color name="C3P0">#5711c3</color>
+    <color name="TOOLS">#337dff</color>
+    <color name="PERFORMANCE">#004f4d</color>
+    <color name="DATASCIENCE">#019fe3</color>
 
 </resources>
