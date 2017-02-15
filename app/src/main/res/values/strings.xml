@@ -16,6 +16,7 @@
     <string name="topic_web">Web</string>
     <string name="topic_agile">Agile</string>
     <string name="topic_jvm_languages">JVM Languages</string>
+    <string name="topic_languages">Languages</string>
     <string name="topic_cloud_and_devopts">Cloud + DevOps</string>
     <string name="topic_mobile">Mobile</string>
     <string name="topic_misc">Misc</string>
@@ -66,7 +67,16 @@
     <string name="license_note">The DevNexus app makes use of the following Open Source libraries:</string>
     <string name="topic_nosql">NoSQL</string>
     <string name="pick_account" >You must pick an account to synchronize your schedule.</string>
-
-
+    <string name="topic_performance">Performance</string>
+    <string name="topic_c3p0">C3PO</string>
+    <string name="topic_frameworks">Frameworks</string>
+    <string name="topic_tools">Tools</string>
+    <string name="topic_data_science">Data Science and Machine Learning</string>
+    <string name="topic_r2d2">R2D2</string>
+    <string name="topic_cloud">Cloud</string>
+    <string name="full_schedule">Full Schedule</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
 
 </resources>

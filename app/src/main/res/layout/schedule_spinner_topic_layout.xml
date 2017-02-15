@@ -43,11 +43,11 @@
 
     <ImageView
         android:id="@+id/color"
-        android:layout_width="42dp"
+        android:layout_width="1dp"
         android:layout_height="42dp"
         android:layout_alignParentRight="true"
         android:adjustViewBounds="true"
-        android:background="@color/MOBILE"
+        android:background="@color/dn_white"
         android:scaleType="centerInside" />
 
     <View

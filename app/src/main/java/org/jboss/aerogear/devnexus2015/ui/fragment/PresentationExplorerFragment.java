@@ -26,6 +26,7 @@ import org.jboss.aerogear.devnexus2015.MainActivity;
 import org.jboss.aerogear.devnexus2015.R;
 import org.jboss.aerogear.devnexus2015.ui.adapter.ScheduleItemWithHeaderViewAdapter;
 import org.jboss.aerogear.devnexus2015.ui.adapter.SessionSpinnerAdaper;
+import org.jboss.aerogear.devnexus2015.ui.adapter.TimeSpinnerAdaper;
 import org.jboss.aerogear.devnexus2015.util.CenteringDecoration;
 import org.jboss.aerogear.devnexus2015.util.SessionClickListener;
 
@@ -42,14 +43,18 @@ import static org.devnexus.vo.contract.ScheduleItemContract.toQuery;
 /**
  * Created by summers on 12/28/14.
  */
-public class PresentationExplorerFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,SessionClickListener {
+public class PresentationExplorerFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, SessionClickListener {
 
     private static final int SCHEDULE_LOADER = 0x0100;
     @Nullable
-    @Bind(R.id.my_recycler_view) RecyclerView recycler;
-    @Bind(R.id.toolbar) Toolbar toolbar;
-    @Bind(R.id.spinner_nav) Spinner spinner;
-
+    @Bind(R.id.my_recycler_view)
+    RecyclerView recycler;
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
+    @Bind(R.id.track_spinner)
+    Spinner topicsSpinner;
+    @Bind(R.id.date_spinner)
+    Spinner timeSpinner;
 
     private ArrayList<ScheduleItem> sechduleItemList = new ArrayList<>(1);
     private int columnCount = 3;
@@ -74,51 +79,54 @@ public class PresentationExplorerFragment extends Fragment implements LoaderMana
 
         recycler.setLayoutManager(new GridLayoutManager(getActivity(), columnCount));
         recycler.setAdapter(new ScheduleItemWithHeaderViewAdapter(sechduleItemList, getActivity(), columnCount));
-        ((GridLayoutManager)recycler.getLayoutManager()).setSpanSizeLookup(((ScheduleItemWithHeaderViewAdapter)recycler.getAdapter()).getSpanSizeLookup());
+        ((GridLayoutManager) recycler.getLayoutManager()).setSpanSizeLookup(((ScheduleItemWithHeaderViewAdapter) recycler.getAdapter()).getSpanSizeLookup());
 
         recycler.addItemDecoration(new CenteringDecoration(columnCount, 280, getActivity()));
 
-        loadSpinnerNav(spinner);
+        loadTopicSpinner(topicsSpinner);
+        loadTimeSpinner(this.timeSpinner);
+        toolbar.setBackgroundColor(getResources().getColor(R.color.dn_white));
         return view;
     }
 
-    private void loadSpinnerNav(final Spinner spinner) {
-        spinner.setAdapter(new SessionSpinnerAdaper(getActivity()));
+    private void loadTimeSpinner(final Spinner spinner) {
+        spinner.setAdapter(new TimeSpinnerAdaper(getActivity()));
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                SessionSpinnerAdaper.ITEMS item = (SessionSpinnerAdaper.ITEMS) spinner.getAdapter().getItem(position);
+                TimeSpinnerAdaper.ITEMS item = (TimeSpinnerAdaper.ITEMS) spinner.getAdapter().getItem(position);
                 Bundle args = new Bundle();
-                toolbar.setBackgroundColor(getResources().getColor(item.getRightDrawable()));
+
                 switch (item) {
 
-                    case ALL_EVENTS:
+                    case ALL_TIME:
                         getLoaderManager().restartLoader(SCHEDULE_LOADER, Bundle.EMPTY, PresentationExplorerFragment.this);
                         break;
-
                     case SPACER_0:
+                    case SPACER_1:
+                    case SPACER_2:
                         break;
-                    case SESSION_TOPIC:
-                    case AGILE:
-                    case CLOUD_DEVOPTS:
-                    case DATA_INTEGRATION_IOT:
-                    case ARCHITECTURE:
-                    case JAVA:
-                    case HTML5:
-                    case JAVASCRIPT:
-                    case JVM_LANGUAGES:
-                    case MICROSERVICES:
-                    case MISC:
-                    case SECURITY:
-                    case MOBILE:
-                    case NO_SQL:
-                    case USER_EXPERIENCE_AND_TOOLS:
-                    case WORKSHOP:
-                    case KEYNOTE:
-                    case WEB:
-                        args.putString(ScheduleItemContract.TRACK, getResources().getString(item.getTitleStringResource()));
+
+                    case WEDNESDAY:
+                    case WED_9_AM:
+                    case THURSDAY:
+                    case THURS_9_AM:
+                    case THURS_10_30_AM:
+                    case THURS_1_PM:
+                    case THURS_2_30_PM:
+                    case THURS_4_PM:
+                    case THURS_5_30_PM:
+                    case FRIDAY:
+                    case FRI_9_AM:
+                    case FRI_10_30_AM:
+                    case FRI_1_PM:
+                    case FRI_2_30_PM:
+                    case FRI_4_PM:
+                        args.putString(ScheduleItemContract.FROM_TIME, item.getFromTime().getTime() + "");
                         getLoaderManager().restartLoader(SCHEDULE_LOADER, args, PresentationExplorerFragment.this);
                         break;
+
+
                 }
             }
 
@@ -129,7 +137,59 @@ public class PresentationExplorerFragment extends Fragment implements LoaderMana
         });
     }
 
-    @Override public void onDestroyView() {
+    private void loadTopicSpinner(final Spinner spinner) {
+        spinner.setAdapter(new SessionSpinnerAdaper(getActivity()));
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                SessionSpinnerAdaper.ITEMS item = (SessionSpinnerAdaper.ITEMS) spinner.getAdapter().getItem(position);
+                Bundle args = new Bundle();
+
+                switch (item) {
+
+                    case ALL_EVENTS:
+                        getLoaderManager().restartLoader(SCHEDULE_LOADER, Bundle.EMPTY, PresentationExplorerFragment.this);
+                        break;
+
+                    case SPACER_0:
+                        break;
+                    case SESSION_TOPIC:
+                        break;
+                    case WORKSHOP:
+                    case KEYNOTE:
+                    case MISC:
+                    case C3P0:
+                    case R2D2:
+                    case FRAMEWORKS:
+                    case JAVA:
+                    case LANGUAGES:
+                    case PERFORMANCE:
+                    case TOOLS:
+                    case WEB:
+                    case CLOUD:
+                    case MICROSERVICES:
+                    case SECURITY:
+                    case ARCHITECTURE:
+                    case JAVASCRIPT:
+                    case MOBILE:
+                    case DATA_SCIENCE:
+                    case AGILE:
+                        args.putString(ScheduleItemContract.TRACK, getResources().getString(item.getTitleStringResource()));
+                        getLoaderManager().restartLoader(SCHEDULE_LOADER, args, PresentationExplorerFragment.this);
+                        break;
+
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
     }
@@ -144,17 +204,16 @@ public class PresentationExplorerFragment extends Fragment implements LoaderMana
     public void onResume() {
         super.onResume();
         this.recycler.getLayoutManager().scrollToPosition(scrollPosition);
-        ((ScheduleItemWithHeaderViewAdapter)recycler.getAdapter()).setClickListener(this);
+        ((ScheduleItemWithHeaderViewAdapter) recycler.getAdapter()).setClickListener(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        ((ScheduleItemWithHeaderViewAdapter)recycler.getAdapter()).setClickListener(null);
-        try{
-            scrollPosition = ((GridLayoutManager)this.recycler.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
-        }
-        catch(Throwable t){
+        ((ScheduleItemWithHeaderViewAdapter) recycler.getAdapter()).setClickListener(null);
+        try {
+            scrollPosition = ((GridLayoutManager) this.recycler.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+        } catch (Throwable t) {
             t.printStackTrace();
         }
     }
@@ -166,7 +225,7 @@ public class PresentationExplorerFragment extends Fragment implements LoaderMana
         else {
             String[] queryKeys = args.keySet().toArray(new String[]{});
             String[] queryValues = new String[queryKeys.length];
-            for (int i = 0; i <queryKeys.length; i++) {
+            for (int i = 0; i < queryKeys.length; i++) {
                 queryValues[i] = args.getString(queryKeys[i]);
             }
             return new CursorLoader(getActivity(), ScheduleItemContract.URI, new String[]{}, toQuery(queryKeys), queryValues, null);
@@ -180,14 +239,14 @@ public class PresentationExplorerFragment extends Fragment implements LoaderMana
             ScheduleItem presentation = GsonUtils.GSON.fromJson(data.getString(0), ScheduleItem.class);
             scheduleItems.add(presentation);
         }
-        
+
         List<ScheduleItem> nonPresentationItems = new ArrayList<>(scheduleItems.size());
         for (ScheduleItem item : scheduleItems) {
             if (item.presentation == null) {
                 nonPresentationItems.add(item);
             }
         }
-        
+
         scheduleItems.removeAll(nonPresentationItems);
 
         Collections.sort(scheduleItems);
@@ -215,7 +274,7 @@ public class PresentationExplorerFragment extends Fragment implements LoaderMana
 
         ScheduleItemWithHeaderViewAdapter adapter = new ScheduleItemWithHeaderViewAdapter(presentationList, getActivity(), columnCount, false, this);
         recycler.setAdapter(adapter);
-        ((GridLayoutManager)recycler.getLayoutManager()).setSpanSizeLookup(((ScheduleItemWithHeaderViewAdapter)recycler.getAdapter()).getSpanSizeLookup());
+        ((GridLayoutManager) recycler.getLayoutManager()).setSpanSizeLookup(((ScheduleItemWithHeaderViewAdapter) recycler.getAdapter()).getSpanSizeLookup());
         scrollPosition = adapter.getDateIndex(new Date());
         if (scrollPosition != 0) {
             scrollPosition--;
@@ -227,8 +286,8 @@ public class PresentationExplorerFragment extends Fragment implements LoaderMana
     public void onLoaderReset(Loader<Cursor> loader) {
         this.sechduleItemList = new ArrayList<>(1);
         if (recycler != null) {
-            recycler.setAdapter(new ScheduleItemWithHeaderViewAdapter(this.sechduleItemList, getActivity(),columnCount,  false, this));
-            ((GridLayoutManager)recycler.getLayoutManager()).setSpanSizeLookup(((ScheduleItemWithHeaderViewAdapter) recycler.getAdapter()).getSpanSizeLookup());
+            recycler.setAdapter(new ScheduleItemWithHeaderViewAdapter(this.sechduleItemList, getActivity(), columnCount, false, this));
+            ((GridLayoutManager) recycler.getLayoutManager()).setSpanSizeLookup(((ScheduleItemWithHeaderViewAdapter) recycler.getAdapter()).getSpanSizeLookup());
         }
 
     }
@@ -237,6 +296,6 @@ public class PresentationExplorerFragment extends Fragment implements LoaderMana
     public void loadSession(Presentation presentation) {
         Fragment sessionDetailFragment = SessionDetailFragment.newInstance(presentation.title, presentation.id);
 
-        ((MainActivity)getActivity()).switchFragment(sessionDetailFragment, MainActivity.BackStackOperation.ADD, "SessionDetailFragment");
+        ((MainActivity) getActivity()).switchFragment(sessionDetailFragment, MainActivity.BackStackOperation.ADD, "SessionDetailFragment");
     }
 }

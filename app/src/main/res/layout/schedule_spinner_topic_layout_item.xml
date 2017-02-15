@@ -41,15 +41,6 @@
         android:text="@string/topic_mobile"
         android:textColor="@color/dn_black" />
 
-    <ImageView
-        android:id="@+id/color"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
-        android:layout_alignParentRight="true"
-        android:adjustViewBounds="true"
-        android:background="@color/MOBILE"
-        android:scaleType="centerInside" />
-
     <View
         android:id="@+id/spacer"
         android:layout_width="match_parent"
