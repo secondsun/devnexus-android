@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 
 
 def SERVER_KEY = '"' + DevNexusServerKeyProp + '"'?: '"Define DevNexusServerKeyProp in gradle.properties"'
+def KEY_PASSWORD = DevNexusSigningKeyPassword ?: "android"
 
 android {
     compileSdkVersion 25
@@ -20,7 +21,7 @@ android {
             storeFile file("/home/summers/.android/debug.keystore")
             storePassword "android"
             keyAlias "release"
-            keyPassword "android"
+            keyPassword KEY_PASSWORD
         }
     }
 

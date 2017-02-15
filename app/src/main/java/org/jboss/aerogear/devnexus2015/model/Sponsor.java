@@ -21,7 +21,7 @@ public class Sponsor implements Serializable, Comparable<Sponsor> {
     }
 
     public enum Level {
-        PLATINUM("Platinum Sponsor"), GOLD("Gold Sponsor"), SILVER("Silver Sponsor"), BADGE("Badge Sponsor"), COCKTAIL_HOUR("Cocktail Hour"), MEDIA_PARTNER("Media Partner"), DEV_LOUNGE("Dev Lounge"), LANYARD("Lanyard");
+        UNOBTAINIUM("Unobtanium"),PLATINUM("Platinum Sponsor"), GOLD("Gold Sponsor"), SILVER("Silver Sponsor"), BADGE("Badge Sponsor"), COCKTAIL_HOUR("Cocktail Hour"), MEDIA_PARTNER("Media Partner"), DEV_LOUNGE("Dev Lounge"), LANYARD("Lanyard");
 
 
         public final String title;

@@ -29,7 +29,7 @@ public class DevNexusDrawerFragment extends Fragment {
         List<DrawerItem> list2Items = new ArrayList<>();
         list2Items.add(new DrawerItem(R.drawable.ic_presentations, "All Presentations"));
         list2Items.add(new DrawerItem(R.drawable.ic_schedule, "My Schedule"));
-        list2Items.add(new DrawerItem(R.drawable.ic_map, "Map"));
+//        list2Items.add(new DrawerItem(R.drawable.ic_map, "Map"));
         list2Items.add(new DrawerItem(R.drawable.ic_person_add, "Scan Badge"));
         list2Items.add(new DrawerItem(R.drawable.ic_info, "About"));
 
@@ -46,13 +46,13 @@ public class DevNexusDrawerFragment extends Fragment {
                     case 1:
                         activity.switchFragment(new MyScheduleFragment(), RESET, "Schedule");
                         break;
+//                    case 2:
+//                        activity.switchFragment(new VenueMapFragment(), RESET, "Map");
+//                        break;
                     case 2:
-                        activity.switchFragment(new VenueMapFragment(), RESET, "Map");
-                        break;
-                    case 3:
                         activity.switchFragment(BadgeContactsFragment.newInstance(), RESET, "BadgeContact");
                         break;
-                    case 4:
+                    case 3:
                         activity.switchFragment(AboutFragment.newInstance(), RESET, "About");
                         break;
                 }
