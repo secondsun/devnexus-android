@@ -121,7 +121,7 @@ public class SessionPickerFragment extends DialogFragment implements LoaderManag
                 }
             });
         }
-        listView.addItemDecoration(new CenteringDecoration(1, 230, getActivity()));
+        //listView.addItemDecoration(new CenteringDecoration(1, 230, getActivity()));
 
         listView.setAdapter(adapter);
         listView.requestLayout();

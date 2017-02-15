@@ -19,7 +19,6 @@
 package org.jboss.aerogear.devnexus2015.ui.fragment;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.LoaderManager;
 import android.content.Loader;
@@ -150,9 +149,9 @@ public class VenueMapFragment extends Fragment implements
         return view;
     }
 
-    private void setupMap(boolean resetCamera) {
+    private void setupMap(boolean resetCamera, GoogleMap googleMap) {
 
-        mMap = mapFragment.getMap();
+        mMap = googleMap;
 
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
             @Override
@@ -222,7 +221,13 @@ public class VenueMapFragment extends Fragment implements
             // load the tile overlays
             lm.initLoader(TOKEN_LOADER_TILES, null, mTileLoader).forceLoad();
 
-            setupMap(true);
+            if (mMap == null) {
+                mapFragment.getMapAsync(this);
+            } else {
+                setupMap(true, mMap);
+            }
+
+
         }
         if (this.dialog != null) {
             this.dialog.getDialog().show();
@@ -304,7 +309,7 @@ public class VenueMapFragment extends Fragment implements
         // load the tile overlays
         lm.initLoader(TOKEN_LOADER_TILES, null, mTileLoader).forceLoad();
 
-        setupMap(true);
+        setupMap(true, googleMap);
     }
 
     @Override

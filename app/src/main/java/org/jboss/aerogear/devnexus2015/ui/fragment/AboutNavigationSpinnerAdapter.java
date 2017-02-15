@@ -48,7 +48,7 @@ public class AboutNavigationSpinnerAdapter extends BaseAdapter implements Spinne
         if (convertView == null) {
             convertView = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.schedule_spinner_topic_layout_item, null);
             convertView.findViewById(R.id.header_label).setVisibility(View.INVISIBLE);
-            convertView.findViewById(R.id.color).setVisibility(View.INVISIBLE);
+
         }
 
         ((TextView)convertView.findViewById(R.id.label)).setText(getItem(position).toString());
@@ -61,7 +61,7 @@ public class AboutNavigationSpinnerAdapter extends BaseAdapter implements Spinne
         if (convertView == null) {
             convertView = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.schedule_spinner_topic_layout, null);
             convertView.findViewById(R.id.header_label).setVisibility(View.INVISIBLE);
-            convertView.findViewById(R.id.color).setVisibility(View.INVISIBLE);
+
         }
 
         ((TextView)convertView.findViewById(R.id.label)).setText(getItem(position).toString());
